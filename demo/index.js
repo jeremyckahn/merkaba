@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { App } from '../src/index.js';
+import { Merkaba } from '../src/index.js';
 
 ReactDOM.render(
-  <App />,
+  <Merkaba />,
   document.getElementById('app')
 );

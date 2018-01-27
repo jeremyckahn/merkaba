@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class App extends Component {
+export class Merkaba extends Component {
   render () {
     return (
       <div>

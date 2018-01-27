@@ -1,1 +1,1 @@
-export { App } from './app';
+export { Merkaba } from './merkaba';

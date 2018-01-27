@@ -1,5 +1,5 @@
 import React from 'react';
-import { App } from '../src/index';
+import { Merkaba } from '../src/merkaba';
 import Enzyme, { mount, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import assert from 'assert';
@@ -8,9 +8,9 @@ Enzyme.configure({ adapter: new Adapter() });
 
 let component;
 
-describe('App', () => {
+describe('Merkaba', () => {
   beforeEach(() => {
-    component = shallow(<App />);
+    component = shallow(<Merkaba />);
   });
 
   describe('dom', () => {
