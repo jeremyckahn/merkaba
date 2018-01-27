@@ -1,1 +1,1 @@
-export { Merkaba } from './merkaba';
+export { Merkaba } from './components/merkaba';
