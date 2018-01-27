@@ -1,7 +1,7 @@
 {
   "name": "merkaba",
   "version": "0.0.0",
-  "description": "My starting point for React apps",
+  "description": "An SVG editor component written in React",
   "main": "dist/app.js",
   "scripts": {
     "build": "webpack",
