@@ -6,7 +6,7 @@ import { Details } from './details';
 export class Merkaba extends Component {
   render () {
     return (
-      <div>
+      <div className="fill merkaba">
         <Toolbar />
         <Workspace />
         <Details />
