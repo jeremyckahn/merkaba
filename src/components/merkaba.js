@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import { Toolbar } from './toolbar';
+import { Workspace } from './workspace';
+import { Details } from './details';
 
 export class Merkaba extends Component {
   render () {
     return (
       <div>
-        <p>Hello World!</p>
+        <Toolbar />
+        <Workspace />
+        <Details />
       </div>
     );
   }
