@@ -10,6 +10,11 @@ module.exports = {
         use: 'babel-loader',
         exclude: path.join(__dirname, 'node_modules')
       }, {
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+        use: [{
+          loader: 'url-loader'
+        }]
+      }, {
         test: /\.(sass|scss|css)$/,
         use: [{
           loader: 'style-loader'

@@ -4,3 +4,21 @@
   background: $chrome-frame-color
   right: auto
   width: $toolbar-width
+
+  > ul
+    margin: 0
+    padding: $toolbar-margin
+
+    $button-dimensions: $toolbar-width - (2 * $toolbar-margin)
+    > li
+      height: $button-dimensions
+      list-style-type: none
+      position: relative
+      width: $button-dimensions
+
+      button
+        background: none
+        border: none
+        color: $chrome-font-color
+        font-size: $toolbar-icon-size
+        padding: 0
