@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import { Toolbar } from './toolbar';
 import { Workspace } from './workspace';
 import { Details } from './details';
+import { selectedTool } from '../enums';
 import eventHandlers from '../event-handlers';
 
 export class Merkaba extends Component {
   constructor () {
     super(...arguments);
+
+    this.state = {
+      selectedTool: selectedTool.NONE
+    };
 
     // Bind event handlers
     Object.keys(eventHandlers).forEach(
