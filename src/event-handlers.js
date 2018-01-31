@@ -1,0 +1,6 @@
+/**
+ * @module eventHandlers
+ */
+
+export default {
+};
