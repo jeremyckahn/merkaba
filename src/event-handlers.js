@@ -1,5 +1,5 @@
 /**
- * @module eventHandlers
+ * @module merkaba.eventHandlers
  */
 
 export default {

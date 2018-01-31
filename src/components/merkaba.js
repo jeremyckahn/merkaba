@@ -5,6 +5,10 @@ import { Details } from './details';
 import { selectedTool } from '../enums';
 import eventHandlers from '../event-handlers';
 
+/**
+ * @class merkaba.Merkaba
+ * @extends {external:React.Component}
+ */
 export class Merkaba extends Component {
   constructor () {
     super(...arguments);

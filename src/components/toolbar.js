@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+/**
+ * @class merkaba.Toolbar
+ * @extends {external:React.Component}
+ */
 export class Toolbar extends Component {
   render () {
     return (
