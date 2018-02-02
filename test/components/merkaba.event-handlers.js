@@ -1,7 +1,7 @@
 import React from 'react';
 import assert from 'assert';
-import { Merkaba } from '../src/components/merkaba';
-import { selectedTool } from '../src/enums';
+import { Merkaba } from '../../src/components/merkaba';
+import { selectedTool } from '../../src/enums';
 import { shallow } from 'enzyme';
 
 let component;

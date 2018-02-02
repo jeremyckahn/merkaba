@@ -3,7 +3,7 @@ import { Toolbar } from './toolbar';
 import { Workspace } from './workspace';
 import { Details } from './details';
 import { selectedTool } from '../enums';
-import eventHandlers from '../event-handlers';
+import eventHandlers from './merkaba.event-handlers';
 
 /**
  * @typedef merkaba.state

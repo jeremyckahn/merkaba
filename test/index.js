@@ -5,6 +5,6 @@ import './components/merkaba';
 import './components/toolbar';
 import './components/workspace';
 import './components/details';
-import './event-handlers';
+import './components/merkaba.event-handlers';
 
 Enzyme.configure({ adapter: new Adapter() });
