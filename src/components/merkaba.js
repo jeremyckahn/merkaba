@@ -6,6 +6,12 @@ import { selectedTool } from '../enums';
 import eventHandlers from '../event-handlers';
 
 /**
+ * @typedef merkaba.state
+ * @type {Object}
+ * @property {merkaba.module:enums.selectedTool} selectedTool
+ */
+
+/**
  * @class merkaba.Merkaba
  * @extends {external:React.Component}
  */
@@ -13,6 +19,10 @@ export class Merkaba extends Component {
   constructor () {
     super(...arguments);
 
+    /**
+     * @member merkaba.Merkaba#state
+     * @type {merkaba.state}
+     */
     this.state = {
       selectedTool: selectedTool.NONE
     };
