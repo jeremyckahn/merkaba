@@ -34,9 +34,17 @@ export class Merkaba extends Component {
   }
 
   render () {
+    const {
+      state: {
+        selectedTool
+      }
+    } = this;
+
     return (
       <div className="fill merkaba">
-        <Toolbar />
+        <Toolbar
+          selectedTool={selectedTool}
+        />
         <Workspace />
         <Details />
       </div>
