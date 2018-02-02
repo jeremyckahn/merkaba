@@ -4,7 +4,6 @@ import { selectedToolType } from '../enums';
 /**
  * @class merkaba.Toolbar
  * @param {merkaba.module:enums.selectedToolType} selectedTool
- * @extends {external:React.Component}
  */
 export const Toolbar = ({
   selectedTool
