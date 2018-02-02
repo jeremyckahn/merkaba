@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Icon } from './icon';
 import { selectedToolType } from '../enums';
 
 /**
@@ -12,7 +13,7 @@ export const Toolbar = ({
     <ul>
       <li>
         <button className={selectedTool === selectedToolType.RECTANGLE ? 'active' : ''}>
-          <i className="glyphicon glyphicon-stop" />
+          <Icon type="stop"/>
         </button>
       </li>
     </ul>
