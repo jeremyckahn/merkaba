@@ -12,7 +12,9 @@ export const Toolbar = ({
   <div className="fill toolbar">
     <ul>
       <li>
-        <button className={`glyphicon glyphicon-stop${selectedTool === selectedToolType.RECTANGLE ? ' active' : ''}`} />
+        <button className={selectedTool === selectedToolType.RECTANGLE ? 'active' : ''}>
+          <i className="glyphicon glyphicon-stop" />
+        </button>
       </li>
     </ul>
   </div>
