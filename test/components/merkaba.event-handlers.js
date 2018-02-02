@@ -1,7 +1,7 @@
 import React from 'react';
 import assert from 'assert';
 import { Merkaba } from '../../src/components/merkaba';
-import { selectedTool } from '../../src/enums';
+import { selectedToolType } from '../../src/enums';
 import { shallow } from 'enzyme';
 
 let component;
@@ -13,11 +13,11 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleToolClick', () => {
     beforeEach(() => {
-      component.instance().handleToolClick(selectedTool.RECTANGLE);
+      component.instance().handleToolClick(selectedToolType.RECTANGLE);
     });
 
     it('sets the selectedTool state', () => {
-      assert.equal(component.state('selectedTool'), selectedTool.RECTANGLE);
+      assert.equal(component.state('selectedTool'), selectedToolType.RECTANGLE);
     });
   });
 });

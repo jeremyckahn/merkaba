@@ -1,6 +1,6 @@
 import React from 'react';
 import { Merkaba } from '../../src/components/merkaba';
-import { selectedTool } from '../../src/enums';
+import { selectedToolType } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
@@ -20,7 +20,7 @@ describe('Merkaba', () => {
   describe('state', () => {
     describe('selectedTool', () => {
       it('has a default value', () => {
-        assert.equal(component.state('selectedTool'), selectedTool.NONE);
+        assert.equal(component.state('selectedTool'), selectedToolType.NONE);
       });
     });
   });

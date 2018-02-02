@@ -3,10 +3,10 @@
  */
 
 /**
- * @property merkaba.module:enums.selectedTool
+ * @property merkaba.module:enums.selectedToolType
  * @enum {string}
  */
-export const selectedTool = {
+export const selectedToolType = {
   NONE: 'NONE',
   RECTANGLE: 'RECTANGLE'
 };
