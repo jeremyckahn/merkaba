@@ -11,8 +11,8 @@ export const Toolbar = ({
 }) =>
   <div className="fill toolbar">
     <ul>
-      <li>
-        <button className={selectedTool === selectedToolType.RECTANGLE ? 'active' : ''}>
+      <li className={selectedTool === selectedToolType.RECTANGLE ? 'active' : ''}>
+        <button>
           <Icon type="stop"/>
         </button>
       </li>
