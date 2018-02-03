@@ -7,18 +7,28 @@
 
   > ul
     margin: 0
-    padding: $toolbar-margin
+    padding: 0
 
-    $button-dimensions: $toolbar-width - (2 * $toolbar-margin)
     > li
-      height: $button-dimensions
       list-style-type: none
       position: relative
-      width: $button-dimensions
+      width: $toolbar-width
+      height: $toolbar-width
+
+      &.active
+        background: $chrome-active-color
 
       button
         background: none
         border: none
         color: $chrome-font-color
-        font-size: $toolbar-icon-size
+        height: 100%
         padding: 0
+        width: 100%
+
+        $icon-size: 30px
+        i
+          font-size: $icon-size
+          height: $icon-size
+          left: -1px
+          width: $icon-size
