@@ -7,12 +7,12 @@ export default {
     this.setState({ selectedTool });
   },
 
-  handleWorkspaceDragStart () {
+  handleCanvasDragStart () {
   },
 
-  handleWorkspaceDrag () {
+  handleCanvasDrag () {
   },
 
-  handleWorkspaceDragStop () {
+  handleCanvasDragStop () {
   },
 };

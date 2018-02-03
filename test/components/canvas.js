@@ -1,13 +1,13 @@
 import React from 'react';
-import { Workspace } from '../../src/components/workspace';
+import { Canvas } from '../../src/components/canvas';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
 let component;
 
-describe('Workspace', () => {
+describe('Canvas', () => {
   beforeEach(() => {
-    component = shallow(<Workspace />);
+    component = shallow(<Canvas />);
   });
 
   describe('dom', () => {

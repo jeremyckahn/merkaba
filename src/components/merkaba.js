@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Toolbar } from './toolbar';
-import { Workspace } from './workspace';
+import { Canvas } from './canvas';
 import { Details } from './details';
 import { selectedToolType } from '../enums';
 import eventHandlers from './merkaba.event-handlers';
@@ -46,10 +46,10 @@ export class Merkaba extends Component {
           handleToolClick={this.handleToolClick}
           selectedTool={selectedTool}
         />
-        <Workspace
-          handleWorkspaceDragStart={this.handleWorkspaceDragStart}
-          handleWorkspaceDrag={this.handleWorkspaceDrag}
-          handleWorkspaceDragStop={this.handleWorkspaceDragStop}
+        <Canvas
+          handleCanvasDragStart={this.handleCanvasDragStart}
+          handleCanvasDrag={this.handleCanvasDrag}
+          handleCanvasDragStop={this.handleCanvasDragStop}
         />
         <Details />
       </div>

@@ -21,9 +21,9 @@ describe('eventHandlers', () => {
     });
   });
 
-  xdescribe('Merkaba#handleWorkspaceDragStart', () => {});
+  xdescribe('Merkaba#handleCanvasDragStart', () => {});
 
-  xdescribe('Merkaba#handleWorkspaceDrag', () => {});
+  xdescribe('Merkaba#handleCanvasDrag', () => {});
 
-  xdescribe('Merkaba#handleWorkspaceDragStop', () => {});
+  xdescribe('Merkaba#handleCanvasDragStop', () => {});
 });
