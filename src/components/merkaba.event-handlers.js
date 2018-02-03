@@ -5,5 +5,14 @@ export default {
    */
   handleToolClick (selectedTool) {
     this.setState({ selectedTool });
-  }
+  },
+
+  handleWorkspaceDragStart () {
+  },
+
+  handleWorkspaceDrag () {
+  },
+
+  handleWorkspaceDragStop () {
+  },
 };

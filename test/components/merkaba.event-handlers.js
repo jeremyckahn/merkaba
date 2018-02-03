@@ -20,4 +20,10 @@ describe('eventHandlers', () => {
       assert.equal(component.state('selectedTool'), selectedToolType.RECTANGLE);
     });
   });
+
+  xdescribe('Merkaba#handleWorkspaceDragStart', () => {});
+
+  xdescribe('Merkaba#handleWorkspaceDrag', () => {});
+
+  xdescribe('Merkaba#handleWorkspaceDragStop', () => {});
 });

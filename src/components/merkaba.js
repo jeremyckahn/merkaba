@@ -46,7 +46,11 @@ export class Merkaba extends Component {
           handleToolClick={this.handleToolClick}
           selectedTool={selectedTool}
         />
-        <Workspace />
+        <Workspace
+          handleWorkspaceDragStart={this.handleWorkspaceDragStart}
+          handleWorkspaceDrag={this.handleWorkspaceDrag}
+          handleWorkspaceDragStop={this.handleWorkspaceDragStop}
+        />
         <Details />
       </div>
     );

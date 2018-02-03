@@ -1,14 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { DraggableCore } from 'react-draggable';
 
 /**
  * @class merkaba.Workspace
  * @extends {external:React.Component}
  */
-export class Workspace extends Component {
-  render () {
-    return (
-      <div className="fill workspace">
-      </div>
-    );
-  }
-}
+export const Workspace = ({
+  handleWorkspaceDragStart,
+  handleWorkspaceDrag,
+  handleWorkspaceDragStop,
+}) =>
+  <DraggableCore
+    onStart={handleWorkspaceDragStart}
+    onDrag={handleWorkspaceDrag}
+    onStop={handleWorkspaceDragStop}
+  >
+    <div className="fill workspace">
+    </div>
+  </DraggableCore>
