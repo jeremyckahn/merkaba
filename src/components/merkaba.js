@@ -43,6 +43,7 @@ export class Merkaba extends Component {
     return (
       <div className="fill merkaba">
         <Toolbar
+          handleToolClick={this.handleToolClick}
           selectedTool={selectedTool}
         />
         <Workspace />
