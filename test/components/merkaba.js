@@ -41,5 +41,17 @@ describe('Merkaba', () => {
         assert.equal(String(component.state('toolDragStartY')), 'null');
       });
     });
+
+    describe('toolDragDeltaX', () => {
+      it('has a default value', () => {
+        assert.equal(String(component.state('toolDragDeltaX')), 'null');
+      });
+    });
+
+    describe('toolDragDeltaY', () => {
+      it('has a default value', () => {
+        assert.equal(String(component.state('toolDragDeltaY')), 'null');
+      });
+    });
   });
 });

@@ -12,6 +12,8 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {boolean} isDraggingTool
  * @property {null|number} toolDragStartX
  * @property {null|number} toolDragStartY
+ * @property {null|number} toolDragDeltaX
+ * @property {null|number} toolDragDeltaY
  */
 
 /**
@@ -31,6 +33,8 @@ export class Merkaba extends Component {
       isDraggingTool: false,
       toolDragStartX: null,
       toolDragStartY: null,
+      toolDragDeltaX: null,
+      toolDragDeltaY: null,
     };
 
     // Bind event handlers
