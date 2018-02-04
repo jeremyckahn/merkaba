@@ -10,6 +10,8 @@ import eventHandlers from './merkaba.event-handlers';
  * @type {Object}
  * @property {merkaba.module:enums.selectedToolType} selectedTool
  * @property {boolean} isDraggingTool
+ * @property {null|number} toolDragStartX
+ * @property {null|number} toolDragStartY
  */
 
 /**
@@ -26,7 +28,9 @@ export class Merkaba extends Component {
      */
     this.state = {
       selectedTool: selectedToolType.NONE,
-      isDraggingTool: false
+      isDraggingTool: false,
+      toolDragStartX: null,
+      toolDragStartY: null,
     };
 
     // Bind event handlers
