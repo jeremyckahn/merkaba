@@ -37,9 +37,34 @@ describe('eventHandlers', () => {
     it('sets the toolDragStartY state', () => {
       assert.equal(component.state('toolDragStartY'), 15);
     });
+
+    it('sets the toolDragDeltaX state', () => {
+      assert.equal(component.state('toolDragDeltaX'), 10);
+    });
+
+    it('sets the toolDragDeltaY state', () => {
+      assert.equal(component.state('toolDragDeltaY'), 15);
+    });
   });
 
-  xdescribe('Merkaba#handleCanvasDrag', () => {});
+  describe('Merkaba#handleCanvasDrag', () => {
+    beforeEach(() => {
+      component.setState({
+        toolDragDeltaX: 10,
+        toolDragDeltaY: 15,
+      });
+
+      component.instance().handleCanvasDrag(null, { deltaX: -5, deltaY: 5 });
+    });
+
+    it('sets the toolDragDeltaX state', () => {
+      assert.equal(component.state('toolDragDeltaX'), 5);
+    });
+
+    it('sets the toolDragDeltaY state', () => {
+      assert.equal(component.state('toolDragDeltaY'), 20);
+    });
+  });
 
   describe('Merkaba#handleCanvasDragStop', () => {
     beforeEach(() => {
@@ -62,6 +87,14 @@ describe('eventHandlers', () => {
 
     it('sets the toolDragStartY state', () => {
       assert.equal(String(component.state('toolDragStartY')), 'null');
+    });
+
+    it('sets the toolDragDeltaX state', () => {
+      assert.equal(String(component.state('toolDragDeltaX')), 'null');
+    });
+
+    it('sets the toolDragDeltaY state', () => {
+      assert.equal(String(component.state('toolDragDeltaY')), 'null');
     });
   });
 });

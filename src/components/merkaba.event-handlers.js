@@ -12,15 +12,26 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleCanvasDragStart (e, { x: toolDragStartX, y: toolDragStartY }) {
+  handleCanvasDragStart (e, { x, y }) {
     this.setState({
       isDraggingTool: true,
-      toolDragStartX,
-      toolDragStartY
+      toolDragStartX: x,
+      toolDragStartY: y,
+      toolDragDeltaX: x,
+      toolDragDeltaY: y
     });
   },
 
-  handleCanvasDrag () {
+  handleCanvasDrag (e, { deltaX, deltaY }) {
+    const {
+      toolDragDeltaX,
+      toolDragDeltaY
+    } = this.state;
+
+    this.setState({
+      toolDragDeltaX: toolDragDeltaX + deltaX,
+      toolDragDeltaY: toolDragDeltaY + deltaY
+    });
   },
 
   /**
@@ -30,7 +41,9 @@ export default {
     this.setState({
       isDraggingTool: false,
       toolDragStartX: null,
-      toolDragStartY: null
+      toolDragStartY: null,
+      toolDragDeltaX: null,
+      toolDragDeltaY: null
     });
   },
 };
