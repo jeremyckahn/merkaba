@@ -7,7 +7,12 @@ export default {
     this.setState({ selectedTool });
   },
 
-  handleCanvasDragStart () {
+  /**
+   * @method merkaba.Merkaba#handleCanvasDragStart
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
+  handleCanvasDragStart (e, data) {
     this.setState({ isDraggingTool: true });
   },
 
