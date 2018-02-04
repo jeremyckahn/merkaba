@@ -21,9 +21,26 @@ describe('eventHandlers', () => {
     });
   });
 
-  xdescribe('Merkaba#handleCanvasDragStart', () => {});
+  describe('Merkaba#handleCanvasDragStart', () => {
+    beforeEach(() => {
+      component.instance().handleCanvasDragStart();
+    });
+
+    it('sets the isDraggingTool state', () => {
+      assert.equal(component.state('isDraggingTool'), true);
+    });
+  });
 
   xdescribe('Merkaba#handleCanvasDrag', () => {});
 
-  xdescribe('Merkaba#handleCanvasDragStop', () => {});
+  describe('Merkaba#handleCanvasDragStop', () => {
+    beforeEach(() => {
+      component.setState({ isDraggingTool: true });
+      component.instance().handleCanvasDragStop();
+    });
+
+    it('sets the isDraggingTool state', () => {
+      assert.equal(component.state('isDraggingTool'), false);
+    });
+  });
 });

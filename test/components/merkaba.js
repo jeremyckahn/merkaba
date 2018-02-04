@@ -23,5 +23,11 @@ describe('Merkaba', () => {
         assert.equal(component.state('selectedTool'), selectedToolType.NONE);
       });
     });
+
+    describe('isDraggingTool', () => {
+      it('has a default value', () => {
+        assert.equal(component.state('isDraggingTool'), false);
+      });
+    });
   });
 });

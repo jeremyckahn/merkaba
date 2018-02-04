@@ -8,11 +8,13 @@ export default {
   },
 
   handleCanvasDragStart () {
+    this.setState({ isDraggingTool: true });
   },
 
   handleCanvasDrag () {
   },
 
   handleCanvasDragStop () {
+    this.setState({ isDraggingTool: false });
   },
 };
