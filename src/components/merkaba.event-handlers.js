@@ -17,8 +17,8 @@ export default {
       isDraggingTool: true,
       toolDragStartX: x,
       toolDragStartY: y,
-      toolDragDeltaX: x,
-      toolDragDeltaY: y
+      toolDragDeltaX: 0,
+      toolDragDeltaY: 0
     });
   },
 

@@ -39,11 +39,11 @@ describe('eventHandlers', () => {
     });
 
     it('sets the toolDragDeltaX state', () => {
-      assert.equal(component.state('toolDragDeltaX'), 10);
+      assert.equal(component.state('toolDragDeltaX'), 0);
     });
 
     it('sets the toolDragDeltaY state', () => {
-      assert.equal(component.state('toolDragDeltaY'), 15);
+      assert.equal(component.state('toolDragDeltaY'), 0);
     });
   });
 
