@@ -46,7 +46,12 @@ export class Merkaba extends Component {
   render () {
     const {
       state: {
-        selectedTool
+        isDraggingTool,
+        selectedTool,
+        toolDragStartX,
+        toolDragStartY,
+        toolDragDeltaX,
+        toolDragDeltaY,
       }
     } = this;
 
@@ -60,6 +65,12 @@ export class Merkaba extends Component {
           handleCanvasDragStart={this.handleCanvasDragStart}
           handleCanvasDrag={this.handleCanvasDrag}
           handleCanvasDragStop={this.handleCanvasDragStop}
+          isDraggingTool={isDraggingTool}
+          selectedTool={selectedTool}
+          toolDragStartX={toolDragStartX}
+          toolDragStartY={toolDragStartY}
+          toolDragDeltaX={toolDragDeltaX}
+          toolDragDeltaY={toolDragDeltaY}
         />
         <Details />
       </div>
