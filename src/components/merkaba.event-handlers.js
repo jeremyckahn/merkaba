@@ -12,11 +12,11 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleCanvasDragStart (e, { x, y }) {
+  handleCanvasDragStart (e, { x, y, node: { offsetLeft, offsetTop } }) {
     this.setState({
       isDraggingTool: true,
-      toolDragStartX: x,
-      toolDragStartY: y,
+      toolDragStartX: x - offsetLeft,
+      toolDragStartY: y - offsetTop,
       toolDragDeltaX: 0,
       toolDragDeltaY: 0
     });

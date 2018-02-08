@@ -23,7 +23,11 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleCanvasDragStart', () => {
     beforeEach(() => {
-      component.instance().handleCanvasDragStart(null, { x: 10, y: 15 });
+      component.instance().handleCanvasDragStart(null, {
+        x: 10,
+        y: 15,
+        node: { offsetLeft: 5, offsetTop: 5 }
+      });
     });
 
     it('sets the isDraggingTool state', () => {
@@ -31,11 +35,11 @@ describe('eventHandlers', () => {
     });
 
     it('sets the toolDragStartX state', () => {
-      assert.equal(component.state('toolDragStartX'), 10);
+      assert.equal(component.state('toolDragStartX'), 5);
     });
 
     it('sets the toolDragStartY state', () => {
-      assert.equal(component.state('toolDragStartY'), 15);
+      assert.equal(component.state('toolDragStartY'), 10);
     });
 
     it('sets the toolDragDeltaX state', () => {
@@ -54,7 +58,7 @@ describe('eventHandlers', () => {
         toolDragDeltaY: 15,
       });
 
-      component.instance().handleCanvasDrag(null, { deltaX: -5, deltaY: 5 });
+      component.instance().handleCanvasDrag(null, { deltaX: -5, deltaY: 5, });
     });
 
     it('sets the toolDragDeltaX state', () => {
