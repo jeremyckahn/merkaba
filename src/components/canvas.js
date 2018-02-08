@@ -36,8 +36,8 @@ export const Canvas = ({
         {isDraggingTool ? (() =>
           selectedTool === selectedToolType.RECTANGLE ?
             <rect
-              x={toolDragDeltaX < 0 ? toolDragStartX + toolDragDeltaX : toolDragStartX}
-              y={toolDragDeltaY < 0 ? toolDragStartY + toolDragDeltaY : toolDragStartY}
+              x={toolDragStartX + Math.min(toolDragDeltaX, 0)}
+              y={toolDragStartY + Math.min(toolDragDeltaY, 0)}
               width={Math.abs(toolDragDeltaX)}
               height={Math.abs(toolDragDeltaY)}
               stroke="red"
