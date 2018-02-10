@@ -14,6 +14,9 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {null|number} toolDragStartY
  * @property {null|number} toolDragDeltaX
  * @property {null|number} toolDragDeltaY
+ * @property {null|string} toolStrokeColor
+ * @property {null|number} toolStrokeWidth
+ * @property {null|string} toolFillColor
  * @property {Array.<merkaba.svgShape>} bufferShapes
  */
 
@@ -36,6 +39,12 @@ export class Merkaba extends Component {
       toolDragStartY: null,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
+
+      // FIXME: Stroke and fill values are temporarily hardcoded
+      toolStrokeColor: 'red',
+      toolStrokeWidth: 1,
+      toolFillColor: 'red',
+
       bufferShapes: [],
     };
 
