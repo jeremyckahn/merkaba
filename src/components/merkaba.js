@@ -14,6 +14,7 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {null|number} toolDragStartY
  * @property {null|number} toolDragDeltaX
  * @property {null|number} toolDragDeltaY
+ * @property {Array.<merkaba.svgShape>} bufferShapes
  */
 
 /**
@@ -35,6 +36,7 @@ export class Merkaba extends Component {
       toolDragStartY: null,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
+      bufferShapes: [],
     };
 
     // Bind event handlers

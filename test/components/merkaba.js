@@ -53,5 +53,11 @@ describe('Merkaba', () => {
         assert.equal(String(component.state('toolDragDeltaY')), 'null');
       });
     });
+
+    describe('bufferShapes', () => {
+      it('has a default value', () => {
+        assert.deepEqual(component.state('bufferShapes'), []);
+      });
+    });
   });
 });
