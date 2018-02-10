@@ -33,8 +33,11 @@ const Rect = ({
  * @param {number|null} toolDragStartY
  * @param {number|null} toolDragDeltaX
  * @param {number|null} toolDragDeltaY
- * @property {boolean} isDraggingTool
- * @property {merkaba.module:enums.selectedToolType} selectedTool
+ * @param {null|string} toolStrokeColor
+ * @param {null|number} toolStrokeWidth
+ * @param {null|string} toolFillColor
+ * @param {boolean} isDraggingTool
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
  * @extends {external:React.Component}
  */
 export const Canvas = ({
@@ -45,6 +48,9 @@ export const Canvas = ({
   toolDragStartY,
   toolDragDeltaX,
   toolDragDeltaY,
+  toolStrokeColor,
+  toolStrokeWidth,
+  toolFillColor,
   isDraggingTool,
   selectedTool,
 }) =>
@@ -62,9 +68,9 @@ export const Canvas = ({
               y={toolDragStartY}
               dx={toolDragDeltaX}
               dy={toolDragDeltaY}
-              stroke={'red'}
-              fill={'red'}
-              strokeWidth={1}
+              stroke={toolStrokeColor}
+              fill={toolFillColor}
+              strokeWidth={toolStrokeWidth}
             />
             : null
         )() : null}

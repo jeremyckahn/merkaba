@@ -63,6 +63,9 @@ export class Merkaba extends Component {
         toolDragStartY,
         toolDragDeltaX,
         toolDragDeltaY,
+        toolStrokeColor,
+        toolStrokeWidth,
+        toolFillColor,
       }
     } = this;
 
@@ -82,6 +85,9 @@ export class Merkaba extends Component {
           toolDragStartY={toolDragStartY}
           toolDragDeltaX={toolDragDeltaX}
           toolDragDeltaY={toolDragDeltaY}
+          toolStrokeColor={toolStrokeColor}
+          toolStrokeWidth={toolStrokeWidth}
+          toolFillColor={toolFillColor}
         />
         <Details />
       </div>
