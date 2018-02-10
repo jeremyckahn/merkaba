@@ -1,7 +1,7 @@
 import React from 'react';
 import assert from 'assert';
 import { Merkaba } from '../../src/components/merkaba';
-import { selectedToolType } from '../../src/enums';
+import { selectedToolType, shapeType } from '../../src/enums';
 import { shallow } from 'enzyme';
 
 let component;
@@ -71,34 +71,65 @@ describe('eventHandlers', () => {
   });
 
   describe('Merkaba#handleCanvasDragStop', () => {
-    beforeEach(() => {
-      component.setState({
-        isDraggingTool: true,
-        toolDragStartX: 10,
-        toolDragStartY: 15
+    describe('coordinate state management', () => {
+      beforeEach(() => {
+        component.setState({
+          isDraggingTool: true,
+          toolDragStartX: 10,
+          toolDragStartY: 15
+        });
+
+        component.instance().handleCanvasDragStop();
       });
 
-      component.instance().handleCanvasDragStop();
+      it('sets the isDraggingTool state', () => {
+        assert.equal(component.state('isDraggingTool'), false);
+      });
+
+      it('sets the toolDragStartX state', () => {
+        assert.equal(String(component.state('toolDragStartX')), 'null');
+      });
+
+      it('sets the toolDragStartY state', () => {
+        assert.equal(String(component.state('toolDragStartY')), 'null');
+      });
+
+      it('sets the toolDragDeltaX state', () => {
+        assert.equal(String(component.state('toolDragDeltaX')), 'null');
+      });
+
+      it('sets the toolDragDeltaY state', () => {
+        assert.equal(String(component.state('toolDragDeltaY')), 'null');
+      });
     });
 
-    it('sets the isDraggingTool state', () => {
-      assert.equal(component.state('isDraggingTool'), false);
-    });
+    describe('committing to state.bufferShapes', () => {
+      describe('merkaba.svgRect', () => {
+        beforeEach(() => {
+          component.setState({
+            isDraggingTool: true,
+            selectedTool: selectedToolType.RECTANGLE,
+            toolDragStartX: 10,
+            toolDragStartY: 15,
+            toolDragDeltaX: 10,
+            toolDragDeltaY: 10,
+          });
 
-    it('sets the toolDragStartX state', () => {
-      assert.equal(String(component.state('toolDragStartX')), 'null');
-    });
+          component.instance().handleCanvasDragStop();
+        });
 
-    it('sets the toolDragStartY state', () => {
-      assert.equal(String(component.state('toolDragStartY')), 'null');
-    });
-
-    it('sets the toolDragDeltaX state', () => {
-      assert.equal(String(component.state('toolDragDeltaX')), 'null');
-    });
-
-    it('sets the toolDragDeltaY state', () => {
-      assert.equal(String(component.state('toolDragDeltaY')), 'null');
+        it('is committed to state.bufferShapes', () => {
+          assert.deepEqual(component.state().bufferShapes, [{
+            type: shapeType.RECT,
+            x: 10,
+            y: 15,
+            width: 10,
+            height: 10,
+            rx: 0,
+            ry: 0
+          }]);
+        });
+      });
     });
   });
 });
