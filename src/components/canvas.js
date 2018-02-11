@@ -63,17 +63,26 @@ export const Canvas = ({
   >
     <div className="fill canvas">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-        {bufferShapes.map((shape, i) =>
-          shape.type === shapeType.RECT ?
+        {bufferShapes.map(({
+          type,
+          x,
+          y,
+          width,
+          height,
+          stroke,
+          fill,
+          strokeWidth
+        }, i) =>
+          type === shapeType.RECT ?
             <Rect
               key={i}
-              x={shape.x}
-              y={shape.y}
-              dx={shape.width}
-              dy={shape.height}
-              stroke={shape.stroke}
-              fill={shape.fill}
-              strokeWidth={shape.strokeWidth}
+              x={x}
+              y={y}
+              dx={width}
+              dy={height}
+              stroke={stroke}
+              fill={fill}
+              strokeWidth={strokeWidth}
             />
             : null
         )}
