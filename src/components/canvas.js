@@ -71,9 +71,9 @@ export const Canvas = ({
               y={shape.y}
               dx={shape.width}
               dy={shape.height}
-              stroke={'red'}
-              fill={'red'}
-              strokeWidth={1}
+              stroke={shape.stroke}
+              fill={shape.fill}
+              strokeWidth={shape.strokeWidth}
             />
             : null
         )}

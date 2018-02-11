@@ -46,6 +46,9 @@ export default {
       toolDragStartY,
       toolDragDeltaX,
       toolDragDeltaY,
+      toolStrokeColor,
+      toolFillColor,
+      toolStrokeWidth,
     } = this.state;
 
     const bufferShapes = this.state.bufferShapes.slice();
@@ -59,7 +62,10 @@ export default {
           width: toolDragDeltaX,
           height: toolDragDeltaY,
           rx: 0,
-          ry: 0
+          ry: 0,
+          stroke: toolStrokeColor,
+          fill: toolFillColor,
+          strokeWidth: toolStrokeWidth,
         });
 
         break;

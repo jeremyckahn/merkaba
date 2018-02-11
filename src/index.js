@@ -8,6 +8,9 @@ import './styles/index.sass';
  * @typedef merkaba.svgShape
  * @type {Object}
  * @property {merkaba.module:enums.shapeType} type
+ * @property {string} stroke
+ * @property {number} strokeWidth
+ * @property {string} fill
  */
 
 /**
