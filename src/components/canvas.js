@@ -1,6 +1,6 @@
 import React from 'react';
 import { DraggableCore } from 'react-draggable';
-import { selectedToolType } from '../enums';
+import { selectedToolType, shapeType } from '../enums';
 
 /**
  * @param {number} x
@@ -38,6 +38,7 @@ const Rect = ({
  * @param {null|string} toolFillColor
  * @param {boolean} isDraggingTool
  * @param {merkaba.module:enums.selectedToolType} selectedTool
+ * @param {Array.<merkaba.svgShape>} bufferShapes
  * @extends {external:React.Component}
  */
 export const Canvas = ({
@@ -53,6 +54,7 @@ export const Canvas = ({
   toolFillColor,
   isDraggingTool,
   selectedTool,
+  bufferShapes = []
 }) =>
   <DraggableCore
     onStart={handleCanvasDragStart}
@@ -61,9 +63,24 @@ export const Canvas = ({
   >
     <div className="fill canvas">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+        {bufferShapes.map((shape, i) =>
+          shape.type === shapeType.RECT ?
+            <Rect
+              key={i}
+              x={shape.x}
+              y={shape.y}
+              dx={shape.width}
+              dy={shape.height}
+              stroke={'red'}
+              fill={'red'}
+              strokeWidth={1}
+            />
+            : null
+        )}
         {isDraggingTool ? (() =>
           selectedTool === selectedToolType.RECTANGLE ?
             <Rect
+              key="live"
               x={toolDragStartX}
               y={toolDragStartY}
               dx={toolDragDeltaX}

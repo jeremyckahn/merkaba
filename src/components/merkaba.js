@@ -66,6 +66,7 @@ export class Merkaba extends Component {
         toolStrokeColor,
         toolStrokeWidth,
         toolFillColor,
+        bufferShapes,
       }
     } = this;
 
@@ -88,6 +89,7 @@ export class Merkaba extends Component {
           toolStrokeColor={toolStrokeColor}
           toolStrokeWidth={toolStrokeWidth}
           toolFillColor={toolFillColor}
+          bufferShapes={bufferShapes}
         />
         <Details />
       </div>
