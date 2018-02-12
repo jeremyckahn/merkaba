@@ -10,9 +10,10 @@ import { selectedToolType, shapeType } from '../enums';
  * @param {string} stroke
  * @param {string} fill
  * @param {number} strokeWidth
+ * @param {string} className
  */
 const Rect = ({
-  x, y, dx, dy, stroke, fill, strokeWidth
+  x, y, dx, dy, stroke, fill, strokeWidth, className
 }) =>
   <rect
     x={x + Math.min(dx, 0)}
@@ -22,6 +23,7 @@ const Rect = ({
     stroke={stroke}
     fill={fill}
     strokeWidth={strokeWidth}
+    className={className}
   />
 
 /**
@@ -90,6 +92,7 @@ export const Canvas = ({
           selectedTool === selectedToolType.RECTANGLE ?
             <Rect
               key="live"
+              className="live"
               x={toolDragStartX}
               y={toolDragStartY}
               dx={toolDragDeltaX}
