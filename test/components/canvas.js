@@ -1,6 +1,6 @@
 import React from 'react';
 import { Canvas } from '../../src/components/canvas';
-import { selectedToolType } from '../../src/enums';
+import { selectedToolType, shapeType } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
@@ -42,5 +42,47 @@ describe('Canvas', () => {
     });
   });
 
-  describe('buffer rendering', () => {});
+  describe('buffer rendering', () => {
+    describe('no buffered shape (default)', () => {
+      it('renders no shapes', () => {
+        assert.equal(component.find('.buffered').length, 0);
+      });
+    });
+
+    describe('any buffered shapes', () => {
+      beforeEach(() => {
+        component = mount(
+          <Canvas
+            bufferShapes={[{
+              type: shapeType.RECT,
+              x: 5,
+              y: 5,
+              width: 10,
+              height: 10,
+              rx: 0,
+              ry: 0,
+              stroke: 'red',
+              fill: 'red',
+              strokeWidth: 1,
+            }, {
+              type: shapeType.RECT,
+              x: 15,
+              y: 15,
+              width: 10,
+              height: 10,
+              rx: 0,
+              ry: 0,
+              stroke: 'blue',
+              fill: 'blue',
+              strokeWidth: 1,
+            }]}
+          />
+        );
+      });
+
+      it('renders the shapes', () => {
+        assert.equal(component.find('rect.buffered').length, 2);
+      });
+    });
+  });
 });

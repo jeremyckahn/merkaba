@@ -78,6 +78,7 @@ export const Canvas = ({
           type === shapeType.RECT ?
             <Rect
               key={i}
+              className="buffered"
               x={x}
               y={y}
               dx={width}
