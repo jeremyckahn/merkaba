@@ -27,6 +27,35 @@ const Rect = ({
   />
 
 /**
+ * @param {Array.<merkaba.svgShape>} bufferShapes
+ */
+const Buffer = ({ bufferShapes }) =>
+  bufferShapes.map(({
+    type,
+    x,
+    y,
+    width,
+    height,
+    stroke,
+    fill,
+    strokeWidth
+  }, i) =>
+    type === shapeType.RECT ?
+      <Rect
+        key={i}
+        className="buffered"
+        x={x}
+        y={y}
+        dx={width}
+        dy={height}
+        stroke={stroke}
+        fill={fill}
+        strokeWidth={strokeWidth}
+      />
+      : null
+  )
+
+/**
  * @param {number|null} toolDragStartX
  * @param {number|null} toolDragStartY
  * @param {number|null} toolDragDeltaX
@@ -99,30 +128,7 @@ export const Canvas = ({
   >
     <div className="fill canvas">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-        {bufferShapes.map(({
-          type,
-          x,
-          y,
-          width,
-          height,
-          stroke,
-          fill,
-          strokeWidth
-        }, i) =>
-          type === shapeType.RECT ?
-            <Rect
-              key={i}
-              className="buffered"
-              x={x}
-              y={y}
-              dx={width}
-              dy={height}
-              stroke={stroke}
-              fill={fill}
-              strokeWidth={strokeWidth}
-            />
-            : null
-        )}
+        <Buffer bufferShapes={bufferShapes} />
         {isDraggingTool ?
           <LiveShape {...
           {
