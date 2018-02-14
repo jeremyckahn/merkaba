@@ -27,6 +27,40 @@ const Rect = ({
   />
 
 /**
+ * @param {number|null} toolDragStartX
+ * @param {number|null} toolDragStartY
+ * @param {number|null} toolDragDeltaX
+ * @param {number|null} toolDragDeltaY
+ * @param {null|string} toolStrokeColor
+ * @param {null|number} toolStrokeWidth
+ * @param {null|string} toolFillColor
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
+ */
+const LiveShape = ({
+  selectedTool,
+  toolDragStartX,
+  toolDragStartY,
+  toolDragDeltaX,
+  toolDragDeltaY,
+  toolStrokeColor,
+  toolFillColor,
+  toolStrokeWidth
+}) =>
+  selectedTool === selectedToolType.RECTANGLE ?
+    <Rect
+      key="live"
+      className="live"
+      x={toolDragStartX}
+      y={toolDragStartY}
+      dx={toolDragDeltaX}
+      dy={toolDragDeltaY}
+      stroke={toolStrokeColor}
+      fill={toolFillColor}
+      strokeWidth={toolStrokeWidth}
+    />
+    : null
+
+/**
  * @class merkaba.Canvas
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
@@ -89,21 +123,19 @@ export const Canvas = ({
             />
             : null
         )}
-        {isDraggingTool ? (() =>
-          selectedTool === selectedToolType.RECTANGLE ?
-            <Rect
-              key="live"
-              className="live"
-              x={toolDragStartX}
-              y={toolDragStartY}
-              dx={toolDragDeltaX}
-              dy={toolDragDeltaY}
-              stroke={toolStrokeColor}
-              fill={toolFillColor}
-              strokeWidth={toolStrokeWidth}
-            />
-            : null
-        )() : null}
+        {isDraggingTool ?
+          <LiveShape {...
+          {
+            selectedTool,
+            toolDragStartX,
+            toolDragStartY,
+            toolDragDeltaX,
+            toolDragDeltaY,
+            toolStrokeColor,
+            toolFillColor,
+            toolStrokeWidth
+          }} />
+        : null}
       </svg>
     </div>
   </DraggableCore>
