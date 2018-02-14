@@ -63,9 +63,11 @@ const Buffer = ({ bufferShapes }) =>
  * @param {null|string} toolStrokeColor
  * @param {null|number} toolStrokeWidth
  * @param {null|string} toolFillColor
+ * @param {boolean} isDraggingTool
  * @param {merkaba.module:enums.selectedToolType} selectedTool
  */
 const LiveShape = ({
+  isDraggingTool,
   selectedTool,
   toolDragStartX,
   toolDragStartY,
@@ -75,18 +77,19 @@ const LiveShape = ({
   toolFillColor,
   toolStrokeWidth
 }) =>
-  selectedTool === selectedToolType.RECTANGLE ?
-    <Rect
-      key="live"
-      className="live"
-      x={toolDragStartX}
-      y={toolDragStartY}
-      dx={toolDragDeltaX}
-      dy={toolDragDeltaY}
-      stroke={toolStrokeColor}
-      fill={toolFillColor}
-      strokeWidth={toolStrokeWidth}
-    />
+  isDraggingTool ?
+    selectedTool === selectedToolType.RECTANGLE ?
+      <Rect
+        className="live"
+        x={toolDragStartX}
+        y={toolDragStartY}
+        dx={toolDragDeltaX}
+        dy={toolDragDeltaY}
+        stroke={toolStrokeColor}
+        fill={toolFillColor}
+        strokeWidth={toolStrokeWidth}
+      />
+      : null
     : null
 
 /**
@@ -129,19 +132,18 @@ export const Canvas = ({
     <div className="fill canvas">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
         <Buffer bufferShapes={bufferShapes} />
-        {isDraggingTool ?
-          <LiveShape {...
-          {
-            selectedTool,
-            toolDragStartX,
-            toolDragStartY,
-            toolDragDeltaX,
-            toolDragDeltaY,
-            toolStrokeColor,
-            toolFillColor,
-            toolStrokeWidth
-          }} />
-        : null}
+        <LiveShape {...
+        {
+          isDraggingTool,
+          selectedTool,
+          toolDragStartX,
+          toolDragStartY,
+          toolDragDeltaX,
+          toolDragDeltaY,
+          toolStrokeColor,
+          toolFillColor,
+          toolStrokeWidth
+        }} />
       </svg>
     </div>
   </DraggableCore>
