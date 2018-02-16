@@ -11,22 +11,22 @@ module.exports = Object.assign(commonConfig, {
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, `${dist}`),
-    filename: `app.js`,
+    filename: 'app.js',
     library: `${name}`,
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
   },
   plugins: [
     new CleanWebpackPlugin([ dist ]),
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         dead_code: true,
-        unused: true
+        unused: true,
       },
       output: {
-        comments: false
-      }
+        comments: false,
+      },
     }),
     new Webpack.BannerPlugin(version),
-  ]
+  ],
 });
