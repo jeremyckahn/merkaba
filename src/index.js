@@ -1,4 +1,4 @@
-import './styles/index.sass';
+import './styles/index.sass'
 
 /**
  * @namespace merkaba
@@ -25,4 +25,4 @@ import './styles/index.sass';
  * @property {number} ry
  */
 
-export { Merkaba } from './components/merkaba';
+export { Merkaba } from './components/merkaba'

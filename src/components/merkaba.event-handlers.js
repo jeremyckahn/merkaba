@@ -20,19 +20,19 @@ export default {
       toolDragStartX: x - offsetLeft,
       toolDragStartY: y - offsetTop,
       toolDragDeltaX: 0,
-      toolDragDeltaY: 0
+      toolDragDeltaY: 0,
     });
   },
 
   handleCanvasDrag (e, { deltaX, deltaY }) {
     const {
       toolDragDeltaX,
-      toolDragDeltaY
+      toolDragDeltaY,
     } = this.state;
 
     this.setState({
       toolDragDeltaX: toolDragDeltaX + deltaX,
-      toolDragDeltaY: toolDragDeltaY + deltaY
+      toolDragDeltaY: toolDragDeltaY + deltaY,
     });
   },
 
@@ -54,21 +54,21 @@ export default {
     const bufferShapes = this.state.bufferShapes.slice();
 
     switch (selectedTool) {
-      case selectedToolType.RECTANGLE:
-        bufferShapes.unshift({
-          type: shapeType.RECT,
-          x: toolDragStartX,
-          y: toolDragStartY,
-          width: toolDragDeltaX,
-          height: toolDragDeltaY,
-          rx: 0,
-          ry: 0,
-          stroke: toolStrokeColor,
-          fill: toolFillColor,
-          strokeWidth: toolStrokeWidth,
-        });
+    case selectedToolType.RECTANGLE:
+      bufferShapes.unshift({
+        type: shapeType.RECT,
+        x: toolDragStartX,
+        y: toolDragStartY,
+        width: toolDragDeltaX,
+        height: toolDragDeltaY,
+        rx: 0,
+        ry: 0,
+        stroke: toolStrokeColor,
+        fill: toolFillColor,
+        strokeWidth: toolStrokeWidth,
+      });
 
-        break;
+      break;
     }
 
     this.setState({
@@ -77,7 +77,7 @@ export default {
       toolDragStartY: null,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
-      bufferShapes
+      bufferShapes,
     });
   },
 };

@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Wed Nov 22 2017 10:15:48 GMT-0600 (CST)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/index.js'
+      'test/index.js',
     ],
 
 
@@ -27,7 +27,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/index.js': ['webpack']
+      'test/index.js': ['webpack'],
     },
 
     webpack: require('./webpack.test.config.js'),
@@ -85,7 +85,7 @@ module.exports = function(config) {
       // the other browser environments as a bellwether before digging too
       // deeply into what could be a spurious issue in the IE test environment.
 
-      //'IE10 - Win7',
+      // 'IE10 - Win7',
     ],
 
 
@@ -95,6 +95,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
   })
 }

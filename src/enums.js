@@ -8,8 +8,8 @@
  */
 export const selectedToolType = {
   NONE: 'NONE',
-  RECTANGLE: 'RECTANGLE'
-};
+  RECTANGLE: 'RECTANGLE',
+}
 
 /**
  * Values in this enum correspond to standard SVG shape names:
@@ -18,5 +18,5 @@ export const selectedToolType = {
  * @enum {string}
  */
 export const shapeType = {
-  RECT: 'rect'
-};
+  RECT: 'rect',
+}
