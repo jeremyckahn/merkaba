@@ -67,29 +67,37 @@ export class Merkaba extends Component {
         toolStrokeWidth,
         toolFillColor,
         bufferShapes,
-      }
+      },
+      handleToolClick,
+      handleCanvasDragStart,
+      handleCanvasDrag,
+      handleCanvasDragStop,
     } = this;
 
     return (
       <div className="fill merkaba">
         <Toolbar
-          handleToolClick={this.handleToolClick}
-          selectedTool={selectedTool}
+          {...{
+            handleToolClick,
+            selectedTool
+          }}
         />
         <Canvas
-          handleCanvasDragStart={this.handleCanvasDragStart}
-          handleCanvasDrag={this.handleCanvasDrag}
-          handleCanvasDragStop={this.handleCanvasDragStop}
-          isDraggingTool={isDraggingTool}
-          selectedTool={selectedTool}
-          toolDragStartX={toolDragStartX}
-          toolDragStartY={toolDragStartY}
-          toolDragDeltaX={toolDragDeltaX}
-          toolDragDeltaY={toolDragDeltaY}
-          toolStrokeColor={toolStrokeColor}
-          toolStrokeWidth={toolStrokeWidth}
-          toolFillColor={toolFillColor}
-          bufferShapes={bufferShapes}
+          {...{
+            handleCanvasDragStart,
+            handleCanvasDrag,
+            handleCanvasDragStop,
+            isDraggingTool,
+            selectedTool,
+            toolDragStartX,
+            toolDragStartY,
+            toolDragDeltaX,
+            toolDragDeltaY,
+            toolStrokeColor,
+            toolStrokeWidth,
+            toolFillColor,
+            bufferShapes,
+          }}
         />
         <Details />
       </div>
