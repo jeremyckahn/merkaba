@@ -99,7 +99,11 @@ export class Merkaba extends Component {
             bufferShapes,
           }}
         />
-        <Details />
+        <Details
+          {...{
+            selectedTool
+          }}
+        />
       </div>
     );
   }

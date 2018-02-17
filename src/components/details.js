@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
+import { selectedToolType } from '../enums';
 
 /**
  * @class merkaba.Details
- * @extends {external:React.Component}
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
  */
-export class Details extends Component {
-  render () {
-    return (
-      <div className="fill details">
+export const Details = ({
+  selectedTool
+}) =>
+  <div className="fill details">
+    {selectedTool === selectedToolType.RECTANGLE ?
+      <div>
+        <input name="x"/>
+        <input name="y"/>
+        <input name="width"/>
+        <input name="height"/>
+        <input name="strokeWidth"/>
+        <input name="fill"/>
       </div>
-    );
-  }
-}
+    : null}
+  </div>
