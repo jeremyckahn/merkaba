@@ -11,12 +11,6 @@ describe('Merkaba', () => {
     component = shallow(<Merkaba />);
   });
 
-  describe('dom', () => {
-    it('renders content', () => {
-      assert.equal(component.find('div').length, 1);
-    });
-  });
-
   describe('state', () => {
     describe('selectedTool', () => {
       it('has a default value', () => {

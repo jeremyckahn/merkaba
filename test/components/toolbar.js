@@ -11,29 +11,23 @@ describe('Toolbar', () => {
     component = shallow(<Toolbar />);
   });
 
-  describe('dom', () => {
-    it('renders content', () => {
-      assert.equal(component.find('div').length, 1);
-    });
+  describe('responding to parameters', () => {
+    describe('selectedTool', () => {
+      describe('selectedToolType.NONE (default)', () => {
+        it('activates nothing', () => {
+          assert.equal(component.find('active').length, 0);
+        });
+      });
 
-    describe('responding to parameters', () => {
-      describe('selectedTool', () => {
-        describe('selectedToolType.NONE (default)', () => {
-          it('activates nothing', () => {
-            assert.equal(component.find('active').length, 0);
-          });
+      describe('selectedToolType.RECTANGLE', () => {
+        beforeEach(() => {
+          component = shallow(
+            <Toolbar selectedTool={selectedToolType.RECTANGLE} />
+          );
         });
 
-        describe('selectedToolType.RECTANGLE', () => {
-          beforeEach(() => {
-            component = shallow(
-              <Toolbar selectedTool={selectedToolType.RECTANGLE} />
-            );
-          });
-
-          it('activates rectangle button', () => {
-            assert.equal(component.find('.active').length, 1);
-          });
+        it('activates rectangle button', () => {
+          assert.equal(component.find('.active').length, 1);
         });
       });
     });
