@@ -4,12 +4,30 @@ import { selectedToolType } from '../enums';
 const RectUI = ({
 }) =>
   <div>
-    <input name="x"/>
-    <input name="y"/>
-    <input name="width"/>
-    <input name="height"/>
-    <input name="strokeWidth"/>
-    <input name="fill"/>
+    <label>
+      <p>X:</p>
+      <input name="x"/>
+    </label>
+    <label>
+      <p>Y:</p>
+      <input name="y"/>
+    </label>
+    <label>
+      <p>Width:</p>
+      <input name="width"/>
+    </label>
+    <label>
+      <p>Height:</p>
+      <input name="height"/>
+    </label>
+    <label>
+      <p>Stroke Width:</p>
+      <input name="strokeWidth"/>
+    </label>
+    <label>
+      <p>Fill:</p>
+      <input name="fill"/>
+    </label>
   </div>
 
 /**
