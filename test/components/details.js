@@ -6,7 +6,7 @@ import assert from 'assert';
 
 let component;
 
-describe.only('Details', () => {
+describe('Details', () => {
   beforeEach(() => {
     component = shallow(<Details />);
   });
@@ -19,7 +19,7 @@ describe.only('Details', () => {
 
   describe('selectedTool === selectedToolType.RECTANGLE', () => {
     beforeEach(() => {
-      component = shallow(<Details selectedTool={selectedToolType.RECTANGLE}/>);
+      component = mount(<Details selectedTool={selectedToolType.RECTANGLE}/>);
     });
 
     it('renders inputs for a rect', () => {
