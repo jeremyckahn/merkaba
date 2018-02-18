@@ -3,13 +3,22 @@
  */
 
 /**
+ * @param {Array.<string>} keys
+ * @return {Object.<string>}
+ */
+const enumify = keys => keys.reduce((acc, key) =>
+  Object.assign(acc, { [key]: key }),
+  {}
+);
+
+/**
  * @property merkaba.module:enums.selectedToolType
  * @enum {string}
  */
-export const selectedToolType = {
-  NONE: 'NONE',
-  RECTANGLE: 'RECTANGLE'
-};
+export const selectedToolType = enumify([
+  'NONE',
+  'RECTANGLE',
+]);
 
 /**
  * Values in this enum correspond to standard SVG shape names:
@@ -25,8 +34,8 @@ export const shapeType = {
  * @property merkaba.module:enums.shapeFocusType
  * @enum {string}
  */
-export const shapeFocusType = {
-  NONE: 'NONE',
-  LIVE: 'LIVE',
-  BUFFER: 'BUFFER'
-};
+export const shapeFocusType = enumify([
+  'NONE',
+  'LIVE',
+  'BUFFER',
+]);
