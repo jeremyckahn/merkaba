@@ -1,7 +1,11 @@
 import React from 'react';
 import assert from 'assert';
 import { Merkaba } from '../../src/components/merkaba';
-import { selectedToolType, shapeType } from '../../src/enums';
+import {
+  selectedToolType,
+  shapeFocusType,
+  shapeType,
+} from '../../src/enums';
 import { shallow } from 'enzyme';
 
 let component;
@@ -27,6 +31,13 @@ describe('eventHandlers', () => {
         x: 10,
         y: 15,
         node: { offsetLeft: 5, offsetTop: 5 }
+      });
+    });
+
+    it('sets the focusedShapeCursor state', () => {
+      assert.deepEqual(component.state('focusedShapeCursor'), {
+        shapeFocus: shapeFocusType.LIVE,
+        bufferIndex: null
       });
     });
 
@@ -71,15 +82,26 @@ describe('eventHandlers', () => {
   });
 
   describe('Merkaba#handleCanvasDragStop', () => {
-    describe('coordinate state management', () => {
+    describe('state management', () => {
       beforeEach(() => {
         component.setState({
           isDraggingTool: true,
           toolDragStartX: 10,
-          toolDragStartY: 15
+          toolDragStartY: 15,
+          focusedShapeCursor: {
+            shapeFocus: shapeFocusType.LIVE,
+            bufferIndex: null
+          }
         });
 
         component.instance().handleCanvasDragStop();
+      });
+
+      it('sets the focusedShapeCursor state', () => {
+        assert.deepEqual(component.state('focusedShapeCursor'), {
+          shapeFocus: shapeFocusType.NONE,
+          bufferIndex: null
+        });
       });
 
       it('sets the isDraggingTool state', () => {

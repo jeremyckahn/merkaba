@@ -1,4 +1,8 @@
-import { selectedToolType, shapeType } from '../enums';
+import {
+  selectedToolType,
+  shapeFocusType,
+  shapeType,
+} from '../enums';
 
 export default {
   /**
@@ -20,7 +24,11 @@ export default {
       toolDragStartX: x - offsetLeft,
       toolDragStartY: y - offsetTop,
       toolDragDeltaX: 0,
-      toolDragDeltaY: 0
+      toolDragDeltaY: 0,
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.LIVE,
+        bufferIndex: null
+      }
     });
   },
 
@@ -79,7 +87,14 @@ export default {
       toolDragStartY: null,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
-      bufferShapes
+      bufferShapes,
+
+      // TODO: This should probably be changed to reference a buffer shape for
+      // a better UX
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndex: null
+      }
     });
   },
 };
