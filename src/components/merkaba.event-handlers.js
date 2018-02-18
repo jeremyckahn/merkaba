@@ -53,22 +53,24 @@ export default {
 
     const bufferShapes = this.state.bufferShapes.slice();
 
-    switch (selectedTool) {
-      case selectedToolType.RECTANGLE:
-        bufferShapes.unshift({
-          type: shapeType.RECT,
-          x: toolDragStartX,
-          y: toolDragStartY,
-          width: toolDragDeltaX,
-          height: toolDragDeltaY,
-          rx: 0,
-          ry: 0,
-          stroke: toolStrokeColor,
-          fill: toolFillColor,
-          strokeWidth: toolStrokeWidth,
-        });
+    if (toolDragDeltaX && toolDragDeltaY) {
+      switch (selectedTool) {
+        case selectedToolType.RECTANGLE:
+          bufferShapes.unshift({
+            type: shapeType.RECT,
+            x: toolDragStartX,
+            y: toolDragStartY,
+            width: toolDragDeltaX,
+            height: toolDragDeltaY,
+            rx: 0,
+            ry: 0,
+            stroke: toolStrokeColor,
+            fill: toolFillColor,
+            strokeWidth: toolStrokeWidth,
+          });
 
-        break;
+          break;
+      }
     }
 
     this.setState({

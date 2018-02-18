@@ -104,6 +104,28 @@ describe('eventHandlers', () => {
     });
 
     describe('committing to state.bufferShapes', () => {
+      describe('shape with no deltas', () => {
+        beforeEach(() => {
+          component.setState({
+            isDraggingTool: true,
+            selectedTool: selectedToolType.RECTANGLE,
+            toolDragStartX: 10,
+            toolDragStartY: 15,
+            toolDragDeltaX: 0,
+            toolDragDeltaY: 0,
+            toolStrokeColor: 'red',
+            toolFillColor: 'red',
+            toolStrokeWidth: 1,
+          });
+
+          component.instance().handleCanvasDragStop();
+        });
+
+        it('is not committed to state.bufferShapes', () => {
+          assert.equal(component.state().bufferShapes.length, 0);
+        });
+      });
+
       describe('merkaba.svgRect', () => {
         beforeEach(() => {
           component.setState({
