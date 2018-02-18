@@ -20,3 +20,13 @@ export const selectedToolType = {
 export const shapeType = {
   RECT: 'rect'
 };
+
+/**
+ * @property merkaba.module:enums.shapeFocusType
+ * @enum {string}
+ */
+export const shapeFocusType = {
+  NONE: 'NONE',
+  LIVE: 'LIVE',
+  BUFFER: 'BUFFER'
+};

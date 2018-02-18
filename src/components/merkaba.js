@@ -2,8 +2,20 @@ import React, { Component } from 'react';
 import { Toolbar } from './toolbar';
 import { Canvas } from './canvas';
 import { Details } from './details';
-import { selectedToolType } from '../enums';
+import {
+  selectedToolType,
+  shapeFocusType,
+} from '../enums';
 import eventHandlers from './merkaba.event-handlers';
+
+/**
+ * @typedef merkaba.focusedShapeCursor
+ * @type {Object}
+ * @property {merkaba.module:enums.shapeFocusType} shapeFocus
+ * @property {number|null} bufferIndex If shapeFocus is
+ * `shapeFocusType.BUFFER`, this is the index of the buffered shape to focus,
+  * otherwise this is `null`.
+ */
 
 /**
  * @typedef merkaba.state
@@ -18,6 +30,7 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {null|number} toolStrokeWidth
  * @property {null|string} toolFillColor
  * @property {Array.<merkaba.svgShape>} bufferShapes
+ * @property {merkaba.focusedShapeCursor} focusedShapeCursor
  */
 
 /**
@@ -46,6 +59,10 @@ export class Merkaba extends Component {
       toolFillColor: 'red',
 
       bufferShapes: [],
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndex: null
+      },
     };
 
     // Bind event handlers

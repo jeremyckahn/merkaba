@@ -1,6 +1,9 @@
 import React from 'react';
 import { Merkaba } from '../../src/components/merkaba';
-import { selectedToolType } from '../../src/enums';
+import {
+  selectedToolType,
+  shapeFocusType,
+} from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
@@ -69,6 +72,15 @@ describe('Merkaba', () => {
     describe('bufferShapes', () => {
       it('has a default value', () => {
         assert.deepEqual(component.state('bufferShapes'), []);
+      });
+    });
+
+    describe('focusedShapeCursor', () => {
+      it('has a default value', () => {
+        assert.deepEqual(component.state('focusedShapeCursor'), {
+          shapeFocus: shapeFocusType.NONE,
+          bufferIndex: null
+        });
       });
     });
   });
