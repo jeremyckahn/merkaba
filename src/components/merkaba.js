@@ -5,6 +5,7 @@ import { Details } from './details';
 import {
   selectedToolType,
   shapeFocusType,
+  shapeType,
 } from '../enums';
 import eventHandlers from './merkaba.event-handlers';
 
@@ -69,6 +70,25 @@ export class Merkaba extends Component {
     Object.keys(eventHandlers).forEach(
       method => this[method] = eventHandlers[method].bind(this)
     );
+  }
+
+  /**
+   * @method merkaba.Merkaba#getFocusedShape
+   * @return {merkaba.svgShape}
+   */
+  getFocusedShape () {
+    const {
+      focusedShapeCursor: {
+        shapeFocus,
+        bufferIndex
+      }
+    } = this.state;
+
+    if (shapeFocus === shapeFocusType.NONE) {
+      return {
+        type: shapeType.NONE
+      };
+    }
   }
 
   render () {

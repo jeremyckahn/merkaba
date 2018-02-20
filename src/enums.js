@@ -28,6 +28,7 @@ export const selectedToolType = enumify([
  * @enum {string}
  */
 export const shapeType = {
+  NONE: 'none',
   RECT: 'rect'
 };
 

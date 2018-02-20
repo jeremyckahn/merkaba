@@ -3,6 +3,7 @@ import { Merkaba } from '../../src/components/merkaba';
 import {
   selectedToolType,
   shapeFocusType,
+  shapeType,
 } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
@@ -80,6 +81,21 @@ describe('Merkaba', () => {
         assert.deepEqual(component.state('focusedShapeCursor'), {
           shapeFocus: shapeFocusType.NONE,
           bufferIndex: null
+        });
+      });
+    });
+  });
+
+  describe('getFocusedShape', () => {
+    let focusedShape;
+    beforeEach(() => {
+      focusedShape = component.instance().getFocusedShape();
+    });
+
+    describe('state.focusedShapeCursor.shapeFocus === shapeFocusType.NONE', () => {
+      it('returns empty shape data', () => {
+        assert.deepEqual(focusedShape, {
+          type: shapeType.NONE
         });
       });
     });
