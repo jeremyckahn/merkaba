@@ -19,6 +19,10 @@ export default {
    * @param {external:Draggable.DraggableData} data
    */
   handleCanvasDragStart (e, { x, y, node: { offsetLeft, offsetTop } }) {
+    if (this.state.selectedTool === selectedToolType.NONE) {
+      return;
+    }
+
     this.setState({
       isDraggingTool: true,
       toolDragStartX: x - offsetLeft,
@@ -33,6 +37,10 @@ export default {
   },
 
   handleCanvasDrag (e, { deltaX, deltaY }) {
+    if (this.state.selectedTool === selectedToolType.NONE) {
+      return;
+    }
+
     const {
       toolDragDeltaX,
       toolDragDeltaY
@@ -48,6 +56,10 @@ export default {
    * @method merkaba.Merkaba#handleCanvasDragStop
    */
   handleCanvasDragStop () {
+    if (this.state.selectedTool === selectedToolType.NONE) {
+      return;
+    }
+
     const {
       selectedTool,
       toolDragStartX,

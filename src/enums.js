@@ -17,6 +17,7 @@ const enumify = keys => keys.reduce((acc, key) =>
  */
 export const selectedToolType = enumify([
   'NONE',
+  'NOT_NONE', // strictly for testing
   'RECTANGLE',
 ]);
 

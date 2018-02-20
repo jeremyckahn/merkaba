@@ -27,6 +27,10 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleCanvasDragStart', () => {
     beforeEach(() => {
+      component.setState({
+        selectedTool: selectedToolType.NOT_NONE
+      });
+
       component.instance().handleCanvasDragStart(null, {
         x: 10,
         y: 15,
@@ -65,6 +69,10 @@ describe('eventHandlers', () => {
   describe('Merkaba#handleCanvasDrag', () => {
     beforeEach(() => {
       component.setState({
+        selectedTool: selectedToolType.NOT_NONE
+      });
+
+      component.setState({
         toolDragDeltaX: 10,
         toolDragDeltaY: 15,
       });
@@ -84,6 +92,10 @@ describe('eventHandlers', () => {
   describe('Merkaba#handleCanvasDragStop', () => {
     describe('state management', () => {
       beforeEach(() => {
+        component.setState({
+          selectedTool: selectedToolType.NOT_NONE
+        });
+
         component.setState({
           isDraggingTool: true,
           toolDragStartX: 10,
