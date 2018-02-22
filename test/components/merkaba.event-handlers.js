@@ -147,9 +147,6 @@ describe('eventHandlers', () => {
             toolDragStartY: 15,
             toolDragDeltaX: 0,
             toolDragDeltaY: 0,
-            toolStrokeColor: 'red',
-            toolFillColor: 'red',
-            toolStrokeWidth: 1,
           });
 
           component.instance().handleCanvasDragStop();
@@ -169,9 +166,6 @@ describe('eventHandlers', () => {
             toolDragStartY: 15,
             toolDragDeltaX: 10,
             toolDragDeltaY: 10,
-            toolStrokeColor: 'red',
-            toolFillColor: 'red',
-            toolStrokeWidth: 1,
           });
 
           component.instance().handleCanvasDragStop();
@@ -184,11 +178,9 @@ describe('eventHandlers', () => {
             y: 15,
             width: 10,
             height: 10,
-            rx: 0,
-            ry: 0,
-            stroke: 'red',
-            fill: 'red',
-            strokeWidth: 1,
+            fill: null,
+            stroke: null,
+            strokeWidth: null,
           }]);
         });
       });

@@ -82,8 +82,6 @@ export default {
             y: toolDragStartY,
             width: toolDragDeltaX,
             height: toolDragDeltaY,
-            rx: 0,
-            ry: 0,
             stroke: toolStrokeColor,
             fill: toolFillColor,
             strokeWidth: toolStrokeWidth,

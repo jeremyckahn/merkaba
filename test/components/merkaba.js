@@ -54,19 +54,19 @@ describe('Merkaba', () => {
 
     describe('toolStrokeColor', () => {
       it('has a default value', () => {
-        assert.equal(component.state('toolStrokeColor'), 'red');
+        assert.equal(component.state('toolStrokeColor'), null);
       });
     });
 
     describe('toolStrokeWidth', () => {
       it('has a default value', () => {
-        assert.equal(component.state('toolStrokeWidth'), 1);
+        assert.equal(component.state('toolStrokeWidth'), null);
       });
     });
 
     describe('toolFillColor', () => {
       it('has a default value', () => {
-        assert.equal(component.state('toolFillColor'), 'red');
+        assert.equal(component.state('toolFillColor'), null);
       });
     });
 

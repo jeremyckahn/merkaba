@@ -7,7 +7,7 @@ const root = document.getElementById('app');
 
 root.classList.add('merkaba-wrapper');
 
-ReactDOM.render(
+const merkaba = ReactDOM.render(
   <Merkaba />,
   root
 );
