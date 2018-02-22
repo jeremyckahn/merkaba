@@ -76,6 +76,11 @@ export class Merkaba extends Component {
    */
   getFocusedShape () {
     const {
+      selectedTool,
+      toolDragStartX,
+      toolDragStartY,
+      toolDragDeltaX,
+      toolDragDeltaY,
       focusedShapeCursor: {
         shapeFocus,
         bufferIndex
@@ -86,6 +91,16 @@ export class Merkaba extends Component {
       return {
         type: shapeType.NONE
       };
+    } else if (shapeFocus === shapeFocusType.LIVE) {
+      if (selectedTool === selectedToolType.RECTANGLE) {
+        return {
+          type: shapeType.RECT,
+          x: toolDragStartX,
+          y: toolDragStartY,
+          width: toolDragDeltaX,
+          height: toolDragDeltaY,
+        };
+      }
     }
   }
 

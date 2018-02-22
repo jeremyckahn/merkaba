@@ -88,14 +88,43 @@ describe('Merkaba', () => {
 
   describe('getFocusedShape', () => {
     let focusedShape;
-    beforeEach(() => {
-      focusedShape = component.instance().getFocusedShape();
-    });
 
     describe('state.focusedShapeCursor.shapeFocus === shapeFocusType.NONE', () => {
+      beforeEach(() => {
+        focusedShape = component.instance().getFocusedShape();
+      });
+
       it('returns empty shape data', () => {
         assert.deepEqual(focusedShape, {
           type: shapeType.NONE
+        });
+      });
+    });
+
+    describe('state.focusedShapeCursor.shapeFocus === shapeFocusType.LIVE (rect)', () => {
+      beforeEach(() => {
+        component.setState({
+          focusedShapeCursor: {
+            shapeFocus: shapeFocusType.LIVE,
+            bufferIndex: null
+          },
+          selectedTool: selectedToolType.RECTANGLE,
+          toolDragStartX: 10,
+          toolDragStartY: 15,
+          toolDragDeltaX: 10,
+          toolDragDeltaY: 10,
+        });
+
+        focusedShape = component.instance().getFocusedShape();
+      });
+
+      it('returns live shape data', () => {
+        assert.deepEqual(focusedShape, {
+          type: shapeType.RECT,
+          x: 10,
+          y: 15,
+          width: 10,
+          height: 10,
         });
       });
     });
