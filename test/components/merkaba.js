@@ -125,6 +125,9 @@ describe('Merkaba', () => {
           y: 15,
           width: 10,
           height: 10,
+          fill: null,
+          stroke: null,
+          strokeWidth: null,
         });
       });
     });

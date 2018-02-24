@@ -74,21 +74,7 @@ export default {
     const bufferShapes = this.state.bufferShapes.slice();
 
     if (toolDragDeltaX && toolDragDeltaY) {
-      switch (selectedTool) {
-        case selectedToolType.RECTANGLE:
-          bufferShapes.unshift({
-            type: shapeType.RECT,
-            x: toolDragStartX,
-            y: toolDragStartY,
-            width: toolDragDeltaX,
-            height: toolDragDeltaY,
-            stroke: toolStrokeColor,
-            fill: toolFillColor,
-            strokeWidth: toolStrokeWidth,
-          });
-
-          break;
-      }
+      bufferShapes.unshift(this.getLiveShape());
     }
 
     this.setState({

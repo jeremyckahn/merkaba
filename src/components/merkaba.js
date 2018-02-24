@@ -87,21 +87,45 @@ export class Merkaba extends Component {
       }
     } = this.state;
 
-    if (shapeFocus === shapeFocusType.NONE) {
-      return {
-        type: shapeType.NONE
-      };
-    } else if (shapeFocus === shapeFocusType.LIVE) {
-      if (selectedTool === selectedToolType.RECTANGLE) {
-        return {
-          type: shapeType.RECT,
-          x: toolDragStartX,
-          y: toolDragStartY,
-          width: toolDragDeltaX,
-          height: toolDragDeltaY,
-        };
-      }
+    if (shapeFocus === shapeFocusType.NONE ||
+        shapeFocus === shapeFocusType.LIVE
+    ) {
+      return this.getLiveShape();
     }
+  }
+
+  /**
+   * @method merkaba.Merkaba#getLiveShape
+   * @return {merkaba.svgShape}
+   */
+  getLiveShape () {
+    const {
+      selectedTool,
+      toolDragStartX,
+      toolDragStartY,
+      toolDragDeltaX,
+      toolDragDeltaY,
+      toolStrokeColor,
+      toolFillColor,
+      toolStrokeWidth,
+    } = this.state;
+
+    if (selectedTool === selectedToolType.RECTANGLE) {
+      return {
+        type: shapeType.RECT,
+        x: toolDragStartX,
+        y: toolDragStartY,
+        width: toolDragDeltaX,
+        height: toolDragDeltaY,
+        stroke: toolStrokeColor,
+        fill: toolFillColor,
+        strokeWidth: toolStrokeWidth,
+      };
+    }
+
+    return {
+      type: shapeType.NONE
+    };
   }
 
   render () {
