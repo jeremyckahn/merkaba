@@ -2,31 +2,34 @@ import React, { Component } from 'react';
 import { shapeType } from '../enums';
 
 const RectUI = ({
+  rect: {
+    x,
+    y,
+    width,
+    height,
+    strokeWidth,
+  }
 }) =>
   <div>
     <label>
       <p>X:</p>
-      <input name="x"/>
+      <input name="x" value={x} onChange={() => {}}/>
     </label>
     <label>
       <p>Y:</p>
-      <input name="y"/>
+      <input name="y" value={y} onChange={() => {}}/>
     </label>
     <label>
       <p>Width:</p>
-      <input name="width"/>
+      <input name="width" value={width} onChange={() => {}}/>
     </label>
     <label>
       <p>Height:</p>
-      <input name="height"/>
+      <input name="height" value={height} onChange={() => {}}/>
     </label>
     <label>
       <p>Stroke Width:</p>
-      <input name="strokeWidth"/>
-    </label>
-    <label>
-      <p>Fill:</p>
-      <input name="fill"/>
+      <input name="strokeWidth" value={strokeWidth} onChange={() => {}}/>
     </label>
   </div>
 
@@ -39,6 +42,6 @@ export const Details = ({
 }) =>
   <div className="fill details">
     {focusedShape.type === shapeType.RECT ?
-      <RectUI />
+      <RectUI rect={focusedShape} />
     : null}
   </div>

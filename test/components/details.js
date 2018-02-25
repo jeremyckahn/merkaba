@@ -16,7 +16,7 @@ const sampleRect = {
   height: 10,
   fill: null,
   stroke: null,
-  strokeWidth: null,
+  strokeWidth: 1,
 }
 
 describe('Details', () => {
@@ -41,10 +41,18 @@ describe('Details', () => {
       assert.equal(component.find('input[name="width"]').length, 1);
       assert.equal(component.find('input[name="height"]').length, 1);
       assert.equal(component.find('input[name="strokeWidth"]').length, 1);
-      assert.equal(component.find('input[name="fill"]').length, 1);
 
-      // TODO: Implement this
+      // TODO: Implement these
       //assert.equal(component.find('input[name="stroke"]').length, 1);
+      //assert.equal(component.find('input[name="fill"]').length, 1);
+    });
+
+    it('populates inputs', () => {
+      assert.equal(component.find('input[name="x"]').prop('value'), sampleRect.x);
+      assert.equal(component.find('input[name="y"]').prop('value'), sampleRect.y);
+      assert.equal(component.find('input[name="width"]').prop('value'), sampleRect.width);
+      assert.equal(component.find('input[name="height"]').prop('value'), sampleRect.height);
+      assert.equal(component.find('input[name="strokeWidth"]').prop('value'), sampleRect.strokeWidth);
     });
   });
 });
