@@ -186,4 +186,8 @@ describe('eventHandlers', () => {
       });
     });
   });
+
+  xdescribe('handlePropertyChange', () => {
+
+  });
 });

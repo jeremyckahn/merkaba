@@ -141,6 +141,7 @@ export class Merkaba extends Component {
       handleCanvasDragStart,
       handleCanvasDrag,
       handleCanvasDragStop,
+      handlePropertyChange,
     } = this;
 
     const focusedShape = this.getFocusedShape();
@@ -172,7 +173,8 @@ export class Merkaba extends Component {
         />
         <Details
           {...{
-            focusedShape
+            handlePropertyChange,
+            focusedShape,
           }}
         />
       </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { shapeType } from '../enums';
 
 const RectUI = ({
+  handlePropertyChange,
   rect: {
     x,
     y,
@@ -10,26 +11,26 @@ const RectUI = ({
     strokeWidth,
   }
 }) =>
-  <div>
+  <div onChange={handlePropertyChange}>
     <label>
       <p>X:</p>
-      <input name="x" value={x} onChange={() => {}}/>
+      <input name="x" defaultValue={x} />
     </label>
     <label>
       <p>Y:</p>
-      <input name="y" value={y} onChange={() => {}}/>
+      <input name="y" defaultValue={y} />
     </label>
     <label>
       <p>Width:</p>
-      <input name="width" value={width} onChange={() => {}}/>
+      <input name="width" defaultValue={width} />
     </label>
     <label>
       <p>Height:</p>
-      <input name="height" value={height} onChange={() => {}}/>
+      <input name="height" defaultValue={height} />
     </label>
     <label>
       <p>Stroke Width:</p>
-      <input name="strokeWidth" value={strokeWidth} onChange={() => {}}/>
+      <input name="strokeWidth" defaultValue={strokeWidth} />
     </label>
   </div>
 
@@ -38,10 +39,11 @@ const RectUI = ({
  * @param {merkaba.svgShape} focusedShape
  */
 export const Details = ({
-  focusedShape = {}
+  focusedShape = {},
+  handlePropertyChange
 }) =>
   <div className="fill details">
     {focusedShape.type === shapeType.RECT ?
-      <RectUI rect={focusedShape} />
+      <RectUI {...{ rect: focusedShape, handlePropertyChange }} />
     : null}
   </div>

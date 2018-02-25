@@ -36,6 +36,11 @@ export default {
     });
   },
 
+  /**
+   * @method merkaba.Merkaba#handleCanvasDrag
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
   handleCanvasDrag (e, { deltaX, deltaY }) {
     if (this.state.selectedTool === selectedToolType.NONE) {
       return;
@@ -92,5 +97,12 @@ export default {
         bufferIndex: null
       }
     });
+  },
+
+  /**
+   * @method merkaba.Merkaba#handlePropertyChange
+   * @param {external:React.SyntheticEvent} e
+   */
+  handlePropertyChange (e) {
   },
 };
