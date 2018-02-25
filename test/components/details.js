@@ -36,23 +36,37 @@ describe('Details', () => {
     });
 
     it('renders inputs for a rect', () => {
-      assert.equal(component.find('input[name="x"]').length, 1);
-      assert.equal(component.find('input[name="y"]').length, 1);
-      assert.equal(component.find('input[name="width"]').length, 1);
-      assert.equal(component.find('input[name="height"]').length, 1);
-      assert.equal(component.find('input[name="strokeWidth"]').length, 1);
-
-      // TODO: Implement these
-      //assert.equal(component.find('input[name="stroke"]').length, 1);
-      //assert.equal(component.find('input[name="fill"]').length, 1);
+      [
+        'x',
+        'y',
+        'width',
+        'height',
+        'strokeWidth',
+        // TODO: Implement these
+        /*'stroke', 'fill'*/
+      ].forEach(property =>
+        assert.equal(
+          component.find(`input[name="${property}"]`).length,
+          1
+        )
+      );
     });
 
     it('populates inputs', () => {
-      assert.equal(component.find('input[name="x"]').prop('value'), sampleRect.x);
-      assert.equal(component.find('input[name="y"]').prop('value'), sampleRect.y);
-      assert.equal(component.find('input[name="width"]').prop('value'), sampleRect.width);
-      assert.equal(component.find('input[name="height"]').prop('value'), sampleRect.height);
-      assert.equal(component.find('input[name="strokeWidth"]').prop('value'), sampleRect.strokeWidth);
+      [
+        'x',
+        'y',
+        'width',
+        'height',
+        'strokeWidth',
+        // TODO: Implement these
+        /*'stroke', 'fill'*/
+      ].forEach(property =>
+        assert.equal(
+          component.find(`input[name="${property}"]`).prop('value'),
+          sampleRect[property]
+        )
+      );
     });
   });
 });
