@@ -78,25 +78,17 @@ export class Merkaba extends Component {
    */
   getFocusedShape () {
     const {
-      selectedTool,
-      toolDragStartX,
-      toolDragStartY,
-      toolDragDeltaX,
-      toolDragDeltaY,
       bufferShapes,
       focusedShapeCursor: {
         shapeFocus,
         bufferIndex
       }
     } = this.state;
+    const { NONE, LIVE } = shapeFocusType;
 
-    if (shapeFocus === shapeFocusType.NONE ||
-        shapeFocus === shapeFocusType.LIVE
-    ) {
-      return this.getLiveShape();
-    } else {
-      return Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
-    }
+    return shapeFocus === NONE || shapeFocus === LIVE ?
+      this.getLiveShape()
+      : Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
   }
 
   /**
