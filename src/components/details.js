@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { selectedToolType } from '../enums';
+import { shapeType } from '../enums';
 
 const RectUI = ({
 }) =>
@@ -32,13 +32,13 @@ const RectUI = ({
 
 /**
  * @class merkaba.Details
- * @param {merkaba.module:enums.selectedToolType} selectedTool
+ * @param {merkaba.svgShape} focusedShape
  */
 export const Details = ({
-  selectedTool
+  focusedShape = {}
 }) =>
   <div className="fill details">
-    {selectedTool === selectedToolType.RECTANGLE ?
+    {focusedShape.type === shapeType.RECT ?
       <RectUI />
     : null}
   </div>

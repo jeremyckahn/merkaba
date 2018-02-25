@@ -1,10 +1,23 @@
 import React from 'react';
 import { Details } from '../../src/components/details';
-import { selectedToolType } from '../../src/enums';
+import {
+  selectedToolType,
+  shapeType
+} from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
 let component;
+const sampleRect = {
+  type: shapeType.RECT,
+  x: 10,
+  y: 15,
+  width: 10,
+  height: 10,
+  fill: null,
+  stroke: null,
+  strokeWidth: null,
+}
 
 describe('Details', () => {
   beforeEach(() => {
@@ -17,9 +30,9 @@ describe('Details', () => {
     });
   });
 
-  describe('selectedTool === selectedToolType.RECTANGLE', () => {
+  describe('focusedShape.type === shapeType.RECT', () => {
     beforeEach(() => {
-      component = mount(<Details selectedTool={selectedToolType.RECTANGLE}/>);
+      component = mount(<Details focusedShape={sampleRect}/>);
     });
 
     it('renders inputs for a rect', () => {
