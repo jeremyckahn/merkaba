@@ -143,6 +143,8 @@ export class Merkaba extends Component {
       handleCanvasDragStop,
     } = this;
 
+    const focusedShape = this.getFocusedShape();
+
     return (
       <div className="fill merkaba">
         <Toolbar
@@ -170,7 +172,7 @@ export class Merkaba extends Component {
         />
         <Details
           {...{
-            selectedTool
+            focusedShape
           }}
         />
       </div>
