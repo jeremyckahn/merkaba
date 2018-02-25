@@ -131,5 +131,54 @@ describe('Merkaba', () => {
         });
       });
     });
+
+    describe('state.focusedShapeCursor.shapeFocus === shapeFocusType.BUFFER', () => {
+      const bufferShape = {
+        type: shapeType.RECT,
+        x: 10,
+        y: 15,
+        width: 10,
+        height: 10,
+        fill: null,
+        stroke: null,
+        strokeWidth: null,
+      };
+
+      describe('valid bufferIndex', () => {
+        beforeEach(() => {
+          component.setState({
+            focusedShapeCursor: {
+              shapeFocus: shapeFocusType.BUFFER,
+              bufferIndex: 0
+            },
+            bufferShapes: [bufferShape]
+          });
+
+          focusedShape = component.instance().getFocusedShape();
+        });
+
+        it('returns empty shape data', () => {
+          assert.deepEqual(focusedShape, bufferShape);
+        });
+      });
+
+      describe('invalid bufferIndex', () => {
+        beforeEach(() => {
+          component.setState({
+            focusedShapeCursor: {
+              shapeFocus: shapeFocusType.BUFFER,
+              bufferIndex: 1
+            },
+            bufferShapes: [bufferShape]
+          });
+
+          focusedShape = component.instance().getFocusedShape();
+        });
+
+        it('returns empty shape data', () => {
+          assert.deepEqual(focusedShape, { type: shapeType.NONE });
+        });
+      });
+    });
   });
 });

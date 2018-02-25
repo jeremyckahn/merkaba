@@ -34,6 +34,8 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {merkaba.focusedShapeCursor} focusedShapeCursor
  */
 
+const emptyShape = { type: shapeType.NONE };
+
 /**
  * @class merkaba.Merkaba
  * @extends {external:React.Component}
@@ -81,6 +83,7 @@ export class Merkaba extends Component {
       toolDragStartY,
       toolDragDeltaX,
       toolDragDeltaY,
+      bufferShapes,
       focusedShapeCursor: {
         shapeFocus,
         bufferIndex
@@ -91,6 +94,8 @@ export class Merkaba extends Component {
         shapeFocus === shapeFocusType.LIVE
     ) {
       return this.getLiveShape();
+    } else {
+      return Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
     }
   }
 
@@ -123,9 +128,7 @@ export class Merkaba extends Component {
       };
     }
 
-    return {
-      type: shapeType.NONE
-    };
+    return Object.assign({}, emptyShape);
   }
 
   render () {
