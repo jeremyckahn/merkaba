@@ -14,23 +14,23 @@ const RectUI = ({
   <div>
     <label>
       <p>X:</p>
-      <input name="x" value={x} onChange={handlePropertyChange} />
+      <input name="x" value={x} type="number" onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Y:</p>
-      <input name="y" value={y} onChange={handlePropertyChange} />
+      <input name="y" value={y} type="number" onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Width:</p>
-      <input name="width" value={width} onChange={handlePropertyChange} />
+      <input name="width" value={width} type="number" onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Height:</p>
-      <input name="height" value={height} onChange={handlePropertyChange} />
+      <input name="height" value={height} type="number" onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Stroke Width:</p>
-      <input name="strokeWidth" value={strokeWidth} onChange={handlePropertyChange} />
+      <input name="strokeWidth" value={strokeWidth} type="number" onChange={handlePropertyChange} />
     </label>
   </div>
 
