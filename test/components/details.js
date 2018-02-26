@@ -63,7 +63,7 @@ describe('Details', () => {
         /*'stroke', 'fill'*/
       ].forEach(property =>
         assert.equal(
-          component.find(`input[name="${property}"]`).prop('defaultValue'),
+          component.find(`input[name="${property}"]`).prop('value'),
           sampleRect[property]
         )
       );

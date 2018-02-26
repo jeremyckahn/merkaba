@@ -11,26 +11,26 @@ const RectUI = ({
     strokeWidth,
   }
 }) =>
-  <div onChange={handlePropertyChange}>
+  <div>
     <label>
       <p>X:</p>
-      <input name="x" defaultValue={x} />
+      <input name="x" value={x} onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Y:</p>
-      <input name="y" defaultValue={y} />
+      <input name="y" value={y} onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Width:</p>
-      <input name="width" defaultValue={width} />
+      <input name="width" value={width} onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Height:</p>
-      <input name="height" defaultValue={height} />
+      <input name="height" value={height} onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Stroke Width:</p>
-      <input name="strokeWidth" defaultValue={strokeWidth} />
+      <input name="strokeWidth" value={strokeWidth} onChange={handlePropertyChange} />
     </label>
   </div>
 
