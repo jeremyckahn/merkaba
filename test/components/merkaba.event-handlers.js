@@ -111,8 +111,8 @@ describe('eventHandlers', () => {
 
       it('sets the focusedShapeCursor state', () => {
         assert.deepEqual(component.state('focusedShapeCursor'), {
-          shapeFocus: shapeFocusType.NONE,
-          bufferIndex: null
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0
         });
       });
 

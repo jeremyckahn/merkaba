@@ -90,11 +90,9 @@ export default {
       toolDragDeltaY: null,
       bufferShapes,
 
-      // TODO: This should probably be changed to reference a buffer shape for
-      // a better UX
       focusedShapeCursor: {
-        shapeFocus: shapeFocusType.NONE,
-        bufferIndex: null
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: 0
       }
     });
   },
