@@ -7,7 +7,6 @@ import {
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
-let component;
 const sampleRect = {
   type: shapeType.RECT,
   x: 10,
@@ -17,7 +16,9 @@ const sampleRect = {
   fill: null,
   stroke: null,
   strokeWidth: 1,
-}
+};
+
+let component;
 
 describe('Details', () => {
   beforeEach(() => {

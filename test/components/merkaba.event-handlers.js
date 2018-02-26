@@ -8,6 +8,17 @@ import {
 } from '../../src/enums';
 import { shallow } from 'enzyme';
 
+const sampleRect = {
+  type: shapeType.RECT,
+  x: 10,
+  y: 15,
+  width: 10,
+  height: 10,
+  fill: null,
+  stroke: null,
+  strokeWidth: 1,
+};
+
 let component;
 
 describe('eventHandlers', () => {
@@ -187,7 +198,28 @@ describe('eventHandlers', () => {
     });
   });
 
-  xdescribe('handlePropertyChange', () => {
+  describe.only('handlePropertyChange', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [Object.assign({}, sampleRect)],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0
+        }
+      });
 
+      component.instance().handlePropertyChange({
+        target: {
+          name: 'x',
+          type: 'number',
+          value: '5',
+          valueAsNumber: 5,
+        }
+      });
+    });
+
+    it('modifies the specified property of the focused shape', () => {
+      assert.equal(component.state().bufferShapes[0].x, 5);
+    });
   });
 });
