@@ -191,7 +191,7 @@ describe('eventHandlers', () => {
             height: 10,
             fill: null,
             stroke: null,
-            strokeWidth: null,
+            strokeWidth: 0,
           }]);
         });
       });

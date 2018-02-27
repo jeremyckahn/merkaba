@@ -56,7 +56,7 @@ export class Merkaba extends Component {
       toolDragDeltaX: null,
       toolDragDeltaY: null,
       toolStrokeColor: null,
-      toolStrokeWidth: null,
+      toolStrokeWidth: 0,
       toolFillColor: null,
 
       bufferShapes: [],

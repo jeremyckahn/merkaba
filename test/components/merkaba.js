@@ -60,7 +60,7 @@ describe('Merkaba', () => {
 
     describe('toolStrokeWidth', () => {
       it('has a default value', () => {
-        assert.equal(component.state('toolStrokeWidth'), null);
+        assert.equal(component.state('toolStrokeWidth'), 0);
       });
     });
 
@@ -127,7 +127,7 @@ describe('Merkaba', () => {
           height: 10,
           fill: null,
           stroke: null,
-          strokeWidth: null,
+          strokeWidth: 0,
         });
       });
     });
@@ -141,7 +141,7 @@ describe('Merkaba', () => {
         height: 10,
         fill: null,
         stroke: null,
-        strokeWidth: null,
+        strokeWidth: 0,
       };
 
       describe('valid bufferIndex', () => {
