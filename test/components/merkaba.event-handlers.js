@@ -198,7 +198,7 @@ describe('eventHandlers', () => {
     });
   });
 
-  describe.only('handlePropertyChange', () => {
+  describe('handlePropertyChange', () => {
     beforeEach(() => {
       component.setState({
         bufferShapes: [Object.assign({}, sampleRect)],

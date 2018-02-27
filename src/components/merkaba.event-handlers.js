@@ -102,22 +102,17 @@ export default {
    * @param {external:React.SyntheticEvent} e
    */
   handlePropertyChange (e) {
-    const { target } = e;
-    const { name, type, value, valueAsNumber } = target;
-    let coercedValue = value;
-
-    if (type === 'number' && !isNaN(valueAsNumber)) {
-      coercedValue = valueAsNumber;
-    }
-
+    const { target: { name, type, value, valueAsNumber } } = e;
     const {
       bufferShapes,
       focusedShapeCursor: { bufferIndex }
     } = this.state;
 
     const shape = Object.assign({}, bufferShapes[bufferIndex]);
+    shape[name] = type === 'number' && !isNaN(valueAsNumber) ?
+      valueAsNumber
+      : value;
 
-    shape[name] = coercedValue;
     const newBuffer = bufferShapes.slice();
     newBuffer[bufferIndex] = shape;
 
