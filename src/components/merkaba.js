@@ -107,17 +107,19 @@ export class Merkaba extends Component {
       toolStrokeWidth,
     } = this.state;
 
-    if (selectedTool === selectedToolType.RECTANGLE) {
-      return {
-        type: shapeType.RECT,
-        x: toolDragStartX,
-        y: toolDragStartY,
-        width: toolDragDeltaX,
-        height: toolDragDeltaY,
-        stroke: toolStrokeColor,
-        fill: toolFillColor,
-        strokeWidth: toolStrokeWidth,
-      };
+    if (toolDragStartX !== null) {
+      if (selectedTool === selectedToolType.RECTANGLE) {
+        return {
+          type: shapeType.RECT,
+          x: toolDragStartX,
+          y: toolDragStartY,
+          width: toolDragDeltaX,
+          height: toolDragDeltaY,
+          stroke: toolStrokeColor,
+          fill: toolFillColor,
+          strokeWidth: toolStrokeWidth,
+        };
+      }
     }
 
     return Object.assign({}, emptyShape);
