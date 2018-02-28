@@ -202,6 +202,8 @@ describe('eventHandlers', () => {
     });
   });
 
+  xdescribe('Merkaba#handleShapeClick', () => {});
+
   xdescribe('Merkaba#handleShapeDragStart', () => {});
 
   xdescribe('Merkaba#handleShapeDrag', () => {});

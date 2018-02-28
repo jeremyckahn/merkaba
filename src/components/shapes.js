@@ -10,6 +10,7 @@ import { DraggableCore } from 'react-draggable';
  * @param {string} fill
  * @param {number} strokeWidth
  * @param {string} className
+ * @param {external:React.SyntheticEvent} handleShapeClick
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
  * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
@@ -23,6 +24,7 @@ export const Rect = ({
   fill,
   strokeWidth,
   className,
+  handleShapeClick,
   handleShapeDragStart,
   handleShapeDrag,
   handleShapeDragStop,
@@ -33,6 +35,7 @@ export const Rect = ({
     onStop={handleShapeDragStop}
   >
     <rect
+      onClick={handleShapeClick}
       x={x + Math.min(dx, 0)}
       y={y + Math.min(dy, 0)}
       width={Math.abs(dx)}
