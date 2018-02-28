@@ -37,9 +37,11 @@ export const Rect = ({
       y={y + Math.min(dy, 0)}
       width={Math.abs(dx)}
       height={Math.abs(dy)}
-      stroke={stroke}
-      fill={fill}
-      strokeWidth={strokeWidth}
-      className={className}
+      {...{
+        stroke,
+        fill,
+        strokeWidth,
+        className,
+      }}
     />
   </DraggableCore>

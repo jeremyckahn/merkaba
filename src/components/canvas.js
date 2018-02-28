@@ -30,14 +30,14 @@ const Buffer = ({
       <Rect
         key={i}
         className="buffered"
-        x={x}
-        y={y}
         dx={width}
         dy={height}
-        stroke={stroke}
-        fill={fill}
-        strokeWidth={strokeWidth}
         {...{
+          x,
+          y,
+          stroke,
+          fill,
+          strokeWidth,
           handleShapeDragStart,
           handleShapeDrag,
           handleShapeDragStop,
