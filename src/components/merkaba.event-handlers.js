@@ -89,7 +89,7 @@ export default {
       toolDragDeltaX: null,
       toolDragDeltaY: null,
       bufferShapes,
-
+      selectedTool: selectedToolType.NONE,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
         bufferIndex: 0

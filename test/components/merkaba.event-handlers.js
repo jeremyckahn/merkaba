@@ -146,6 +146,10 @@ describe('eventHandlers', () => {
       it('sets the toolDragDeltaY state', () => {
         assert.equal(String(component.state('toolDragDeltaY')), 'null');
       });
+
+      it('sets the selectedTool state', () => {
+        assert.equal(String(component.state('selectedTool')), selectedToolType.NONE);
+      });
     });
 
     describe('committing to state.bufferShapes', () => {
