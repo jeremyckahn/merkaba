@@ -144,6 +144,9 @@ export class Merkaba extends Component {
       handleCanvasDrag,
       handleCanvasDragStop,
       handlePropertyChange,
+      handleShapeDragStart,
+      handleShapeDrag,
+      handleShapeDragStop,
     } = this;
 
     const focusedShape = this.getFocusedShape();
@@ -161,6 +164,9 @@ export class Merkaba extends Component {
             handleCanvasDragStart,
             handleCanvasDrag,
             handleCanvasDragStop,
+            handleShapeDragStart,
+            handleShapeDrag,
+            handleShapeDragStop,
             isDraggingTool,
             selectedTool,
             toolDragStartX,

@@ -98,6 +98,27 @@ export default {
   },
 
   /**
+   * @method merkaba.Merkaba#handleShapeDragStart
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
+  handleShapeDragStart () {},
+
+  /**
+   * @method merkaba.Merkaba#handleShapeDrag
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
+  handleShapeDrag () {},
+
+  /**
+   * @method merkaba.Merkaba#handleShapeDragStop
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
+  handleShapeDragStop () {},
+
+  /**
    * @method merkaba.Merkaba#handlePropertyChange
    * @param {external:React.SyntheticEvent} e
    */

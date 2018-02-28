@@ -5,9 +5,17 @@ import { Rect } from './shapes';
 
 
 /**
+ * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
+ * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
+ * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
  * @param {Array.<merkaba.svgShape>} bufferShapes
  */
-const Buffer = ({ bufferShapes }) =>
+const Buffer = ({
+  handleShapeDragStart,
+  handleShapeDrag,
+  handleShapeDragStop,
+  bufferShapes,
+}) =>
   bufferShapes.map(({
     type,
     x,
@@ -16,7 +24,7 @@ const Buffer = ({ bufferShapes }) =>
     height,
     stroke,
     fill,
-    strokeWidth
+    strokeWidth,
   }, i) =>
     type === shapeType.RECT ?
       <Rect
@@ -29,6 +37,11 @@ const Buffer = ({ bufferShapes }) =>
         stroke={stroke}
         fill={fill}
         strokeWidth={strokeWidth}
+        {...{
+          handleShapeDragStart,
+          handleShapeDrag,
+          handleShapeDragStop,
+        }}
       />
       : null
   )
@@ -53,7 +66,7 @@ const LiveShape = ({
   toolDragDeltaY,
   toolStrokeColor,
   toolFillColor,
-  toolStrokeWidth
+  toolStrokeWidth,
 }) =>
   isDraggingTool ?
     selectedTool === selectedToolType.RECTANGLE ?
@@ -75,6 +88,9 @@ const LiveShape = ({
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
+ * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
+ * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
+ * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
  * @param {number|null} toolDragStartX
  * @param {number|null} toolDragStartY
  * @param {number|null} toolDragDeltaX
@@ -91,6 +107,9 @@ export const Canvas = ({
   handleCanvasDragStart,
   handleCanvasDrag,
   handleCanvasDragStop,
+  handleShapeDragStart,
+  handleShapeDrag,
+  handleShapeDragStop,
   toolDragStartX,
   toolDragStartY,
   toolDragDeltaX,
@@ -109,7 +128,12 @@ export const Canvas = ({
   >
     <div className="fill canvas">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <Buffer {...{bufferShapes}} />
+        <Buffer {...{
+          handleShapeDragStart,
+          handleShapeDrag,
+          handleShapeDragStop,
+          bufferShapes,
+        }} />
         <LiveShape {...
         {
           isDraggingTool,
@@ -120,7 +144,7 @@ export const Canvas = ({
           toolDragDeltaY,
           toolStrokeColor,
           toolFillColor,
-          toolStrokeWidth
+          toolStrokeWidth,
         }} />
       </svg>
     </div>

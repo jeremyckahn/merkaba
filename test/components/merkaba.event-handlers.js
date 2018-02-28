@@ -202,6 +202,12 @@ describe('eventHandlers', () => {
     });
   });
 
+  xdescribe('Merkaba#handleShapeDragStart', () => {});
+
+  xdescribe('Merkaba#handleShapeDrag', () => {});
+
+  xdescribe('Merkaba#handleShapeDragStop', () => {});
+
   describe('handlePropertyChange', () => {
     beforeEach(() => {
       component.setState({
