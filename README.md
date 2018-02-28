@@ -4,15 +4,15 @@
 
 ## Milestone 1 tasks
 
-- [ ] Stand up basic environment layout/structure similar to [Vectr](https://vectr.com/new)
+- [x] Stand up basic environment layout/structure similar to [Vectr](https://vectr.com/new)
 - [ ] Layer reordering
 - [ ] Initial primitives support: Rectangles
     - [ ] Drag-and-drop:
-        - [ ] Creation
+        - [x] Creation
         - [ ] Repositioning
         - [ ] Rotation/scaling
     - [ ] Detail manipulation:
-        - [ ] Direct positional/display value editing
+        - [x] Direct positional/display value editing
         - [ ] Color selection via color picker element
         - [ ] Stroke/fill support
 - [ ] Undo/redo support
