@@ -42,6 +42,38 @@ describe('Canvas', () => {
     });
   });
 
+  describe('state classes', () => {
+    describe('no-tool-selected', () => {
+      describe('selectedTool === selectedToolType.NONE', () => {
+        beforeEach(() => {
+          component.setProps({
+            selectedTool: selectedToolType.NONE
+          });
+        });
+
+        it('has the class', () => {
+          assert(
+            ~component.find('.canvas').props().className.indexOf('no-tool-selected')
+          );
+        });
+      });
+
+      describe('selectedTool !== selectedToolType.NONE', () => {
+        beforeEach(() => {
+          component.setProps({
+            selectedTool: selectedToolType.NOT_NONE
+          });
+        });
+
+        it('does not have the class', () => {
+          assert(
+            !~component.find('.canvas').props().className.indexOf('no-tool-selected')
+          );
+        });
+      });
+    });
+  });
+
   describe('buffer rendering', () => {
     describe('no buffered shape (default)', () => {
       it('renders no shapes', () => {

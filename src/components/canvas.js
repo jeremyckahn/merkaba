@@ -126,7 +126,11 @@ export const Canvas = ({
     onDrag={handleCanvasDrag}
     onStop={handleCanvasDragStop}
   >
-    <div className="fill canvas">
+    <div
+      className={`fill canvas ${
+        selectedTool === selectedToolType.NONE ? 'no-tool-selected' : ''
+      }`}
+    >
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
         <Buffer {...{
           handleShapeDragStart,
