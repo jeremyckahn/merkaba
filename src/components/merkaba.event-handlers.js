@@ -4,6 +4,14 @@ import {
   shapeType,
 } from '../enums';
 
+const { indexOf } = Array.prototype;
+
+/**
+ * @param {HTMLElement} el
+ * @return {number}
+ */
+const getElementIndex = el => indexOf.call(el.parentElement.children, el);
+
 export default {
   /**
    * @method merkaba.Merkaba#handleToolClick
@@ -102,7 +110,14 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleShapeClick () {},
+  handleShapeClick (e) {
+    this.setState({
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: getElementIndex(e.target)
+      }
+    });
+  },
 
   /**
    * @method merkaba.Merkaba#handleShapeDragStart

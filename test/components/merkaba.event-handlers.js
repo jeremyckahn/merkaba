@@ -202,7 +202,31 @@ describe('eventHandlers', () => {
     });
   });
 
-  xdescribe('Merkaba#handleShapeClick', () => {});
+  describe('Merkaba#handleShapeClick', () => {
+    describe('clicking on a shape', () => {
+      beforeEach(() => {
+        component.setProps({
+          bufferShapes: [Object.assign({}, sampleRect)],
+        });
+
+        // This weird object setup is needed to mimic the object reference
+        // structure of a real DOM node
+        const target = {};
+        target.parentElement = {
+          children: [{}, target]
+        };
+
+        component.instance().handleShapeClick({ target });
+      });
+
+      it('focuses the clicked shape', () => {
+        assert.deepEqual(component.state('focusedShapeCursor'), {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 1
+        });
+      });
+    });
+  });
 
   xdescribe('Merkaba#handleShapeDragStart', () => {});
 
