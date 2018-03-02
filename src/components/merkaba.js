@@ -7,6 +7,7 @@ import {
   shapeFocusType,
   shapeType,
 } from '../enums';
+import { absolutizeCoordinates } from '../utils';
 import eventHandlers from './merkaba.event-handlers';
 
 /**
@@ -109,16 +110,17 @@ export class Merkaba extends Component {
 
     if (toolDragStartX !== null) {
       if (selectedTool === selectedToolType.RECTANGLE) {
-        return {
+        return Object.assign({
           type: shapeType.RECT,
-          x: toolDragStartX + Math.min(toolDragDeltaX, 0),
-          y: toolDragStartY + Math.min(toolDragDeltaY, 0),
-          width: Math.abs(toolDragDeltaX),
-          height: Math.abs(toolDragDeltaY),
           stroke: toolStrokeColor,
           fill: toolFillColor,
           strokeWidth: toolStrokeWidth,
-        };
+        }, absolutizeCoordinates(
+          toolDragStartX,
+          toolDragStartY,
+          toolDragDeltaX,
+          toolDragDeltaY
+        ));
       }
     }
 

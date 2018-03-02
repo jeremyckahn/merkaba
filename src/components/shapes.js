@@ -1,5 +1,6 @@
 import React from 'react';
 import { DraggableCore } from 'react-draggable';
+import { absolutizeCoordinates } from '../utils';
 
 /**
  * @param {number} x
@@ -36,15 +37,16 @@ export const Rect = ({
   >
     <rect
       onClick={handleShapeClick}
-      x={x + Math.min(dx, 0)}
-      y={y + Math.min(dy, 0)}
-      width={Math.abs(dx)}
-      height={Math.abs(dy)}
-      {...{
+      {...Object.assign({
         stroke,
         fill,
         strokeWidth,
         className,
-      }}
+      }, absolutizeCoordinates(
+        x,
+        y,
+        dx,
+        dy
+      ))}
     />
   </DraggableCore>
