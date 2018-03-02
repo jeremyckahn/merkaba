@@ -111,10 +111,10 @@ export class Merkaba extends Component {
       if (selectedTool === selectedToolType.RECTANGLE) {
         return {
           type: shapeType.RECT,
-          x: toolDragStartX,
-          y: toolDragStartY,
-          width: toolDragDeltaX,
-          height: toolDragDeltaY,
+          x: toolDragStartX + Math.min(toolDragDeltaX, 0),
+          y: toolDragStartY + Math.min(toolDragDeltaY, 0),
+          width: Math.abs(toolDragDeltaX),
+          height: Math.abs(toolDragDeltaY),
           stroke: toolStrokeColor,
           fill: toolFillColor,
           strokeWidth: toolStrokeWidth,
