@@ -18,36 +18,38 @@ const Buffer = ({
   handleShapeDragStop,
   bufferShapes,
 }) =>
-  bufferShapes.map(({
-    type,
-    x,
-    y,
-    width,
-    height,
-    stroke,
-    fill,
-    strokeWidth,
-  }, i) =>
-    type === shapeType.RECT ?
-      <Rect
-        key={i}
-        className="buffered"
-        dx={width}
-        dy={height}
-        {...{
-          x,
-          y,
-          stroke,
-          fill,
-          strokeWidth,
-          handleShapeClick,
-          handleShapeDragStart,
-          handleShapeDrag,
-          handleShapeDragStop,
-        }}
-      />
-      : null
-  )
+  <svg className="fill" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    {bufferShapes.map(({
+      type,
+      x,
+      y,
+      width,
+      height,
+      stroke,
+      fill,
+      strokeWidth,
+    }, i) =>
+      type === shapeType.RECT ?
+        <Rect
+          key={i}
+          className="buffered"
+          dx={width}
+          dy={height}
+          {...{
+            x,
+            y,
+            stroke,
+            fill,
+            strokeWidth,
+            handleShapeClick,
+            handleShapeDragStart,
+            handleShapeDrag,
+            handleShapeDragStop,
+          }}
+        />
+        : null
+    )}
+  </svg>
 
 /**
  * @param {number|null} toolDragStartX
@@ -71,20 +73,22 @@ const LiveShape = ({
   toolFillColor,
   toolStrokeWidth,
 }) =>
-  isDraggingTool ?
-    selectedTool === selectedToolType.RECTANGLE ?
-      <Rect
-        className="live"
-        x={toolDragStartX}
-        y={toolDragStartY}
-        dx={toolDragDeltaX}
-        dy={toolDragDeltaY}
-        stroke={toolStrokeColor}
-        fill={toolFillColor}
-        strokeWidth={toolStrokeWidth}
-      />
+  <svg className="fill" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    {isDraggingTool ?
+      selectedTool === selectedToolType.RECTANGLE ?
+        <Rect
+          className="live"
+          x={toolDragStartX}
+          y={toolDragStartY}
+          dx={toolDragDeltaX}
+          dy={toolDragDeltaY}
+          stroke={toolStrokeColor}
+          fill={toolFillColor}
+          strokeWidth={toolStrokeWidth}
+        />
       : null
-    : null
+    : null}
+  </svg>
 
 /**
  * @class merkaba.Canvas
@@ -136,14 +140,14 @@ export const Canvas = ({
         selectedTool === selectedToolType.NONE ? 'no-tool-selected' : ''
       }`}
     >
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <Buffer {...{
-          handleShapeClick,
-          handleShapeDragStart,
-          handleShapeDrag,
-          handleShapeDragStop,
-          bufferShapes,
-        }} />
+      <Buffer {...{
+        handleShapeClick,
+        handleShapeDragStart,
+        handleShapeDrag,
+        handleShapeDragStop,
+        bufferShapes,
+      }} />
+      {selectedTool !== selectedToolType.NONE ?
         <LiveShape {...
         {
           isDraggingTool,
@@ -156,6 +160,6 @@ export const Canvas = ({
           toolFillColor,
           toolStrokeWidth,
         }} />
-      </svg>
+      : null}
     </div>
   </DraggableCore>
