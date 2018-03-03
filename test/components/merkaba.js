@@ -28,6 +28,12 @@ describe('Merkaba', () => {
       });
     });
 
+    describe('isDraggingShape', () => {
+      it('has a default value', () => {
+        assert.equal(component.state('isDraggingShape'), false);
+      });
+    });
+
     describe('toolDragStartX', () => {
       it('has a default value', () => {
         assert.equal(String(component.state('toolDragStartX')), 'null');

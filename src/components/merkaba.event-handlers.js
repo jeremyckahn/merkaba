@@ -111,7 +111,10 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleShapeDragStart () {},
+  handleShapeDragStart (e) {
+    this.focusBufferShape(e.target);
+    this.setState({ isDraggingShape: true });
+  },
 
   /**
    * @method merkaba.Merkaba#handleShapeDrag
@@ -125,7 +128,9 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleShapeDragStop () {},
+  handleShapeDragStop () {
+    this.setState({ isDraggingShape: false });
+  },
 
   /**
    * @method merkaba.Merkaba#handlePropertyChange

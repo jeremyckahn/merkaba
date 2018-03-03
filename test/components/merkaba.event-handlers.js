@@ -228,11 +228,53 @@ describe('eventHandlers', () => {
     });
   });
 
-  xdescribe('Merkaba#handleShapeDragStart', () => {});
+  describe('Merkaba#handleShapeDragStart', () => {
+    beforeEach(() => {
+      component.setProps({
+        bufferShapes: [Object.assign({}, sampleRect)],
+      });
+
+      const target = {};
+      target.parentElement = {
+        children: [{}, target]
+      };
+
+      component.instance().handleShapeDragStart({ target });
+    });
+
+    it('focuses the clicked shape', () => {
+      assert.deepEqual(component.state('focusedShapeCursor'), {
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: 1
+      });
+    });
+
+    it('updates isDraggingTool state', () => {
+      assert(component.state('isDraggingShape'));
+    });
+  });
 
   xdescribe('Merkaba#handleShapeDrag', () => {});
 
-  xdescribe('Merkaba#handleShapeDragStop', () => {});
+  describe('Merkaba#handleShapeDragStop', () => {
+    beforeEach(() => {
+      component.setProps({
+        bufferShapes: [Object.assign({}, sampleRect)],
+      });
+      component.setState({ isDraggingShape: true });
+
+      const target = {};
+      target.parentElement = {
+        children: [{}, target]
+      };
+
+      component.instance().handleShapeDragStop({ target });
+    });
+
+    it('updates isDraggingTool state', () => {
+      assert.equal(component.state('isDraggingShape'), false);
+    });
+  });
 
   describe('handlePropertyChange', () => {
     beforeEach(() => {
