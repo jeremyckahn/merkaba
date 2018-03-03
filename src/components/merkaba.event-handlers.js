@@ -4,14 +4,6 @@ import {
   shapeType,
 } from '../enums';
 
-const { indexOf } = Array.prototype;
-
-/**
- * @param {HTMLElement} el
- * @return {number}
- */
-const getElementIndex = el => indexOf.call(el.parentElement.children, el);
-
 export default {
   /**
    * @method merkaba.Merkaba#handleToolClick
@@ -111,12 +103,7 @@ export default {
    * @param {external:Draggable.DraggableData} data
    */
   handleShapeClick (e) {
-    this.setState({
-      focusedShapeCursor: {
-        shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: getElementIndex(e.target)
-      }
-    });
+    this.focusBufferShape(e.target);
   },
 
   /**

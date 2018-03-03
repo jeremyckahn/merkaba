@@ -35,7 +35,14 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {merkaba.focusedShapeCursor} focusedShapeCursor
  */
 
+const { indexOf } = Array.prototype;
 const emptyShape = { type: shapeType.NONE };
+
+/**
+ * @param {HTMLElement} el
+ * @return {number}
+ */
+const getElementIndex = el => indexOf.call(el.parentElement.children, el);
 
 /**
  * @class merkaba.Merkaba
@@ -125,6 +132,18 @@ export class Merkaba extends Component {
     }
 
     return Object.assign({}, emptyShape);
+  }
+
+  /**
+   * @param {SVGElement} shapeEl
+   */
+  focusBufferShape (shapeEl) {
+    this.setState({
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: getElementIndex(shapeEl)
+      }
+    });
   }
 
   render () {
