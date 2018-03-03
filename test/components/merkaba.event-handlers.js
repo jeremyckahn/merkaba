@@ -205,7 +205,7 @@ describe('eventHandlers', () => {
   describe('Merkaba#handleShapeClick', () => {
     describe('clicking on a shape', () => {
       beforeEach(() => {
-        component.setProps({
+        component.setState({
           bufferShapes: [Object.assign({}, sampleRect)],
         });
 
@@ -230,7 +230,7 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleShapeDragStart', () => {
     beforeEach(() => {
-      component.setProps({
+      component.setState({
         bufferShapes: [Object.assign({}, sampleRect)],
       });
 
@@ -258,7 +258,7 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleShapeDragStop', () => {
     beforeEach(() => {
-      component.setProps({
+      component.setState({
         bufferShapes: [Object.assign({}, sampleRect)],
       });
       component.setState({ isDraggingShape: true });
