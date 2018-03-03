@@ -4,12 +4,16 @@
 
 ## Milestone 1 tasks
 
+This project is early in development and not useful yet, but you can play with the current snapshot here: https://jeremyckahn.github.io/merkaba/
+
+This is the current roadmap:
+
 - [x] Stand up basic environment layout/structure similar to [Vectr](https://vectr.com/new)
 - [ ] Layer reordering
 - [ ] Initial primitives support: Rectangles
     - [ ] Drag-and-drop:
         - [x] Creation
-        - [ ] Repositioning
+        - [x] Repositioning
         - [ ] Rotation/scaling
     - [ ] Detail manipulation:
         - [x] Direct positional/display value editing
