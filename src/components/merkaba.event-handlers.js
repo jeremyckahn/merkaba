@@ -121,7 +121,22 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleShapeDrag () {},
+  handleShapeDrag (e, { deltaX, deltaY }) {
+    const {
+      bufferShapes,
+      focusedShapeCursor: { bufferIndex }
+    } = this.state;
+    const focusedShape = this.getFocusedShape();
+
+    const modifiedShape = Object.assign({}, focusedShape);
+    modifiedShape.x += deltaX;
+    modifiedShape.y += deltaY;
+
+    const modifiedBuffer = bufferShapes.slice();
+    modifiedBuffer[bufferIndex] = modifiedShape;
+
+    this.setState({ bufferShapes: modifiedBuffer });
+  },
 
   /**
    * @method merkaba.Merkaba#handleShapeDragStop

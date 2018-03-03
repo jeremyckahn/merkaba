@@ -254,7 +254,25 @@ describe('eventHandlers', () => {
     });
   });
 
-  xdescribe('Merkaba#handleShapeDrag', () => {});
+  describe('Merkaba#handleShapeDrag', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [Object.assign({}, sampleRect)],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0
+        }
+      });
+
+      component.instance().handleShapeDrag({}, { deltaX: 10, deltaY: -10 });
+    });
+
+    it('modifies the bufferShapes data', () => {
+      const [ shapeData ] = component.state('bufferShapes');
+      assert.equal(shapeData.x, sampleRect.x + 10);
+      assert.equal(shapeData.y, sampleRect.y - 10);
+    });
+  });
 
   describe('Merkaba#handleShapeDragStop', () => {
     beforeEach(() => {
