@@ -65,9 +65,9 @@ export class Merkaba extends Component {
       toolDragStartY: null,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
-      toolStrokeColor: null,
+      toolStrokeColor: 'rgba(0, 0, 0, 1)',
       toolStrokeWidth: 0,
-      toolFillColor: null,
+      toolFillColor: 'rgba(0, 0, 0, 1)',
 
       bufferShapes: [],
       focusedShapeCursor: {
@@ -137,6 +137,7 @@ export class Merkaba extends Component {
   }
 
   /**
+   * @method merkaba.Merkaba#focusBufferShape
    * @param {SVGElement} shapeEl
    */
   focusBufferShape (shapeEl) {
@@ -146,6 +147,24 @@ export class Merkaba extends Component {
         bufferIndex: getElementIndex(shapeEl)
       }
     });
+  }
+
+  /**
+   * @method merkaba.Merkaba#updateBufferShapeProperty
+   * @param {number} bufferIndex
+   * @param {string} name
+   * @param {*} value
+   */
+  updateBufferShapeProperty (bufferIndex, name, value) {
+    const { bufferShapes, } = this.state;
+
+    const shape = Object.assign({}, bufferShapes[bufferIndex]);
+    shape[name] = value;
+
+    const newBuffer = bufferShapes.slice();
+    newBuffer[bufferIndex] = shape;
+
+    this.setState({ bufferShapes: newBuffer });
   }
 
   render () {
@@ -167,6 +186,7 @@ export class Merkaba extends Component {
       handleCanvasDrag,
       handleCanvasDragStop,
       handlePropertyChange,
+      handleColorPropertyChange,
       handleShapeClick,
       handleShapeDragStart,
       handleShapeDrag,
@@ -207,6 +227,7 @@ export class Merkaba extends Component {
         <Details
           {...{
             handlePropertyChange,
+            handleColorPropertyChange,
             focusedShape,
           }}
         />

@@ -153,19 +153,28 @@ export default {
    */
   handlePropertyChange (e) {
     const { target: { name, type, value, valueAsNumber } } = e;
-    const {
-      bufferShapes,
-      focusedShapeCursor: { bufferIndex }
-    } = this.state;
 
-    const shape = Object.assign({}, bufferShapes[bufferIndex]);
-    shape[name] = type === 'number' && !isNaN(valueAsNumber) ?
-      valueAsNumber
-      : value;
-
-    const newBuffer = bufferShapes.slice();
-    newBuffer[bufferIndex] = shape;
-
-    this.setState({ bufferShapes: newBuffer });
+    this.updateBufferShapeProperty(
+      this.state.focusedShapeCursor.bufferIndex,
+      name,
+      type === 'number' && !isNaN(valueAsNumber) ?
+        valueAsNumber
+        : value
+    );
   },
+
+  /**
+   * @method merkaba.Merkaba#handleColorPropertyChange
+   * @param {external:ReactColor.Color} color
+   * @param {string} name
+   */
+  handleColorPropertyChange (color, name) {
+    const { r, g, b, a } = color.rgb;
+
+    this.updateBufferShapeProperty(
+      this.state.focusedShapeCursor.bufferIndex,
+      name,
+      `rgba(${r}, ${g}, ${b}, ${a})`
+    );
+  }
 };

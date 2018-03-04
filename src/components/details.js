@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
+import { ColorInput } from './color-input';
 import { shapeType } from '../enums';
 
 const RectUI = ({
   handlePropertyChange,
+  handleColorPropertyChange,
   rect: {
     x,
     y,
     width,
     height,
     strokeWidth,
+    stroke
   }
 }) =>
   <div>
@@ -57,6 +60,15 @@ const RectUI = ({
         onChange={handlePropertyChange}
       />
     </label>
+    <label>
+      <p>Stroke Color:</p>
+      <ColorInput
+        value={stroke}
+        name="stroke"
+        handlePropertyChange={handlePropertyChange}
+        handleColorPropertyChange={handleColorPropertyChange}
+      />
+    </label>
   </div>
 
 /**
@@ -65,13 +77,15 @@ const RectUI = ({
  */
 export const Details = ({
   focusedShape = {},
-  handlePropertyChange
+  handlePropertyChange,
+  handleColorPropertyChange,
 }) =>
   <div className="fill details">
     {focusedShape.type === shapeType.RECT ?
       <RectUI {...{
         rect: focusedShape,
-        handlePropertyChange
+        handlePropertyChange,
+        handleColorPropertyChange,
       }} />
     : null}
   </div>

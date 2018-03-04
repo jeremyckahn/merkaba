@@ -193,8 +193,8 @@ describe('eventHandlers', () => {
             y: 15,
             width: 10,
             height: 10,
-            fill: null,
-            stroke: null,
+            fill: 'rgba(0, 0, 0, 1)',
+            stroke: 'rgba(0, 0, 0, 1)',
             strokeWidth: 0,
           }]);
         });
@@ -316,6 +316,27 @@ describe('eventHandlers', () => {
 
     it('modifies the specified property of the focused shape', () => {
       assert.equal(component.state().bufferShapes[0].x, 5);
+    });
+  });
+
+  describe('handleColorPropertyChange', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [Object.assign({}, sampleRect)],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0
+        }
+      });
+
+      component.instance().handleColorPropertyChange(
+        { rgb: { r: 1, g: 2, b: 3, a: .5 } },
+        'stroke'
+      );
+    });
+
+    it('modifies the specified color property of the focused shape', () => {
+      assert.equal(component.state().bufferShapes[0].stroke, 'rgba(1, 2, 3, 0.5)');
     });
   });
 });
