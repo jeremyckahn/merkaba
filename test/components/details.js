@@ -43,8 +43,8 @@ describe('Details', () => {
         'width',
         'height',
         'strokeWidth',
-        // TODO: Implement these
-        /*'stroke', 'fill'*/
+        'stroke',
+        'fill'
       ].forEach(property =>
         assert.equal(
           component.find(`input[name="${property}"]`).length,
@@ -60,8 +60,8 @@ describe('Details', () => {
         'width',
         'height',
         'strokeWidth',
-        // TODO: Implement these
-        /*'stroke', 'fill'*/
+        'stroke',
+        'fill'
       ].forEach(property =>
         assert.equal(
           component.find(`input[name="${property}"]`).prop('value'),

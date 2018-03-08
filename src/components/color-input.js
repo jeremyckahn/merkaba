@@ -11,7 +11,7 @@ export const ColorInput = ({
   <span>
     <input
       data-tip
-      data-for="colorpicker-tooltip"
+      data-for={`colorpicker-tooltip-${name}`}
       data-event="focus"
       data-event-off="blur"
       name={name}
@@ -19,7 +19,7 @@ export const ColorInput = ({
       onChange={handlePropertyChange}
     />
     <ReactTooltip
-      id="colorpicker-tooltip"
+      id={`colorpicker-tooltip-${name}`}
       place="left"
       type="light"
       effect="solid"

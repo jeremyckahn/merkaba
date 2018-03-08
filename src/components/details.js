@@ -11,7 +11,8 @@ const RectUI = ({
     width,
     height,
     strokeWidth,
-    stroke
+    stroke,
+    fill,
   }
 }) =>
   <div>
@@ -65,6 +66,15 @@ const RectUI = ({
       <ColorInput
         value={stroke}
         name="stroke"
+        handlePropertyChange={handlePropertyChange}
+        handleColorPropertyChange={handleColorPropertyChange}
+      />
+    </label>
+    <label>
+      <p>Fill Color:</p>
+      <ColorInput
+        value={fill}
+        name="fill"
         handlePropertyChange={handlePropertyChange}
         handleColorPropertyChange={handleColorPropertyChange}
       />
