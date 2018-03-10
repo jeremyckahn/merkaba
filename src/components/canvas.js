@@ -5,6 +5,7 @@ import { Rect } from './shapes';
 
 
 /**
+ * @param {external:React.SyntheticEvent} handleCanvasClick
  * @param {external:React.SyntheticEvent} handleShapeClick
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
  * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
@@ -12,13 +13,19 @@ import { Rect } from './shapes';
  * @param {Array.<merkaba.svgShape>} bufferShapes
  */
 const Buffer = ({
+  handleCanvasClick,
   handleShapeClick,
   handleShapeDragStart,
   handleShapeDrag,
   handleShapeDragStop,
   bufferShapes,
 }) =>
-  <svg className="fill" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    className="fill"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    onClick={handleCanvasClick}
+  >
     {bufferShapes.map(({
       type,
       x,
@@ -106,6 +113,7 @@ const LiveShape = ({
 
 /**
  * @class merkaba.Canvas
+ * @param {external:React.SyntheticEvent} handleCanvasClick
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
@@ -126,6 +134,7 @@ const LiveShape = ({
  * @extends {external:React.Component}
  */
 export const Canvas = ({
+  handleCanvasClick,
   handleCanvasDragStart,
   handleCanvasDrag,
   handleCanvasDragStop,
@@ -156,6 +165,7 @@ export const Canvas = ({
       }`}
     >
       <Buffer {...{
+        handleCanvasClick,
         handleShapeClick,
         handleShapeDragStart,
         handleShapeDrag,

@@ -14,6 +14,23 @@ export default {
   },
 
   /**
+   * @method merkaba.Merkaba#handleCanvasClick
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleCanvasClick ({ target, currentTarget }) {
+    if (target !== currentTarget) {
+      return;
+    }
+
+    this.setState({
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndex: null
+      }
+    });
+  },
+
+  /**
    * @method merkaba.Merkaba#handleCanvasDragStart
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data

@@ -182,6 +182,7 @@ export class Merkaba extends Component {
         bufferShapes,
       },
       handleToolClick,
+      handleCanvasClick,
       handleCanvasDragStart,
       handleCanvasDrag,
       handleCanvasDragStop,
@@ -205,6 +206,7 @@ export class Merkaba extends Component {
         />
         <Canvas
           {...{
+            handleCanvasClick,
             handleCanvasDragStart,
             handleCanvasDrag,
             handleCanvasDragStop,

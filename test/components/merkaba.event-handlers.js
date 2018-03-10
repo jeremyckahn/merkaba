@@ -36,6 +36,28 @@ describe('eventHandlers', () => {
     });
   });
 
+  describe('Merkaba#handleCanvasClick', () => {
+    beforeEach(() => {
+      component = shallow(<Merkaba />);
+      component.setState({
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 1
+        }
+      });
+
+      const target = {};
+      component.instance().handleCanvasClick({ target, currentTarget: target });
+    });
+
+    it('resets the drag and focus state', () => {
+      assert.deepEqual(component.state('focusedShapeCursor'), {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndex: null
+      });
+    });
+  });
+
   describe('Merkaba#handleCanvasDragStart', () => {
     beforeEach(() => {
       component.setState({
