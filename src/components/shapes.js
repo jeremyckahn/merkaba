@@ -11,7 +11,7 @@ import { absolutizeCoordinates } from '../utils';
  * @param {string} fill
  * @param {number} strokeWidth
  * @param {string} className
- * @param {external:React.SyntheticEvent} handleShapeClick
+ * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
  * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop

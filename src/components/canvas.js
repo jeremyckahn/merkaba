@@ -5,8 +5,8 @@ import { Rect } from './shapes';
 
 
 /**
- * @param {external:React.SyntheticEvent} handleCanvasClick
- * @param {external:React.SyntheticEvent} handleShapeClick
+ * @param {Function(external:React.SyntheticEvent)} handleCanvasClick
+ * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
  * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
@@ -113,11 +113,11 @@ const LiveShape = ({
 
 /**
  * @class merkaba.Canvas
- * @param {external:React.SyntheticEvent} handleCanvasClick
+ * @param {Function(external:React.SyntheticEvent)} handleCanvasClick
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
- * @param {external:React.SyntheticEvent} handleShapeClick
+ * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
  * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
  * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
