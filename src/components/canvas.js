@@ -59,7 +59,7 @@ const Buffer = ({
   </svg>
 
 const Selector = ({
-  focusedShape = {}
+  focusedShape = { type: shapeType.NONE }
 }) =>
   <svg className="selection" version="1.1" xmlns="http://www.w3.org/2000/svg">
     {focusedShape.type === shapeType.NONE ? null :

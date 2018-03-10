@@ -13,8 +13,8 @@ const sampleRect = {
   y: 15,
   width: 10,
   height: 10,
-  fill: null,
-  stroke: null,
+  fill: 'rgba(0, 0, 0, 1)',
+  stroke: 'rgba(0, 0, 0, 1)',
   strokeWidth: 1,
 };
 
@@ -33,7 +33,7 @@ describe('Details', () => {
 
   describe('focusedShape.type === shapeType.RECT', () => {
     beforeEach(() => {
-      component = mount(<Details focusedShape={sampleRect}/>);
+      component = mount(<Details focusedShape={sampleRect} />);
     });
 
     it('renders inputs for a rect', () => {

@@ -3,8 +3,8 @@ import { ColorInput } from './color-input';
 import { shapeType } from '../enums';
 
 const RectUI = ({
-  handlePropertyChange,
-  handleColorPropertyChange,
+  handlePropertyChange = () => {},
+  handleColorPropertyChange = () => {},
   rect: {
     x,
     y,
