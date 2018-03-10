@@ -222,6 +222,7 @@ export class Merkaba extends Component {
             toolStrokeWidth,
             toolFillColor,
             bufferShapes,
+            focusedShape,
           }}
         />
         <Details

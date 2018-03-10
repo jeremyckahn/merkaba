@@ -117,4 +117,24 @@ describe('Canvas', () => {
       });
     });
   });
+
+  describe('selector rendering', () => {
+    describe('a shape is not selected', () => {
+      it('does not render a selector rect', () => {
+        assert.equal(component.find('.selection rect').length, 0);
+      });
+    });
+
+    describe('a shape is selected', () => {
+      beforeEach(() => {
+        component = mount(<Canvas
+          focusedShape={{ type: shapeType.RECT, x: 0, y: 0, width: 0, height: 0 }}
+        />);
+      });
+
+      it('renders a selector rect', () => {
+        assert.equal(component.find('.selection rect').length, 1);
+      });
+    });
+  });
 });

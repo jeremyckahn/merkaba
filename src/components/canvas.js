@@ -51,6 +51,20 @@ const Buffer = ({
     )}
   </svg>
 
+const Selector = ({
+  focusedShape = {}
+}) =>
+  <svg className="selection" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    {focusedShape.type === shapeType.NONE ? null :
+      <Rect
+        x={focusedShape.x}
+        y={focusedShape.y}
+        dx={focusedShape.width}
+        dy={focusedShape.height}
+      />
+    }
+  </svg>
+
 /**
  * @param {number|null} toolDragStartX
  * @param {number|null} toolDragStartY
@@ -128,7 +142,8 @@ export const Canvas = ({
   toolFillColor,
   isDraggingTool,
   selectedTool,
-  bufferShapes = []
+  bufferShapes = [],
+  focusedShape,
 }) =>
   <DraggableCore
     onStart={handleCanvasDragStart}
@@ -146,6 +161,9 @@ export const Canvas = ({
         handleShapeDrag,
         handleShapeDragStop,
         bufferShapes,
+      }} />
+      <Selector {...{
+        focusedShape
       }} />
       {selectedTool !== selectedToolType.NONE ?
         <LiveShape {...
