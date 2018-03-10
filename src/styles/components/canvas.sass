@@ -1,5 +1,7 @@
 @import ../variables
 
+$dashmark-size: 5
+
 .canvas
   background: $canvas-background
   left: $toolbar-width
@@ -16,5 +18,15 @@
     &.selection
       rect
         stroke: $selector-color
-        stroke-dasharray: 5, 5
+        stroke-dasharray: $dashmark-size, $dashmark-size
         stroke-width: 4px
+        animation-duration: 750ms
+        animation-iteration-count: infinite
+        animation-name: merkaba-selection
+        animation-timing-function: linear
+
+@keyframes merkaba-selection
+  0%
+    stroke-dashoffset: 0
+  100%
+    stroke-dashoffset: $dashmark-size * -2
