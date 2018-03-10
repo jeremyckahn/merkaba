@@ -15,13 +15,13 @@ This is the current roadmap:
         - [x] Creation
         - [x] Repositioning
         - [ ] Rotation/scaling
-    - [ ] Detail manipulation:
+    - [x] Detail manipulation:
         - [x] Direct positional/display value editing
-        - [ ] Color selection via color picker element
-        - [ ] Stroke/fill support
+        - [x] Color selection via color picker element
+        - [x] Stroke/fill support
 - [ ] Undo/redo support
     - [ ] This will likely necessitate Redux
-- [ ] Tools
+- [ ] Oher tools
     - [ ] Rectangle select
         - [ ] Grouping support
 - [ ] Keyboard shortcuts/keybindings
