@@ -5,72 +5,108 @@ import { Rect } from './shapes';
 
 
 /**
- * @param {Function(external:React.SyntheticEvent)} handleCanvasClick
  * @param {Function(external:React.SyntheticEvent)} handleShapeClick
- * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
- * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
- * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
  * @param {Array.<merkaba.svgShape>} bufferShapes
  */
 const Buffer = ({
-  handleCanvasClick,
   handleShapeClick,
-  handleShapeDragStart,
-  handleShapeDrag,
-  handleShapeDragStop,
   bufferShapes,
 }) =>
-  <svg
-    className="fill"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    onClick={handleCanvasClick}
-  >
-    {bufferShapes.map(({
-      type,
-      x,
-      y,
-      width,
-      height,
-      stroke,
-      fill,
-      strokeWidth,
-    }, i) =>
-      type === shapeType.RECT ?
-        <Rect
-          key={i}
-          className="buffered"
-          dx={width}
-          dy={height}
-          {...{
-            x,
-            y,
-            stroke,
-            fill,
-            strokeWidth,
-            handleShapeClick,
-            handleShapeDragStart,
-            handleShapeDrag,
-            handleShapeDragStop,
-          }}
-        />
-        : null
-    )}
-  </svg>
+  bufferShapes.map(({
+    type,
+    x,
+    y,
+    width,
+    height,
+    stroke,
+    fill,
+    strokeWidth,
+  }, i) =>
+    type === shapeType.RECT ?
+      <Rect
+        key={i}
+        bufferIndex={i}
+        className="buffered"
+        dx={width}
+        dy={height}
+        {...{
+          x,
+          y,
+          stroke,
+          fill,
+          strokeWidth,
+          handleShapeClick,
+        }}
+      />
+      : null
+  )
+
+const Handle = ({
+  x,
+  y,
+  orientation,
+}) =>
+  <ellipse
+    {...{
+      className: `selection-handle ${orientation}`,
+      orientation,
+      cx: x,
+      cy: y,
+      rx: 5,
+      ry: 5,
+    }}
+  />
 
 const Selector = ({
-  focusedShape = { type: shapeType.NONE }
+  focusedShape: {
+    type,
+    x = 0,
+    y = 0,
+    width = 0,
+    height = 0
+  }
 }) =>
-  <svg className="selection" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    {focusedShape.type === shapeType.NONE ? null :
+  type === shapeType.NONE ? null :
+    [
       <Rect
-        x={focusedShape.x}
-        y={focusedShape.y}
-        dx={focusedShape.width}
-        dy={focusedShape.height}
+        {...{
+          x,
+          y,
+          dx: width,
+          dy: height,
+          key: 0,
+          fill: 'none',
+          className: 'selection',
+        }}
       />
-    }
-  </svg>
+    ].concat([
+      {
+        orientation: 'top-left',
+        x,
+        y
+      }, {
+        orientation: 'top-right',
+        x: x + width,
+        y
+      }, {
+        orientation: 'bottom-right',
+        x: x + width,
+        y: y + height
+      }, {
+        orientation: 'bottom-left',
+        x,
+        y: y + height
+      }
+    ].map(({ orientation, x, y }, i) =>
+      <Handle
+        {...{
+          x,
+          y,
+          orientation,
+          key: i + 1
+        }}
+      />
+    ))
 
 /**
  * @param {number|null} toolDragStartX
@@ -94,33 +130,28 @@ const LiveShape = ({
   toolFillColor,
   toolStrokeWidth,
 }) =>
-  <svg className="fill" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    {isDraggingTool ?
-      selectedTool === selectedToolType.RECTANGLE ?
-        <Rect
-          className="live"
-          x={toolDragStartX}
-          y={toolDragStartY}
-          dx={toolDragDeltaX}
-          dy={toolDragDeltaY}
-          stroke={toolStrokeColor}
-          fill={toolFillColor}
-          strokeWidth={toolStrokeWidth}
-        />
-      : null
-    : null}
-  </svg>
+  isDraggingTool ?
+    selectedTool === selectedToolType.RECTANGLE ?
+      <Rect
+        className="live"
+        x={toolDragStartX}
+        y={toolDragStartY}
+        dx={toolDragDeltaX}
+        dy={toolDragDeltaY}
+        stroke={toolStrokeColor}
+        fill={toolFillColor}
+        strokeWidth={toolStrokeWidth}
+      />
+    : null
+  : null
 
 /**
  * @class merkaba.Canvas
- * @param {Function(external:React.SyntheticEvent)} handleCanvasClick
+ * @param {Function(external:React.SyntheticEvent)} handleCanvasMouseDown
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
  * @param {Function(external:React.SyntheticEvent)} handleShapeClick
- * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
- * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
- * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
  * @param {number|null} toolDragStartX
  * @param {number|null} toolDragStartY
  * @param {number|null} toolDragDeltaX
@@ -134,14 +165,11 @@ const LiveShape = ({
  * @extends {external:React.Component}
  */
 export const Canvas = ({
-  handleCanvasClick,
+  handleCanvasMouseDown,
   handleCanvasDragStart,
   handleCanvasDrag,
   handleCanvasDragStop,
   handleShapeClick,
-  handleShapeDragStart,
-  handleShapeDrag,
-  handleShapeDragStop,
   toolDragStartX,
   toolDragStartY,
   toolDragDeltaX,
@@ -152,7 +180,7 @@ export const Canvas = ({
   isDraggingTool,
   selectedTool,
   bufferShapes = [],
-  focusedShape,
+  focusedShape = {},
 }) =>
   <DraggableCore
     onStart={handleCanvasDragStart}
@@ -164,30 +192,33 @@ export const Canvas = ({
         selectedTool === selectedToolType.NONE ? 'no-tool-selected' : ''
       }`}
     >
-      <Buffer {...{
-        handleCanvasClick,
-        handleShapeClick,
-        handleShapeDragStart,
-        handleShapeDrag,
-        handleShapeDragStop,
-        bufferShapes,
-      }} />
-      <Selector {...{
-        focusedShape
-      }} />
-      {selectedTool !== selectedToolType.NONE ?
-        <LiveShape {...
-        {
-          isDraggingTool,
-          selectedTool,
-          toolDragStartX,
-          toolDragStartY,
-          toolDragDeltaX,
-          toolDragDeltaY,
-          toolStrokeColor,
-          toolFillColor,
-          toolStrokeWidth,
+      <svg
+        className="fill"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        onMouseDown={handleCanvasMouseDown}
+      >
+        <Buffer {...{
+          handleShapeClick,
+          bufferShapes,
         }} />
-      : null}
+        {selectedTool !== selectedToolType.NONE ?
+          <LiveShape {...
+          {
+            isDraggingTool,
+            selectedTool,
+            toolDragStartX,
+            toolDragStartY,
+            toolDragDeltaX,
+            toolDragDeltaY,
+            toolStrokeColor,
+            toolFillColor,
+            toolStrokeWidth,
+          }} />
+        : null}
+        <Selector {...{
+          focusedShape,
+        }} />
+      </svg>
     </div>
   </DraggableCore>

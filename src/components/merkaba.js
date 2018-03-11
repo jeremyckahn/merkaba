@@ -25,6 +25,8 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {merkaba.module:enums.selectedToolType} selectedTool
  * @property {boolean} isDraggingTool
  * @property {boolean} isDraggingShape
+ * @property {boolean} isDraggingSelectionHandle
+ * @property {null|string} draggedHandleOrientation
  * @property {null|number} toolDragStartX
  * @property {null|number} toolDragStartY
  * @property {null|number} toolDragDeltaX
@@ -38,12 +40,6 @@ import eventHandlers from './merkaba.event-handlers';
 
 const { indexOf } = Array.prototype;
 const emptyShape = { type: shapeType.NONE };
-
-/**
- * @param {HTMLElement} el
- * @return {number}
- */
-const getElementIndex = el => indexOf.call(el.parentElement.children, el);
 
 /**
  * @class merkaba.Merkaba
@@ -61,6 +57,8 @@ export class Merkaba extends Component {
       selectedTool: selectedToolType.NONE,
       isDraggingTool: false,
       isDraggingShape: false,
+      isDraggingSelectionHandle: false,
+      draggedHandleOrientation: null,
       toolDragStartX: null,
       toolDragStartY: null,
       toolDragDeltaX: null,
@@ -144,9 +142,27 @@ export class Merkaba extends Component {
     this.setState({
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: getElementIndex(shapeEl)
+        bufferIndex: +shapeEl.getAttribute('data-buffer-index')
       }
     });
+  }
+
+  /**
+   * @method merkaba.Merkaba#updateBufferShape
+   * @param {number} bufferIndex
+   * @param {Object.<any>} newShapeData Any properties to update the buffered
+   * shape with.
+   */
+  updateBufferShape (shapeIndex, newShapeData) {
+    const {
+      bufferShapes,
+      focusedShapeCursor: { bufferIndex }
+    } = this.state;
+    const modifiedBuffer = bufferShapes.slice();
+    modifiedBuffer[bufferIndex] =
+      Object.assign({}, this.getFocusedShape(), newShapeData);
+
+    this.setState({ bufferShapes: modifiedBuffer });
   }
 
   /**
@@ -182,16 +198,13 @@ export class Merkaba extends Component {
         bufferShapes,
       },
       handleToolClick,
-      handleCanvasClick,
+      handleCanvasMouseDown,
       handleCanvasDragStart,
       handleCanvasDrag,
       handleCanvasDragStop,
       handlePropertyChange,
       handleColorPropertyChange,
       handleShapeClick,
-      handleShapeDragStart,
-      handleShapeDrag,
-      handleShapeDragStop,
     } = this;
 
     const focusedShape = this.getFocusedShape();
@@ -206,14 +219,11 @@ export class Merkaba extends Component {
         />
         <Canvas
           {...{
-            handleCanvasClick,
+            handleCanvasMouseDown,
             handleCanvasDragStart,
             handleCanvasDrag,
             handleCanvasDragStop,
             handleShapeClick,
-            handleShapeDragStart,
-            handleShapeDrag,
-            handleShapeDragStop,
             isDraggingTool,
             selectedTool,
             toolDragStartX,

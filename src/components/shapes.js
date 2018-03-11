@@ -11,10 +11,8 @@ import { absolutizeCoordinates } from '../utils';
  * @param {string} fill
  * @param {number} strokeWidth
  * @param {string} className
+ * @param {number} bufferIndex
  * @param {Function(external:React.SyntheticEvent)} handleShapeClick
- * @param {external:Draggable.DraggableEventHandler} handleShapeDragStart
- * @param {external:Draggable.DraggableEventHandler} handleShapeDrag
- * @param {external:Draggable.DraggableEventHandler} handleShapeDragStop
  */
 export const Rect = ({
   x,
@@ -25,28 +23,21 @@ export const Rect = ({
   fill,
   strokeWidth,
   className,
+  bufferIndex,
   handleShapeClick,
-  handleShapeDragStart,
-  handleShapeDrag,
-  handleShapeDragStop,
 }) =>
-  <DraggableCore
-    onStart={handleShapeDragStart}
-    onDrag={handleShapeDrag}
-    onStop={handleShapeDragStop}
-  >
-    <rect
-      onClick={handleShapeClick}
-      {...Object.assign({
-        stroke,
-        fill,
-        strokeWidth,
-        className,
-      }, absolutizeCoordinates(
-        x,
-        y,
-        dx,
-        dy
-      ))}
-    />
-  </DraggableCore>
+  <rect
+    onClick={handleShapeClick}
+    {...Object.assign({
+      stroke,
+      fill,
+      strokeWidth,
+      className,
+      'data-buffer-index': bufferIndex,
+    }, absolutizeCoordinates(
+      x,
+      y,
+      dx,
+      dy
+    ))}
+  />

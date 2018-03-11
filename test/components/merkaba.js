@@ -34,6 +34,18 @@ describe('Merkaba', () => {
       });
     });
 
+    describe('isDraggingSelectionHandle', () => {
+      it('has a default value', () => {
+        assert.equal(component.state('isDraggingSelectionHandle'), false);
+      });
+    });
+
+    describe('draggedHandleOrientation', () => {
+      it('has a default value', () => {
+        assert.equal(component.state('draggedHandleOrientation'), null);
+      });
+    });
+
     describe('toolDragStartX', () => {
       it('has a default value', () => {
         assert.equal(String(component.state('toolDragStartX')), 'null');

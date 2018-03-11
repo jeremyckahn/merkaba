@@ -15,15 +15,17 @@ $dashmark-size: 5
     height: 100%
     width: 100%
 
-    &.selection
-      rect
-        stroke: $selector-color
-        stroke-dasharray: $dashmark-size, $dashmark-size
-        stroke-width: 4px
-        animation-duration: 750ms
-        animation-iteration-count: infinite
-        animation-name: merkaba-selection
-        animation-timing-function: linear
+    .selection
+      animation-duration: 750ms
+      animation-iteration-count: infinite
+      animation-name: merkaba-selection
+      animation-timing-function: linear
+      stroke: $selector-color
+      stroke-dasharray: $dashmark-size, $dashmark-size
+      stroke-width: 4px
+
+    .selection-handle
+      fill: $selector-color
 
 @keyframes merkaba-selection
   0%

@@ -36,7 +36,7 @@ describe('eventHandlers', () => {
     });
   });
 
-  describe('Merkaba#handleCanvasClick', () => {
+  describe('Merkaba#handleCanvasMouseDown', () => {
     beforeEach(() => {
       component = shallow(<Merkaba />);
       component.setState({
@@ -46,8 +46,7 @@ describe('eventHandlers', () => {
         }
       });
 
-      const target = {};
-      component.instance().handleCanvasClick({ target, currentTarget: target });
+      component.instance().handleCanvasMouseDown({ target: { nodeName: 'svg' } });
     });
 
     it('resets the drag and focus state', () => {
@@ -64,11 +63,14 @@ describe('eventHandlers', () => {
         selectedTool: selectedToolType.NOT_NONE
       });
 
-      component.instance().handleCanvasDragStart(null, {
-        x: 10,
-        y: 15,
-        node: { offsetLeft: 5, offsetTop: 5 }
-      });
+      component.instance().handleCanvasDragStart({
+          target: { nodeName: 'svg' }
+        }, {
+          x: 10,
+          y: 15,
+          node: { offsetLeft: 5, offsetTop: 5 }
+        }
+      );
     });
 
     it('sets the focusedShapeCursor state', () => {
@@ -231,14 +233,9 @@ describe('eventHandlers', () => {
           bufferShapes: [Object.assign({}, sampleRect)],
         });
 
-        // This weird object setup is needed to mimic the object reference
-        // structure of a real DOM node
-        const target = {};
-        target.parentElement = {
-          children: [{}, target]
-        };
-
-        component.instance().handleShapeClick({ target });
+        component.instance().handleShapeClick({
+          target: { getAttribute: () => 1 }
+        });
       });
 
       it('focuses the clicked shape', () => {
@@ -250,18 +247,15 @@ describe('eventHandlers', () => {
     });
   });
 
-  describe('Merkaba#handleShapeDragStart', () => {
+  describe('Merkaba#handleBufferedShapeDragStart', () => {
     beforeEach(() => {
       component.setState({
         bufferShapes: [Object.assign({}, sampleRect)],
       });
 
-      const target = {};
-      target.parentElement = {
-        children: [{}, target]
-      };
-
-      component.instance().handleShapeDragStart({ target });
+      component.instance().handleBufferedShapeDragStart({
+        target: { getAttribute: () => 1 }
+      });
     });
 
     it('focuses the clicked shape', () => {
@@ -276,7 +270,7 @@ describe('eventHandlers', () => {
     });
   });
 
-  describe('Merkaba#handleShapeDrag', () => {
+  describe('Merkaba#handleBufferedShapeDrag', () => {
     beforeEach(() => {
       component.setState({
         bufferShapes: [Object.assign({}, sampleRect)],
@@ -286,7 +280,7 @@ describe('eventHandlers', () => {
         }
       });
 
-      component.instance().handleShapeDrag({}, { deltaX: 10, deltaY: -10 });
+      component.instance().handleBufferedShapeDrag({}, { deltaX: 10, deltaY: -10 });
     });
 
     it('modifies the bufferShapes data', () => {
@@ -296,23 +290,126 @@ describe('eventHandlers', () => {
     });
   });
 
-  describe('Merkaba#handleShapeDragStop', () => {
+  describe('Merkaba#handleBufferedShapeDragStop', () => {
     beforeEach(() => {
       component.setState({
         bufferShapes: [Object.assign({}, sampleRect)],
       });
       component.setState({ isDraggingShape: true });
 
-      const target = {};
-      target.parentElement = {
-        children: [{}, target]
-      };
-
-      component.instance().handleShapeDragStop({ target });
+      component.instance().handleBufferedShapeDragStop({
+        target: { getAttribute: () => 1 }
+      });
     });
 
     it('updates isDraggingTool state', () => {
       assert.equal(component.state('isDraggingShape'), false);
+    });
+  });
+
+  describe('Merkaba#handleSelectionHandleDragStart', () => {
+    beforeEach(() => {
+      component.instance().handleSelectionHandleDragStart({
+        target: {
+          getAttribute: () => 'top-left'
+        }
+      });
+    });
+
+    it('updates isDraggingSelectionHandle state', () => {
+      assert.equal(component.state('isDraggingSelectionHandle'), true);
+    });
+
+    it('updates draggedHandleOrientation state', () => {
+      assert.equal(component.state('draggedHandleOrientation'), 'top-left');
+    });
+  });
+
+  describe('Merkaba#handleSelectionHandleDrag', () => {
+    const deltaX = 5;
+    const deltaY = 10;
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [Object.assign({}, sampleRect)],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0
+        }
+      });
+    });
+
+    describe('top-left', () => {
+      beforeEach(() => {
+        component.setState({ draggedHandleOrientation: 'top-left' });
+        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+      });
+
+      it('modifies shape appropriately', () => {
+        const { x, y, height, width } = component.state('bufferShapes')[0];
+        assert.equal(x, sampleRect.x + deltaX);
+        assert.equal(y, sampleRect.y + deltaY);
+        assert.equal(width, sampleRect.x - deltaX);
+        assert.equal(height, sampleRect.height - deltaY);
+      });
+    });
+
+    describe('top-right', () => {
+      beforeEach(() => {
+        component.setState({ draggedHandleOrientation: 'top-right' });
+        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+      });
+
+      it('modifies shape appropriately', () => {
+        const { y, height, width } = component.state('bufferShapes')[0];
+        assert.equal(y, sampleRect.y + deltaY);
+        assert.equal(width, sampleRect.x + deltaX);
+        assert.equal(height, sampleRect.height - deltaY);
+      });
+    });
+
+    describe('bottom-right', () => {
+      beforeEach(() => {
+        component.setState({ draggedHandleOrientation: 'bottom-right' });
+        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+      });
+
+      it('modifies shape appropriately', () => {
+        const { height, width } = component.state('bufferShapes')[0];
+        assert.equal(width, sampleRect.x + deltaX);
+        assert.equal(height, sampleRect.height + deltaY);
+      });
+    });
+
+    describe('bottom-left', () => {
+      beforeEach(() => {
+        component.setState({ draggedHandleOrientation: 'bottom-left' });
+        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+      });
+
+      it('modifies shape appropriately', () => {
+        const { x, height, width } = component.state('bufferShapes')[0];
+        assert.equal(x, sampleRect.x + deltaX);
+        assert.equal(width, sampleRect.x - deltaX);
+        assert.equal(height, sampleRect.height + deltaY);
+      });
+    });
+  });
+
+  describe('Merkaba#handleSelectionHandleDragStop', () => {
+    beforeEach(() => {
+      component.setState({
+        draggedHandleOrientation: 'top-left',
+        isDraggingSelectionHandle: true
+      });
+      component.instance().handleSelectionHandleDragStop();
+    });
+
+    it('updates isDraggingSelectionHandle state', () => {
+      assert.equal(component.state('isDraggingSelectionHandle'), false);
+    });
+
+    it('updates draggedHandleOrientation state', () => {
+      assert.equal(component.state('draggedHandleOrientation'), null);
     });
   });
 
