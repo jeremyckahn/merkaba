@@ -14,6 +14,46 @@ export default {
   },
 
   /**
+   * @method merkaba.Merkaba#handleShapeClick
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
+  handleShapeClick (e) {
+    this.focusBufferShape(e.target);
+  },
+
+  /**
+   * @method merkaba.Merkaba#handlePropertyChange
+   * @param {external:React.SyntheticEvent} e
+   */
+  handlePropertyChange (e) {
+    const { target: { name, type, value, valueAsNumber } } = e;
+
+    this.updateBufferShapeProperty(
+      this.state.focusedShapeCursor.bufferIndex,
+      name,
+      type === 'number' && !isNaN(valueAsNumber) ?
+        valueAsNumber
+        : value
+    );
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleColorPropertyChange
+   * @param {external:ReactColor.Color} color
+   * @param {string} name
+   */
+  handleColorPropertyChange (color, name) {
+    const { r, g, b, a } = color.rgb;
+
+    this.updateBufferShapeProperty(
+      this.state.focusedShapeCursor.bufferIndex,
+      name,
+      `rgba(${r}, ${g}, ${b}, ${a})`
+    );
+  },
+
+  /**
    * @method merkaba.Merkaba#handleCanvasMouseDown
    * @param {external:React.SyntheticEvent} e
    */
@@ -146,15 +186,6 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleShapeClick
-   * @param {external:React.SyntheticEvent} e
-   * @param {external:Draggable.DraggableData} data
-   */
-  handleShapeClick (e) {
-    this.focusBufferShape(e.target);
-  },
-
-  /**
    * @method merkaba.Merkaba#handleBufferedShapeDragStart
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
@@ -185,37 +216,6 @@ export default {
    */
   handleBufferedShapeDragStop () {
     this.setState({ isDraggingShape: false });
-  },
-
-  /**
-   * @method merkaba.Merkaba#handlePropertyChange
-   * @param {external:React.SyntheticEvent} e
-   */
-  handlePropertyChange (e) {
-    const { target: { name, type, value, valueAsNumber } } = e;
-
-    this.updateBufferShapeProperty(
-      this.state.focusedShapeCursor.bufferIndex,
-      name,
-      type === 'number' && !isNaN(valueAsNumber) ?
-        valueAsNumber
-        : value
-    );
-  },
-
-  /**
-   * @method merkaba.Merkaba#handleColorPropertyChange
-   * @param {external:ReactColor.Color} color
-   * @param {string} name
-   */
-  handleColorPropertyChange (color, name) {
-    const { r, g, b, a } = color.rgb;
-
-    this.updateBufferShapeProperty(
-      this.state.focusedShapeCursor.bufferIndex,
-      name,
-      `rgba(${r}, ${g}, ${b}, ${a})`
-    );
   },
 
   /**
