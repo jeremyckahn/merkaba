@@ -77,18 +77,21 @@ export default {
    * @param {external:Draggable.DraggableData} data
    */
   handleCanvasDrag (e, { deltaX, deltaY }) {
-    if (this.state.isDraggingShape) {
+    const {
+      isDraggingSelectionHandle,
+      isDraggingShape,
+      selectedTool,
+      toolDragDeltaX,
+      toolDragDeltaY,
+    } = this.state;
+
+    if (isDraggingShape) {
       return this.handleBufferedShapeDrag(...arguments);
-    } else if (this.state.isDraggingSelectionHandle) {
+    } else if (isDraggingSelectionHandle) {
       return this.handleSelectionHandleDrag(...arguments);
-    } else if (this.state.selectedTool === selectedToolType.NONE) {
+    } else if (selectedTool === selectedToolType.NONE) {
       return;
     }
-
-    const {
-      toolDragDeltaX,
-      toolDragDeltaY
-    } = this.state;
 
     this.setState({
       toolDragDeltaX: toolDragDeltaX + deltaX,
@@ -100,24 +103,26 @@ export default {
    * @method merkaba.Merkaba#handleCanvasDragStop
    */
   handleCanvasDragStop (e) {
-    if (this.state.isDraggingShape) {
-      return this.handleBufferedShapeDragStop(...arguments);
-    } else if (this.state.isDraggingSelectionHandle) {
-      return this.handleSelectionHandleDragStop(...arguments);
-    } else if (this.state.selectedTool === selectedToolType.NONE) {
-      return;
-    }
-
     const {
+      isDraggingSelectionHandle,
+      isDraggingShape,
       selectedTool,
-      toolDragStartX,
-      toolDragStartY,
       toolDragDeltaX,
       toolDragDeltaY,
-      toolStrokeColor,
+      toolDragStartX,
+      toolDragStartY,
       toolFillColor,
+      toolStrokeColor,
       toolStrokeWidth,
     } = this.state;
+
+    if (isDraggingShape) {
+      return this.handleBufferedShapeDragStop(...arguments);
+    } else if (isDraggingSelectionHandle) {
+      return this.handleSelectionHandleDragStop(...arguments);
+    } else if (selectedTool === selectedToolType.NONE) {
+      return;
+    }
 
     const bufferShapes = this.state.bufferShapes.slice();
 
