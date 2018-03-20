@@ -40,6 +40,12 @@ describe('Merkaba', () => {
       });
     });
 
+    describe('isDraggingSelectionRotator', () => {
+      it('has a default value', () => {
+        assert.equal(component.state('isDraggingSelectionRotator'), false);
+      });
+    });
+
     describe('draggedHandleOrientation', () => {
       it('has a default value', () => {
         assert.equal(component.state('draggedHandleOrientation'), null);
@@ -67,6 +73,12 @@ describe('Merkaba', () => {
     describe('toolDragDeltaY', () => {
       it('has a default value', () => {
         assert.equal(String(component.state('toolDragDeltaY')), 'null');
+      });
+    });
+
+    describe('toolRotate', () => {
+      it('has a default value', () => {
+        assert.equal(component.state('toolRotate'), 0);
       });
     });
 
@@ -143,6 +155,7 @@ describe('Merkaba', () => {
           y: 15,
           width: 10,
           height: 10,
+          rotate: 0,
           fill: 'rgba(0, 0, 0, 1)',
           stroke: 'rgba(0, 0, 0, 1)',
           strokeWidth: 0,

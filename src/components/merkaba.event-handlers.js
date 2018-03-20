@@ -91,6 +91,8 @@ export default {
         return this.handleBufferedShapeDragStart(...arguments);
       } else if (classList.contains('selection-handle')) {
         return this.handleSelectionHandleDragStart(...arguments);
+      } else if (classList.contains('selection-handle-rotator')) {
+        return this.handleSelectionRotatorDragStart(...arguments);
       }
     } else if (this.state.selectedTool === selectedToolType.NONE) {
       return;
@@ -119,6 +121,7 @@ export default {
   handleCanvasDrag (e, { deltaX, deltaY }) {
     const {
       isDraggingSelectionHandle,
+      isDraggingSelectionRotator,
       isDraggingShape,
       selectedTool,
       toolDragDeltaX,
@@ -129,6 +132,8 @@ export default {
       return this.handleBufferedShapeDrag(...arguments);
     } else if (isDraggingSelectionHandle) {
       return this.handleSelectionHandleDrag(...arguments);
+    } else if (isDraggingSelectionRotator) {
+      return this.handleSelectionRotatorDrag(...arguments);
     } else if (selectedTool === selectedToolType.NONE) {
       return;
     }
@@ -145,6 +150,7 @@ export default {
   handleCanvasDragStop (e) {
     const {
       isDraggingSelectionHandle,
+      isDraggingSelectionRotator,
       isDraggingShape,
       selectedTool,
       toolDragDeltaX,
@@ -160,6 +166,8 @@ export default {
       return this.handleBufferedShapeDragStop(...arguments);
     } else if (isDraggingSelectionHandle) {
       return this.handleSelectionHandleDragStop(...arguments);
+    } else if (isDraggingSelectionRotator) {
+      return this.handleSelectionRotatorDragStop(...arguments);
     } else if (selectedTool === selectedToolType.NONE) {
       return;
     }
@@ -176,6 +184,7 @@ export default {
       toolDragStartY: null,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
+      toolRotate: 0,
       bufferShapes,
       selectedTool: selectedToolType.NONE,
       focusedShapeCursor: {
@@ -280,5 +289,55 @@ export default {
       draggedHandleOrientation: null,
       isDraggingSelectionHandle: false
     });
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleSelectionRotatorDragStart
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleSelectionRotatorDragStart (e) {
+    this.setState({ isDraggingSelectionRotator: true });
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleSelectionRotatorDrag
+   * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
+   */
+  handleSelectionRotatorDrag (e, data) {
+    const {
+      height,
+      width,
+      x: shapeX,
+      y: shapeY,
+      rotate
+    } = this.getFocusedShape();
+    const {
+      lastX,
+      lastY,
+      x: newX,
+      y: newY
+    } = data;
+
+    const originX = shapeX + (width  / 2);
+    const originY = shapeY + (height  / 2);
+
+    const oldAngle = Math.atan2(lastY - originY, lastX - originX);
+    const newAngle = Math.atan2(newY - originY, newX - originX);
+    const deltaDegrees = (newAngle - oldAngle) * 180 / Math.PI;
+
+    this.updateBufferShapeProperty(
+      this.state.focusedShapeCursor.bufferIndex,
+      'rotate',
+      (360 + (rotate + deltaDegrees)) % 360
+    );
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleSelectionRotatorDragStop
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleSelectionRotatorDragStop (e) {
+    this.setState({ isDraggingSelectionRotator: false });
   },
 };

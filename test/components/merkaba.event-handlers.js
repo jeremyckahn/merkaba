@@ -14,6 +14,7 @@ const sampleRect = {
   y: 15,
   width: 10,
   height: 10,
+  rotate: 0,
   fill: null,
   stroke: null,
   strokeWidth: 1,
@@ -135,6 +136,7 @@ describe('eventHandlers', () => {
           isDraggingTool: true,
           toolDragStartX: 10,
           toolDragStartY: 15,
+          toolRotate: 30,
           focusedShapeCursor: {
             shapeFocus: shapeFocusType.LIVE,
             bufferIndex: null
@@ -169,6 +171,10 @@ describe('eventHandlers', () => {
 
       it('sets the toolDragDeltaY state', () => {
         assert.equal(String(component.state('toolDragDeltaY')), 'null');
+      });
+
+      it('sets the toolRotate state', () => {
+        assert.equal(String(component.state('toolRotate')), 0);
       });
 
       it('sets the selectedTool state', () => {
@@ -217,6 +223,7 @@ describe('eventHandlers', () => {
             y: 15,
             width: 10,
             height: 10,
+            rotate: 0,
             fill: 'rgba(0, 0, 0, 1)',
             stroke: 'rgba(0, 0, 0, 1)',
             strokeWidth: 0,
@@ -410,6 +417,60 @@ describe('eventHandlers', () => {
 
     it('updates draggedHandleOrientation state', () => {
       assert.equal(component.state('draggedHandleOrientation'), null);
+    });
+  });
+
+  describe('Merkaba#handleSelectionRotatorDragStart', () => {
+    beforeEach(() => {
+      component.instance().handleSelectionRotatorDragStart();
+    });
+
+    it('updates isDraggingSelectionRotator state', () => {
+      assert.equal(component.state('isDraggingSelectionRotator'), true);
+    });
+  });
+
+  describe('Merkaba#handleSelectionRotatorDrag', () => {
+    beforeEach(() => {
+      component.setState({
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0
+        },
+        bufferShapes: [{
+          type: shapeType.RECT,
+          x: -5,
+          y: -5,
+          width: 10,
+          height: 10,
+          rotate: 0,
+          fill: null,
+          stroke: null,
+          strokeWidth: 1,
+        }],
+      });
+
+      component.instance().handleSelectionRotatorDrag(null, {
+        lastX: 0,
+        lastY: 0,
+        x: 90,
+        y: 90
+      });
+    });
+
+    it('rotates the shape', () => {
+      assert.equal(component.state('bufferShapes')[0].rotate, 45);
+    });
+  });
+
+  describe('Merkaba#handleSelectionRotatorDragStop', () => {
+    beforeEach(() => {
+      component.instance().setState({ isDraggingSelectionRotator: true });
+      component.instance().handleSelectionRotatorDragStop();
+    });
+
+    it('updates isDraggingSelectionRotator state', () => {
+      assert.equal(component.state('isDraggingSelectionRotator'), false);
     });
   });
 

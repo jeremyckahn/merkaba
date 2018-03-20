@@ -13,6 +13,7 @@ const sampleRect = {
   y: 15,
   width: 10,
   height: 10,
+  rotate: 0,
   fill: 'rgba(0, 0, 0, 1)',
   stroke: 'rgba(0, 0, 0, 1)',
   strokeWidth: 1,
@@ -42,6 +43,7 @@ describe('Details', () => {
         'y',
         'width',
         'height',
+        'rotate',
         'strokeWidth',
         'stroke',
         'fill'
@@ -59,6 +61,7 @@ describe('Details', () => {
         'y',
         'width',
         'height',
+        'rotate',
         'strokeWidth',
         'stroke',
         'fill'

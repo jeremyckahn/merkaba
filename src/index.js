@@ -18,6 +18,7 @@ import './styles/index.sass';
  * @property {number} y
  * @property {number} width
  * @property {number} height
+ * @property {number} rotate
  * @property {null|number} rx
  * @property {null|number} ry
  * @property {null|string} stroke

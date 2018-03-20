@@ -10,6 +10,7 @@ const RectUI = ({
     y,
     width,
     height,
+    rotate,
     strokeWidth,
     stroke,
     fill,
@@ -53,6 +54,24 @@ const RectUI = ({
       />
     </label>
     <label>
+      <p>Rotate:</p>
+      <input
+        name="rotate"
+        value={rotate}
+        type="number"
+        onChange={handlePropertyChange}
+      />
+    </label>
+    <label>
+      <p>Fill Color:</p>
+      <ColorInput
+        value={fill}
+        name="fill"
+        handlePropertyChange={handlePropertyChange}
+        handleColorPropertyChange={handleColorPropertyChange}
+      />
+    </label>
+    <label>
       <p>Stroke Width:</p>
       <input
         name="strokeWidth"
@@ -66,15 +85,6 @@ const RectUI = ({
       <ColorInput
         value={stroke}
         name="stroke"
-        handlePropertyChange={handlePropertyChange}
-        handleColorPropertyChange={handleColorPropertyChange}
-      />
-    </label>
-    <label>
-      <p>Fill Color:</p>
-      <ColorInput
-        value={fill}
-        name="fill"
         handlePropertyChange={handlePropertyChange}
         handleColorPropertyChange={handleColorPropertyChange}
       />

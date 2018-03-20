@@ -27,6 +27,13 @@ $dashmark-size: 5
     .selection-handle
       fill: $selector-color
 
+    .selection-handle-rotator
+      // TODO: alias isn't ideal for this UI element, it's just the best
+      // standard option. Replace this with a custom image:
+      // https://css-tricks.com/almanac/properties/c/cursor/
+      cursor: alias
+      opacity: 0
+
 @keyframes merkaba-selection
   0%
     stroke-dashoffset: 0

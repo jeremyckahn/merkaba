@@ -7,6 +7,7 @@ import { absolutizeCoordinates } from '../utils';
  * @param {number} y
  * @param {number} dx
  * @param {number} dy
+ * @param {number} rotate
  * @param {string} stroke
  * @param {string} fill
  * @param {number} strokeWidth
@@ -19,6 +20,7 @@ export const Rect = ({
   y,
   dx,
   dy,
+  rotate = 0,
   stroke,
   fill,
   strokeWidth,
@@ -32,6 +34,7 @@ export const Rect = ({
       stroke,
       fill,
       strokeWidth,
+      transform: `rotate(${rotate} ${x + (dx / 2)} ${y + (dy / 2)})`,
       className,
       'data-buffer-index': bufferIndex,
     }, absolutizeCoordinates(

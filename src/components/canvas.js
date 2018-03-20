@@ -1,8 +1,8 @@
 import React from 'react';
 import { DraggableCore } from 'react-draggable';
 import { selectedToolType, shapeType } from '../enums';
+import { rotatorHitArea } from '../constants';
 import { Rect } from './shapes';
-
 
 /**
  * @param {Function(external:React.SyntheticEvent)} handleShapeClick
@@ -18,6 +18,7 @@ const Buffer = ({
     y,
     width,
     height,
+    rotate,
     stroke,
     fill,
     strokeWidth,
@@ -32,6 +33,7 @@ const Buffer = ({
         {...{
           x,
           y,
+          rotate,
           stroke,
           fill,
           strokeWidth,
@@ -41,33 +43,52 @@ const Buffer = ({
       : null
   )
 
-const Handle = ({
-  x,
-  y,
-  orientation,
-}) =>
-  <ellipse
-    {...{
-      className: `selection-handle ${orientation}`,
-      orientation,
-      cx: x,
-      cy: y,
-      rx: 5,
-      ry: 5,
-    }}
-  />
-
 const Selector = ({
   focusedShape: {
     type,
     x = 0,
     y = 0,
     width = 0,
-    height = 0
-  }
+    height = 0,
+    rotate = 0,
+  },
+  handleConfig = [
+    {
+      orientation: 'top-left',
+      x,
+      y
+    }, {
+      orientation: 'top-right',
+      x: x + width,
+      y
+    }, {
+      orientation: 'bottom-right',
+      x: x + width,
+      y: y + height
+    }, {
+      orientation: 'bottom-left',
+      x,
+      y: y + height
+    }
+  ]
 }) =>
   type === shapeType.NONE ? null :
-    [
+    <g
+      transform={`rotate(${rotate} ${x + (width / 2)} ${y + (height / 2)})`}
+    >
+      {handleConfig.map(({ orientation, x, y }, i) =>
+        <ellipse
+          {...{
+            key: `handle-rotator-${i}`,
+            className: 'selection-handle-rotator',
+            cx: x,
+            cy: y,
+            rx: rotatorHitArea,
+            ry: rotatorHitArea,
+          }}
+        />
+      )
+    }
       <Rect
         {...{
           x,
@@ -79,34 +100,21 @@ const Selector = ({
           className: 'selection',
         }}
       />
-    ].concat([
-      {
-        orientation: 'top-left',
-        x,
-        y
-      }, {
-        orientation: 'top-right',
-        x: x + width,
-        y
-      }, {
-        orientation: 'bottom-right',
-        x: x + width,
-        y: y + height
-      }, {
-        orientation: 'bottom-left',
-        x,
-        y: y + height
-      }
-    ].map(({ orientation, x, y }, i) =>
-      <Handle
-        {...{
-          x,
-          y,
-          orientation,
-          key: i + 1
-        }}
-      />
-    ))
+      {handleConfig.map(({ orientation, x, y }, i) =>
+        <ellipse
+          {...{
+            key: `handle-${i}`,
+            className: `selection-handle ${orientation}`,
+            orientation,
+            cx: x,
+            cy: y,
+            rx: 5,
+            ry: 5,
+          }}
+        />
+      )
+    }
+  </g>
 
 /**
  * @param {number|null} toolDragStartX
@@ -126,6 +134,7 @@ const LiveShape = ({
   toolDragStartY,
   toolDragDeltaX,
   toolDragDeltaY,
+  toolRotate,
   toolStrokeColor,
   toolFillColor,
   toolStrokeWidth,
@@ -138,6 +147,7 @@ const LiveShape = ({
         y={toolDragStartY}
         dx={toolDragDeltaX}
         dy={toolDragDeltaY}
+        rotate={toolRotate}
         stroke={toolStrokeColor}
         fill={toolFillColor}
         strokeWidth={toolStrokeWidth}
@@ -156,6 +166,7 @@ const LiveShape = ({
  * @param {number|null} toolDragStartY
  * @param {number|null} toolDragDeltaX
  * @param {number|null} toolDragDeltaY
+ * @param {number} toolRotate
  * @param {null|string} toolStrokeColor
  * @param {null|number} toolStrokeWidth
  * @param {null|string} toolFillColor
@@ -174,6 +185,7 @@ export const Canvas = ({
   toolDragStartY,
   toolDragDeltaX,
   toolDragDeltaY,
+  toolRotate,
   toolStrokeColor,
   toolStrokeWidth,
   toolFillColor,
@@ -211,6 +223,7 @@ export const Canvas = ({
             toolDragStartY,
             toolDragDeltaX,
             toolDragDeltaY,
+            toolRotate,
             toolStrokeColor,
             toolFillColor,
             toolStrokeWidth,
