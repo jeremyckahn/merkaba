@@ -10,8 +10,8 @@ This is the current roadmap:
 
 - [x] Stand up basic environment layout/structure similar to [Vectr](https://vectr.com/new)
 - [ ] Layer reordering
-- [ ] Initial primitives support: Rectangles
-    - [ ] Drag-and-drop:
+- [x] Initial primitives support: Rectangles
+    - [x] Drag-and-drop:
         - [x] Creation
         - [x] Repositioning
         - [x] Rotation/scaling
