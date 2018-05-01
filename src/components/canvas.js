@@ -7,10 +7,22 @@ import { Rect } from './shapes';
 /**
  * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {Array.<merkaba.svgShape>} bufferShapes
+ * @param {string|null} draggedHandleOrientation
+ * @param {number|null} selectionDragStartX
+ * @param {number|null} selectionDragStartY
+ * @param {number|null} selectionDragX
+ * @param {number|null} selectionDragY
+ * @param {number|null} focusedShapeBufferIndex
  */
 const Buffer = ({
   handleShapeClick,
   bufferShapes,
+  draggedHandleOrientation,
+  selectionDragStartX,
+  selectionDragStartY,
+  selectionDragX,
+  selectionDragY,
+  focusedShapeBufferIndex,
 }) =>
   bufferShapes.map(({
     type,
@@ -171,8 +183,15 @@ const LiveShape = ({
  * @param {null|number} toolStrokeWidth
  * @param {null|string} toolFillColor
  * @param {boolean} isDraggingTool
+ * @param {string|null} draggedHandleOrientation
  * @param {merkaba.module:enums.selectedToolType} selectedTool
  * @param {Array.<merkaba.svgShape>} bufferShapes
+ * @param {merkaba.svgShape} focusedShape
+ * @param {number|null} selectionDragStartX
+ * @param {number|null} selectionDragStartY
+ * @param {number|null} selectionDragX
+ * @param {number|null} selectionDragY
+ * @param {number|null} focusedShapeBufferIndex
  * @extends {external:React.Component}
  */
 export const Canvas = ({
@@ -190,9 +209,15 @@ export const Canvas = ({
   toolStrokeWidth,
   toolFillColor,
   isDraggingTool,
+  draggedHandleOrientation,
   selectedTool,
   bufferShapes = [],
   focusedShape = {},
+  selectionDragStartX,
+  selectionDragStartY,
+  selectionDragX,
+  selectionDragY,
+  focusedShapeBufferIndex,
 }) =>
   <DraggableCore
     onStart={handleCanvasDragStart}
@@ -213,6 +238,12 @@ export const Canvas = ({
         <Buffer {...{
           handleShapeClick,
           bufferShapes,
+          draggedHandleOrientation,
+          selectionDragStartX,
+          selectionDragStartY,
+          selectionDragX,
+          selectionDragY,
+          focusedShapeBufferIndex,
         }} />
         {selectedTool !== selectedToolType.NONE ?
           <LiveShape {...

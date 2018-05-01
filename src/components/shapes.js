@@ -31,12 +31,12 @@ export const Rect = ({
   <rect
     onClick={handleShapeClick}
     {...Object.assign({
-      stroke,
-      fill,
-      strokeWidth,
-      transform: `rotate(${rotate} ${x + (dx / 2)} ${y + (dy / 2)})`,
       className,
       'data-buffer-index': bufferIndex,
+      fill,
+      stroke,
+      strokeWidth,
+      transform: `rotate(${rotate} ${x + (dx / 2)} ${y + (dy / 2)})`,
     }, absolutizeCoordinates(
       x,
       y,

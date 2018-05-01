@@ -61,6 +61,8 @@
     "react-color": "^2.14.0",
     "react-dom": "^16.2.0",
     "react-draggable": "^3.0.5",
-    "react-tooltip": "^3.4.0"
+    "react-tooltip": "^3.4.0",
+    "transformation-matrix": "^1.10.0",
+    "transformation-matrix-js": "^2.7.1"
   }
 }

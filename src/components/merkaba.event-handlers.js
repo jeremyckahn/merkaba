@@ -29,8 +29,7 @@ export default {
   handlePropertyChange (e) {
     const { target: { name, type, value, valueAsNumber } } = e;
 
-    this.updateBufferShapeProperty(
-      this.state.focusedShapeCursor.bufferIndex,
+    this.updateFocusedBufferShapeProperty(
       name,
       type === 'number' && !isNaN(valueAsNumber) ?
         valueAsNumber
@@ -46,8 +45,7 @@ export default {
   handleColorPropertyChange (color, name) {
     const { r, g, b, a } = color.rgb;
 
-    this.updateBufferShapeProperty(
-      this.state.focusedShapeCursor.bufferIndex,
+    this.updateFocusedBufferShapeProperty(
       name,
       `rgba(${r}, ${g}, ${b}, ${a})`
     );
@@ -61,6 +59,21 @@ export default {
     if (target.nodeName !== 'svg') {
       return;
     }
+
+    const {
+      x,
+      y,
+      width,
+      height,
+      top,
+      right,
+      bottom,
+      left
+    } = target.getBoundingClientRect();
+
+    this.setState({
+      svgBoundingRect: { x, y, width, height, top, right, bottom, left }
+    });
 
     this.setState({
       focusedShapeCursor: {
@@ -212,7 +225,7 @@ export default {
   handleBufferedShapeDrag (e, { deltaX, deltaY }) {
     const focusedShape = this.getFocusedShape();
 
-    this.updateBufferShape(this.state.focusedShapeCursor.bufferIndex, {
+    this.updateFocusedBufferShape({
       x: focusedShape.x + deltaX,
       y: focusedShape.y + deltaY
     });
@@ -230,12 +243,18 @@ export default {
   /**
    * @method merkaba.Merkaba#handleSelectionHandleDragStart
    * @param {external:React.SyntheticEvent} e
+   * @param {external:Draggable.DraggableData} data
    */
-  handleSelectionHandleDragStart (e) {
+  handleSelectionHandleDragStart (e, { x, y }) {
     const draggedHandleOrientation = e.target.getAttribute('orientation');
+    const { svgBoundingRect } = this.state;
+
     this.setState({
       draggedHandleOrientation,
-      isDraggingSelectionHandle: true
+      isDraggingSelectionHandle: true,
+      selectionDragStartX: x - svgBoundingRect.x,
+      selectionDragStartY: y - svgBoundingRect.y,
+      shapeStateBeforeDragTransform: this.getFocusedShape()
     });
   },
 
@@ -244,40 +263,22 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleSelectionHandleDrag (e, { deltaX, deltaY }) {
+  handleSelectionHandleDrag (e, { x, y }) {
     const {
-      draggedHandleOrientation,
-      focusedShapeCursor: { bufferIndex }
+      svgBoundingRect,
+      shapeStateBeforeDragTransform,
     } = this.state;
-    const modifiedShape = Object.assign({}, this.getFocusedShape());
 
-    switch (draggedHandleOrientation) {
-      case 'top-left':
-        modifiedShape.x += deltaX;
-        modifiedShape.y += deltaY;
-        modifiedShape.width -= deltaX;
-        modifiedShape.height -= deltaY;
-      break;
+    this.setState({
+      selectionDragX: x - svgBoundingRect.x,
+      selectionDragY: y - svgBoundingRect.y
+    });
 
-      case 'top-right':
-        modifiedShape.y += deltaY;
-        modifiedShape.width += deltaX;
-        modifiedShape.height -= deltaY;
-      break;
+    this.updateFocusedBufferShape(shapeStateBeforeDragTransform);
 
-      case 'bottom-right':
-        modifiedShape.width += deltaX;
-        modifiedShape.height += deltaY;
-      break;
-
-      case 'bottom-left':
-        modifiedShape.x += deltaX;
-        modifiedShape.width -= deltaX;
-        modifiedShape.height += deltaY;
-      break;
-    }
-
-    this.updateBufferShape(bufferIndex, modifiedShape);
+    this.applyMatrixToFocusedShape(
+      this.getAggregateDragMatrix()
+    );
   },
 
   /**
@@ -287,7 +288,12 @@ export default {
   handleSelectionHandleDragStop (e) {
     this.setState({
       draggedHandleOrientation: null,
-      isDraggingSelectionHandle: false
+      isDraggingSelectionHandle: false,
+      shapeStateBeforeDragTransform: {},
+      selectionDragStartX: null,
+      selectionDragStartY: null,
+      selectionDragX: null,
+      selectionDragY: null,
     });
   },
 
@@ -326,8 +332,7 @@ export default {
     const newAngle = Math.atan2(newY - originY, newX - originX);
     const deltaDegrees = (newAngle - oldAngle) * 180 / Math.PI;
 
-    this.updateBufferShapeProperty(
-      this.state.focusedShapeCursor.bufferIndex,
+    this.updateFocusedBufferShapeProperty(
       'rotate',
       (360 + (rotate + deltaDegrees)) % 360
     );

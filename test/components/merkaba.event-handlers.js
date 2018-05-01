@@ -1,5 +1,8 @@
 import React from 'react';
 import assert from 'assert';
+import {
+  sampleRect
+} from '../test-utils.js';
 import { Merkaba } from '../../src/components/merkaba';
 import {
   selectedToolType,
@@ -7,18 +10,6 @@ import {
   shapeType,
 } from '../../src/enums';
 import { shallow } from 'enzyme';
-
-const sampleRect = {
-  type: shapeType.RECT,
-  x: 10,
-  y: 15,
-  width: 10,
-  height: 10,
-  rotate: 0,
-  fill: null,
-  stroke: null,
-  strokeWidth: 1,
-};
 
 let component;
 
@@ -47,7 +38,12 @@ describe('eventHandlers', () => {
         }
       });
 
-      component.instance().handleCanvasMouseDown({ target: { nodeName: 'svg' } });
+      component.instance().handleCanvasMouseDown({
+        target: {
+          getBoundingClientRect: () => ({ x: 1, y: 2 }),
+          nodeName: 'svg'
+        },
+      });
     });
 
     it('resets the drag and focus state', () => {
@@ -55,6 +51,11 @@ describe('eventHandlers', () => {
         shapeFocus: shapeFocusType.NONE,
         bufferIndex: null
       });
+    });
+
+    it('updates the svgBoundingRect state', () => {
+      const { x, y } = component.state('svgBoundingRect');
+      assert.deepEqual({ x, y }, { x: 1, y: 2 });
     });
   });
 
@@ -237,7 +238,7 @@ describe('eventHandlers', () => {
     describe('clicking on a shape', () => {
       beforeEach(() => {
         component.setState({
-          bufferShapes: [Object.assign({}, sampleRect)],
+          bufferShapes: [sampleRect()],
         });
 
         component.instance().handleShapeClick({
@@ -257,7 +258,7 @@ describe('eventHandlers', () => {
   describe('Merkaba#handleBufferedShapeDragStart', () => {
     beforeEach(() => {
       component.setState({
-        bufferShapes: [Object.assign({}, sampleRect)],
+        bufferShapes: [sampleRect()],
       });
 
       component.instance().handleBufferedShapeDragStart({
@@ -280,7 +281,7 @@ describe('eventHandlers', () => {
   describe('Merkaba#handleBufferedShapeDrag', () => {
     beforeEach(() => {
       component.setState({
-        bufferShapes: [Object.assign({}, sampleRect)],
+        bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
           bufferIndex: 0
@@ -292,15 +293,16 @@ describe('eventHandlers', () => {
 
     it('modifies the bufferShapes data', () => {
       const [ shapeData ] = component.state('bufferShapes');
-      assert.equal(shapeData.x, sampleRect.x + 10);
-      assert.equal(shapeData.y, sampleRect.y - 10);
+      const { x, y } = sampleRect();
+      assert.equal(shapeData.x, x + 10);
+      assert.equal(shapeData.y, y - 10);
     });
   });
 
   describe('Merkaba#handleBufferedShapeDragStop', () => {
     beforeEach(() => {
       component.setState({
-        bufferShapes: [Object.assign({}, sampleRect)],
+        bufferShapes: [sampleRect()],
       });
       component.setState({ isDraggingShape: true });
 
@@ -316,11 +318,30 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleSelectionHandleDragStart', () => {
     beforeEach(() => {
-      component.instance().handleSelectionHandleDragStart({
-        target: {
-          getAttribute: () => 'top-left'
+      component.setState({
+        bufferShapes: [sampleRect()],
+        svgBoundingRect: { x: 0, y: 0 },
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 0,
         }
       });
+
+      component.instance().handleSelectionHandleDragStart({
+        target: {
+          getAttribute: () => 'top-left',
+          viewportElement: {
+            getBoundingClientRect: () => ({ x: 0, y: 0 })
+          }
+        },
+      }, {
+        x: 5,
+        y: 10
+      });
+    });
+
+    it('updates shapeStateBeforeDragTransform state', () => {
+      assert.deepEqual(component.state('shapeStateBeforeDragTransform'), sampleRect());
     });
 
     it('updates isDraggingSelectionHandle state', () => {
@@ -330,14 +351,24 @@ describe('eventHandlers', () => {
     it('updates draggedHandleOrientation state', () => {
       assert.equal(component.state('draggedHandleOrientation'), 'top-left');
     });
+
+    it('updates selectionDragStartX state', () => {
+      assert.equal(component.state('selectionDragStartX'), 5);
+    });
+
+    it('updates selectionDragStartY state', () => {
+      assert.equal(component.state('selectionDragStartY'), 10);
+    });
   });
 
   describe('Merkaba#handleSelectionHandleDrag', () => {
-    const deltaX = 5;
-    const deltaY = 10;
+    const x = 0;
+    const y = 5;
     beforeEach(() => {
       component.setState({
-        bufferShapes: [Object.assign({}, sampleRect)],
+        bufferShapes: [sampleRect()],
+        draggedHandleOrientation: 'top-left',
+        svgBoundingRect: { x: 0, y: 0 },
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
           bufferIndex: 0
@@ -345,59 +376,27 @@ describe('eventHandlers', () => {
       });
     });
 
-    describe('top-left', () => {
+    describe('state updates', () => {
       beforeEach(() => {
-        component.setState({ draggedHandleOrientation: 'top-left' });
-        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+        component.instance().handleSelectionHandleDrag(null, { x, y })
       });
 
-      it('modifies shape appropriately', () => {
-        const { x, y, height, width } = component.state('bufferShapes')[0];
-        assert.equal(x, sampleRect.x + deltaX);
-        assert.equal(y, sampleRect.y + deltaY);
-        assert.equal(width, sampleRect.x - deltaX);
-        assert.equal(height, sampleRect.height - deltaY);
-      });
-    });
-
-    describe('top-right', () => {
-      beforeEach(() => {
-        component.setState({ draggedHandleOrientation: 'top-right' });
-        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+      it('updates the selectionDragX state', () => {
+        assert.equal(component.state('selectionDragX'), x);
       });
 
-      it('modifies shape appropriately', () => {
-        const { y, height, width } = component.state('bufferShapes')[0];
-        assert.equal(y, sampleRect.y + deltaY);
-        assert.equal(width, sampleRect.x + deltaX);
-        assert.equal(height, sampleRect.height - deltaY);
-      });
-    });
-
-    describe('bottom-right', () => {
-      beforeEach(() => {
-        component.setState({ draggedHandleOrientation: 'bottom-right' });
-        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
+      it('updates the selectionDragY state', () => {
+        assert.equal(component.state('selectionDragY'), y);
       });
 
-      it('modifies shape appropriately', () => {
-        const { height, width } = component.state('bufferShapes')[0];
-        assert.equal(width, sampleRect.x + deltaX);
-        assert.equal(height, sampleRect.height + deltaY);
-      });
-    });
-
-    describe('bottom-left', () => {
-      beforeEach(() => {
-        component.setState({ draggedHandleOrientation: 'bottom-left' });
-        component.instance().handleSelectionHandleDrag(null, { deltaX, deltaY })
-      });
-
-      it('modifies shape appropriately', () => {
-        const { x, height, width } = component.state('bufferShapes')[0];
-        assert.equal(x, sampleRect.x + deltaX);
-        assert.equal(width, sampleRect.x - deltaX);
-        assert.equal(height, sampleRect.height + deltaY);
+      it('updates the focused shape', () => {
+        const { height, width, x, y } = component.instance().getFocusedShape();
+        assert.deepEqual({ height, width, x, y }, {
+          height: 5,
+          width: 10,
+          x: 10,
+          y: 20
+        });
       });
     });
   });
@@ -406,7 +405,12 @@ describe('eventHandlers', () => {
     beforeEach(() => {
       component.setState({
         draggedHandleOrientation: 'top-left',
-        isDraggingSelectionHandle: true
+        isDraggingSelectionHandle: true,
+        shapeStateBeforeDragTransform: sampleRect(),
+        selectionDragStartX: 5,
+        selectionDragStartY: 10,
+        selectionDragX: 0,
+        selectionDragY: 5,
       });
       component.instance().handleSelectionHandleDragStop();
     });
@@ -417,6 +421,26 @@ describe('eventHandlers', () => {
 
     it('updates draggedHandleOrientation state', () => {
       assert.equal(component.state('draggedHandleOrientation'), null);
+    });
+
+    it('updates shapeStateBeforeDragTransform state', () => {
+      assert.deepEqual(component.state('shapeStateBeforeDragTransform'), {});
+    });
+
+    it('updates selectionDragStartX state', () => {
+      assert.equal(component.state('selectionDragStartX'), null);
+    });
+
+    it('updates selectionDragStartY state', () => {
+      assert.equal(component.state('selectionDragStartY'), null);
+    });
+
+    it('updates the selectionDragX state', () => {
+      assert.equal(component.state('selectionDragX'), null);
+    });
+
+    it('updates the selectionDragY state', () => {
+      assert.equal(component.state('selectionDragY'), null);
     });
   });
 
@@ -477,7 +501,7 @@ describe('eventHandlers', () => {
   describe('handlePropertyChange', () => {
     beforeEach(() => {
       component.setState({
-        bufferShapes: [Object.assign({}, sampleRect)],
+        bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
           bufferIndex: 0
@@ -502,7 +526,7 @@ describe('eventHandlers', () => {
   describe('handleColorPropertyChange', () => {
     beforeEach(() => {
       component.setState({
-        bufferShapes: [Object.assign({}, sampleRect)],
+        bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
           bufferIndex: 0
