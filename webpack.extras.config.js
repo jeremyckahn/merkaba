@@ -11,6 +11,7 @@ module.exports = Object.assign(commonConfig, {
   entry: {
     demo: './demo/index.js'
   },
+  mode: 'development',
   output: {
     path: path.join(__dirname, `${dist}`),
     filename: '[name].js',

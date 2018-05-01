@@ -7,6 +7,7 @@ module.exports = Object.assign(commonConfig, {
     tests: './test/index.js',
     demo: './demo/index.js'
   },
+  mode: 'development',
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',

@@ -9,6 +9,7 @@ const dist = 'dist';
 
 module.exports = Object.assign(commonConfig, {
   entry: './src/index.js',
+  mode: 'production',
   output: {
     path: path.join(__dirname, `${dist}`),
     filename: `app.js`,
@@ -18,15 +19,6 @@ module.exports = Object.assign(commonConfig, {
   },
   plugins: [
     new CleanWebpackPlugin([ dist ]),
-    new Webpack.optimize.UglifyJsPlugin({
-      compress: {
-        dead_code: true,
-        unused: true
-      },
-      output: {
-        comments: false
-      }
-    }),
     new Webpack.BannerPlugin(version),
   ]
 });
