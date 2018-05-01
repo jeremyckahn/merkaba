@@ -7,7 +7,7 @@ export const ColorInput = ({
   name,
   handlePropertyChange,
   handleColorPropertyChange,
-}) =>
+}) => (
   <span>
     <input
       data-tip
@@ -27,9 +27,8 @@ export const ColorInput = ({
     >
       <ChromePicker
         color={value}
-        onChange={
-          color => handleColorPropertyChange(color, name)
-        }
+        onChange={color => handleColorPropertyChange(color, name)}
       />
     </ReactTooltip>
   </span>
+);

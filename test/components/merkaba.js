@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  sampleRect
-} from '../test-utils.js';
+import { sampleRect } from '../test-utils.js';
 import { Merkaba } from '../../src/components/merkaba';
-import {
-  selectedToolType,
-  shapeFocusType,
-  shapeType,
-} from '../../src/enums';
+import { selectedToolType, shapeFocusType, shapeType } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
@@ -149,7 +143,7 @@ describe('Merkaba', () => {
       it('has a default value', () => {
         assert.deepEqual(component.state('focusedShapeCursor'), {
           shapeFocus: shapeFocusType.NONE,
-          bufferIndex: null
+          bufferIndex: null,
         });
       });
     });
@@ -165,7 +159,7 @@ describe('Merkaba', () => {
 
       it('returns empty shape data', () => {
         assert.deepEqual(focusedShape, {
-          type: shapeType.NONE
+          type: shapeType.NONE,
         });
       });
     });
@@ -175,7 +169,7 @@ describe('Merkaba', () => {
         component.setState({
           focusedShapeCursor: {
             shapeFocus: shapeFocusType.LIVE,
-            bufferIndex: null
+            bufferIndex: null,
           },
           selectedTool: selectedToolType.RECTANGLE,
           toolDragStartX: 10,
@@ -219,9 +213,9 @@ describe('Merkaba', () => {
           component.setState({
             focusedShapeCursor: {
               shapeFocus: shapeFocusType.BUFFER,
-              bufferIndex: 0
+              bufferIndex: 0,
             },
-            bufferShapes: [bufferShape]
+            bufferShapes: [bufferShape],
           });
 
           focusedShape = component.instance().getFocusedShape();
@@ -237,9 +231,9 @@ describe('Merkaba', () => {
           component.setState({
             focusedShapeCursor: {
               shapeFocus: shapeFocusType.BUFFER,
-              bufferIndex: 1
+              bufferIndex: 1,
             },
-            bufferShapes: [bufferShape]
+            bufferShapes: [bufferShape],
           });
 
           focusedShape = component.instance().getFocusedShape();
@@ -265,7 +259,7 @@ describe('Merkaba', () => {
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0
+          bufferIndex: 0,
         },
       });
     });
@@ -277,14 +271,17 @@ describe('Merkaba', () => {
 
       it('computes the correct matrix', () => {
         const { a, b, c, d, e, f } = matrix;
-        assert.deepEqual({ a, b, c, d, e, f }, {
-          a: -3,
-          b: 0,
-          c: 0,
-          d: -3,
-          e: 80,
-          f: 100
-        });
+        assert.deepEqual(
+          { a, b, c, d, e, f },
+          {
+            a: -3,
+            b: 0,
+            c: 0,
+            d: -3,
+            e: 80,
+            f: 100,
+          }
+        );
       });
     });
 
@@ -294,17 +291,20 @@ describe('Merkaba', () => {
       });
 
       it('computes the correct matrix', () => {
-        assert.deepEqual({
-          a: Math.round(matrix.a),
-          d: Math.round(matrix.d),
-          e: Math.round(matrix.e),
-          f: Math.round(matrix.f)
-        }, {
-          a: 3,
-          d: 3,
-          e: -50,
-          f: -60
-        });
+        assert.deepEqual(
+          {
+            a: Math.round(matrix.a),
+            d: Math.round(matrix.d),
+            e: Math.round(matrix.e),
+            f: Math.round(matrix.f),
+          },
+          {
+            a: 3,
+            d: 3,
+            e: -50,
+            f: -60,
+          }
+        );
       });
     });
   });
@@ -322,7 +322,7 @@ describe('Merkaba', () => {
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0
+          bufferIndex: 0,
         },
       });
 
@@ -331,14 +331,17 @@ describe('Merkaba', () => {
 
     it('computes the correct matrix', () => {
       const { a, b, c, d, e, f } = matrix;
-      assert.deepEqual({ a, b, c, d, e, f }, {
-        a: -3,
-        b: 0,
-        c: 0,
-        d: -3,
-        e: 80,
-        f: 100
-      });
+      assert.deepEqual(
+        { a, b, c, d, e, f },
+        {
+          a: -3,
+          b: 0,
+          c: 0,
+          d: -3,
+          e: 80,
+          f: 100,
+        }
+      );
     });
   });
 
@@ -353,24 +356,25 @@ describe('Merkaba', () => {
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0
+          bufferIndex: 0,
         },
       });
 
       const instance = component.instance();
-      instance.applyMatrixToFocusedShape(
-        instance.getAggregateDragMatrix()
-      );
+      instance.applyMatrixToFocusedShape(instance.getAggregateDragMatrix());
     });
 
     it('sets the matrix values to the focused shape', () => {
       const { height, width, x, y } = component.instance().getFocusedShape();
-      assert.deepEqual({ height, width, x, y }, {
-        height: 30,
-        width: 30,
-        x: 20,
-        y: 25
-      });
+      assert.deepEqual(
+        { height, width, x, y },
+        {
+          height: 30,
+          width: 30,
+          x: 20,
+          y: 25,
+        }
+      );
     });
   });
 });

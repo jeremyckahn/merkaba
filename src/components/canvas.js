@@ -24,71 +24,56 @@ const Buffer = ({
   selectionDragY,
   focusedShapeBufferIndex,
 }) =>
-  bufferShapes.map(({
-    type,
-    x,
-    y,
-    width,
-    height,
-    rotate,
-    stroke,
-    fill,
-    strokeWidth,
-  }, i) =>
-    type === shapeType.RECT ?
-      <Rect
-        key={i}
-        bufferIndex={i}
-        className="buffered"
-        dx={width}
-        dy={height}
-        {...{
-          x,
-          y,
-          rotate,
-          stroke,
-          fill,
-          strokeWidth,
-          handleShapeClick,
-        }}
-      />
-      : null
-  )
+  bufferShapes.map(
+    ({ type, x, y, width, height, rotate, stroke, fill, strokeWidth }, i) =>
+      type === shapeType.RECT ? (
+        <Rect
+          key={i}
+          bufferIndex={i}
+          className="buffered"
+          dx={width}
+          dy={height}
+          {...{
+            x,
+            y,
+            rotate,
+            stroke,
+            fill,
+            strokeWidth,
+            handleShapeClick,
+          }}
+        />
+      ) : null
+  );
 
 const Selector = ({
-  focusedShape: {
-    type,
-    x = 0,
-    y = 0,
-    width = 0,
-    height = 0,
-    rotate = 0,
-  },
+  focusedShape: { type, x = 0, y = 0, width = 0, height = 0, rotate = 0 },
   handleConfig = [
     {
       orientation: 'top-left',
       x,
-      y
-    }, {
+      y,
+    },
+    {
       orientation: 'top-right',
       x: x + width,
-      y
-    }, {
+      y,
+    },
+    {
       orientation: 'bottom-right',
       x: x + width,
-      y: y + height
-    }, {
+      y: y + height,
+    },
+    {
       orientation: 'bottom-left',
       x,
-      y: y + height
-    }
-  ]
+      y: y + height,
+    },
+  ],
 }) =>
-  type === shapeType.NONE ? null :
-    <g
-      transform={`rotate(${rotate} ${x + (width / 2)} ${y + (height / 2)})`}
-    >
-      {handleConfig.map(({ orientation, x, y }, i) =>
+  type === shapeType.NONE ? null : (
+    <g transform={`rotate(${rotate} ${x + width / 2} ${y + height / 2})`}>
+      {handleConfig.map(({ orientation, x, y }, i) => (
         <ellipse
           {...{
             key: `handle-rotator-${i}`,
@@ -99,8 +84,7 @@ const Selector = ({
             ry: rotatorHitArea,
           }}
         />
-      )
-    }
+      ))}
       <Rect
         {...{
           x,
@@ -112,7 +96,7 @@ const Selector = ({
           className: 'selection',
         }}
       />
-      {handleConfig.map(({ orientation, x, y }, i) =>
+      {handleConfig.map(({ orientation, x, y }, i) => (
         <ellipse
           {...{
             key: `handle-${i}`,
@@ -124,9 +108,9 @@ const Selector = ({
             ry: 5,
           }}
         />
-      )
-    }
-  </g>
+      ))}
+    </g>
+  );
 
 /**
  * @param {number|null} toolDragStartX
@@ -151,8 +135,8 @@ const LiveShape = ({
   toolFillColor,
   toolStrokeWidth,
 }) =>
-  isDraggingTool ?
-    selectedTool === selectedToolType.RECTANGLE ?
+  isDraggingTool ? (
+    selectedTool === selectedToolType.RECTANGLE ? (
       <Rect
         className="live"
         x={toolDragStartX}
@@ -164,8 +148,8 @@ const LiveShape = ({
         fill={toolFillColor}
         strokeWidth={toolStrokeWidth}
       />
-    : null
-  : null
+    ) : null
+  ) : null;
 
 /**
  * @class merkaba.Canvas
@@ -218,7 +202,7 @@ export const Canvas = ({
   selectionDragX,
   selectionDragY,
   focusedShapeBufferIndex,
-}) =>
+}) => (
   <DraggableCore
     onStart={handleCanvasDragStart}
     onDrag={handleCanvasDrag}
@@ -235,34 +219,40 @@ export const Canvas = ({
         xmlns="http://www.w3.org/2000/svg"
         onMouseDown={handleCanvasMouseDown}
       >
-        <Buffer {...{
-          handleShapeClick,
-          bufferShapes,
-          draggedHandleOrientation,
-          selectionDragStartX,
-          selectionDragStartY,
-          selectionDragX,
-          selectionDragY,
-          focusedShapeBufferIndex,
-        }} />
-        {selectedTool !== selectedToolType.NONE ?
-          <LiveShape {...
-          {
-            isDraggingTool,
-            selectedTool,
-            toolDragStartX,
-            toolDragStartY,
-            toolDragDeltaX,
-            toolDragDeltaY,
-            toolRotate,
-            toolStrokeColor,
-            toolFillColor,
-            toolStrokeWidth,
-          }} />
-        : null}
-        <Selector {...{
-          focusedShape,
-        }} />
+        <Buffer
+          {...{
+            handleShapeClick,
+            bufferShapes,
+            draggedHandleOrientation,
+            selectionDragStartX,
+            selectionDragStartY,
+            selectionDragX,
+            selectionDragY,
+            focusedShapeBufferIndex,
+          }}
+        />
+        {selectedTool !== selectedToolType.NONE ? (
+          <LiveShape
+            {...{
+              isDraggingTool,
+              selectedTool,
+              toolDragStartX,
+              toolDragStartY,
+              toolDragDeltaX,
+              toolDragDeltaY,
+              toolRotate,
+              toolStrokeColor,
+              toolFillColor,
+              toolStrokeWidth,
+            }}
+          />
+        ) : null}
+        <Selector
+          {...{
+            focusedShape,
+          }}
+        />
       </svg>
     </div>
   </DraggableCore>
+);

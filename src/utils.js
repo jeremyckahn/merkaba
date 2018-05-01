@@ -4,7 +4,7 @@ import {
   rotateDEG,
   transform,
   translate,
-  scale
+  scale,
 } from 'transformation-matrix';
 
 /**
@@ -31,7 +31,8 @@ export const absolutizeCoordinates = (x1, y1, x2, y2) => ({
  * @return { rotate: number, originX: number, originY: number, scaleX: number, scaleY: number, transformX: number, transformY: number}
  */
 const computeMidDragTransform = (
-  { // Shape data
+  {
+    // Shape data
     x,
     y,
     width,
@@ -40,14 +41,15 @@ const computeMidDragTransform = (
   },
   draggedHandleOrientation,
   dragDeltaX,
-  dragDeltaY,
+  dragDeltaY
 ) => {
-
   // This logic is adapted from SVG-Edit:
   // https://github.com/SVG-Edit/svgedit/blob/396cce40ebfde03f7245c682041f63f07f69e3d3/editor/svgcanvas.js#L1648-L1737
 
   if (rotate) {
-    const radians = Math.sqrt((dragDeltaX * dragDeltaX) + (dragDeltaY * dragDeltaY));
+    const radians = Math.sqrt(
+      dragDeltaX * dragDeltaX + dragDeltaY * dragDeltaY
+    );
     const theta = Math.atan2(dragDeltaY, dragDeltaX) - rotate * Math.PI / 180;
     dragDeltaX = radians * Math.cos(theta);
     dragDeltaY = radians * Math.sin(theta);
@@ -70,8 +72,8 @@ const computeMidDragTransform = (
 
   return {
     rotate,
-    originX: x + (width / 2),
-    originY: y + (height / 2),
+    originX: x + width / 2,
+    originY: y + height / 2,
     scaleX,
     scaleY,
     transformX: transformX + x,
@@ -86,11 +88,11 @@ const computeMidDragTransform = (
  * @param {number} dragDeltaY
  * @return {Matrix}
  */
-export const computeMidDragMatrix = function (
+export const computeMidDragMatrix = function(
   shapeData,
   draggedHandleOrientation,
   dragDeltaX,
-  dragDeltaY,
+  dragDeltaY
 ) {
   const {
     rotate,
@@ -110,4 +112,4 @@ export const computeMidDragMatrix = function (
       translate(-transformX, -transformY),
     ])
   );
-}
+};

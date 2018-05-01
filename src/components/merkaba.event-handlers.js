@@ -1,15 +1,11 @@
-import {
-  selectedToolType,
-  shapeFocusType,
-  shapeType,
-} from '../enums';
+import { selectedToolType, shapeFocusType, shapeType } from '../enums';
 
 export default {
   /**
    * @method merkaba.Merkaba#handleToolClick
    * @param {merkaba.module:enums.selectedToolType} selectedTool
    */
-  handleToolClick (selectedTool) {
+  handleToolClick(selectedTool) {
     this.setState({ selectedTool });
   },
 
@@ -18,7 +14,7 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleShapeClick (e) {
+  handleShapeClick(e) {
     this.focusBufferShape(e.target);
   },
 
@@ -26,14 +22,14 @@ export default {
    * @method merkaba.Merkaba#handlePropertyChange
    * @param {external:React.SyntheticEvent} e
    */
-  handlePropertyChange (e) {
-    const { target: { name, type, value, valueAsNumber } } = e;
+  handlePropertyChange(e) {
+    const {
+      target: { name, type, value, valueAsNumber },
+    } = e;
 
     this.updateFocusedBufferShapeProperty(
       name,
-      type === 'number' && !isNaN(valueAsNumber) ?
-        valueAsNumber
-        : value
+      type === 'number' && !isNaN(valueAsNumber) ? valueAsNumber : value
     );
   },
 
@@ -42,20 +38,17 @@ export default {
    * @param {external:ReactColor.Color} color
    * @param {string} name
    */
-  handleColorPropertyChange (color, name) {
+  handleColorPropertyChange(color, name) {
     const { r, g, b, a } = color.rgb;
 
-    this.updateFocusedBufferShapeProperty(
-      name,
-      `rgba(${r}, ${g}, ${b}, ${a})`
-    );
+    this.updateFocusedBufferShapeProperty(name, `rgba(${r}, ${g}, ${b}, ${a})`);
   },
 
   /**
    * @method merkaba.Merkaba#handleCanvasMouseDown
    * @param {external:React.SyntheticEvent} e
    */
-  handleCanvasMouseDown ({ target, currentTarget }) {
+  handleCanvasMouseDown({ target, currentTarget }) {
     if (target.nodeName !== 'svg') {
       return;
     }
@@ -68,18 +61,18 @@ export default {
       top,
       right,
       bottom,
-      left
+      left,
     } = target.getBoundingClientRect();
 
     this.setState({
-      svgBoundingRect: { x, y, width, height, top, right, bottom, left }
+      svgBoundingRect: { x, y, width, height, top, right, bottom, left },
     });
 
     this.setState({
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.NONE,
-        bufferIndex: null
-      }
+        bufferIndex: null,
+      },
     });
   },
 
@@ -88,8 +81,10 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleCanvasDragStart (e, data) {
-    const { target: { nodeName, classList } } = e;
+  handleCanvasDragStart(e, data) {
+    const {
+      target: { nodeName, classList },
+    } = e;
 
     // Because of limitations of how DraggableCore handles events and the fact
     // that all SVG shapes (buffered, live, selector components, etc.) are all
@@ -111,7 +106,11 @@ export default {
       return;
     }
 
-    const { x, y, node: { offsetLeft, offsetTop } } = data;
+    const {
+      x,
+      y,
+      node: { offsetLeft, offsetTop },
+    } = data;
 
     this.setState({
       isDraggingTool: true,
@@ -121,8 +120,8 @@ export default {
       toolDragDeltaY: 0,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.LIVE,
-        bufferIndex: null
-      }
+        bufferIndex: null,
+      },
     });
   },
 
@@ -131,7 +130,7 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleCanvasDrag (e, { deltaX, deltaY }) {
+  handleCanvasDrag(e, { deltaX, deltaY }) {
     const {
       isDraggingSelectionHandle,
       isDraggingSelectionRotator,
@@ -153,14 +152,14 @@ export default {
 
     this.setState({
       toolDragDeltaX: toolDragDeltaX + deltaX,
-      toolDragDeltaY: toolDragDeltaY + deltaY
+      toolDragDeltaY: toolDragDeltaY + deltaY,
     });
   },
 
   /**
    * @method merkaba.Merkaba#handleCanvasDragStop
    */
-  handleCanvasDragStop (e) {
+  handleCanvasDragStop(e) {
     const {
       isDraggingSelectionHandle,
       isDraggingSelectionRotator,
@@ -202,8 +201,8 @@ export default {
       selectedTool: selectedToolType.NONE,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: 0
-      }
+        bufferIndex: 0,
+      },
     });
   },
 
@@ -212,7 +211,7 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleBufferedShapeDragStart (e) {
+  handleBufferedShapeDragStart(e) {
     this.focusBufferShape(e.target);
     this.setState({ isDraggingShape: true });
   },
@@ -222,12 +221,12 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleBufferedShapeDrag (e, { deltaX, deltaY }) {
+  handleBufferedShapeDrag(e, { deltaX, deltaY }) {
     const focusedShape = this.getFocusedShape();
 
     this.updateFocusedBufferShape({
       x: focusedShape.x + deltaX,
-      y: focusedShape.y + deltaY
+      y: focusedShape.y + deltaY,
     });
   },
 
@@ -236,7 +235,7 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleBufferedShapeDragStop () {
+  handleBufferedShapeDragStop() {
     this.setState({ isDraggingShape: false });
   },
 
@@ -245,7 +244,7 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleSelectionHandleDragStart (e, { x, y }) {
+  handleSelectionHandleDragStart(e, { x, y }) {
     const draggedHandleOrientation = e.target.getAttribute('orientation');
     const { svgBoundingRect } = this.state;
 
@@ -254,7 +253,7 @@ export default {
       isDraggingSelectionHandle: true,
       selectionDragStartX: x - svgBoundingRect.x,
       selectionDragStartY: y - svgBoundingRect.y,
-      shapeStateBeforeDragTransform: this.getFocusedShape()
+      shapeStateBeforeDragTransform: this.getFocusedShape(),
     });
   },
 
@@ -263,29 +262,24 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleSelectionHandleDrag (e, { x, y }) {
-    const {
-      svgBoundingRect,
-      shapeStateBeforeDragTransform,
-    } = this.state;
+  handleSelectionHandleDrag(e, { x, y }) {
+    const { svgBoundingRect, shapeStateBeforeDragTransform } = this.state;
 
     this.setState({
       selectionDragX: x - svgBoundingRect.x,
-      selectionDragY: y - svgBoundingRect.y
+      selectionDragY: y - svgBoundingRect.y,
     });
 
     this.updateFocusedBufferShape(shapeStateBeforeDragTransform);
 
-    this.applyMatrixToFocusedShape(
-      this.getAggregateDragMatrix()
-    );
+    this.applyMatrixToFocusedShape(this.getAggregateDragMatrix());
   },
 
   /**
    * @method merkaba.Merkaba#handleSelectionHandleDragStop
    * @param {external:React.SyntheticEvent} e
    */
-  handleSelectionHandleDragStop (e) {
+  handleSelectionHandleDragStop(e) {
     this.setState({
       draggedHandleOrientation: null,
       isDraggingSelectionHandle: false,
@@ -301,7 +295,7 @@ export default {
    * @method merkaba.Merkaba#handleSelectionRotatorDragStart
    * @param {external:React.SyntheticEvent} e
    */
-  handleSelectionRotatorDragStart (e) {
+  handleSelectionRotatorDragStart(e) {
     this.setState({ isDraggingSelectionRotator: true });
   },
 
@@ -310,23 +304,18 @@ export default {
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
-  handleSelectionRotatorDrag (e, data) {
+  handleSelectionRotatorDrag(e, data) {
     const {
       height,
       width,
       x: shapeX,
       y: shapeY,
-      rotate
+      rotate,
     } = this.getFocusedShape();
-    const {
-      lastX,
-      lastY,
-      x: newX,
-      y: newY
-    } = data;
+    const { lastX, lastY, x: newX, y: newY } = data;
 
-    const originX = shapeX + (width  / 2);
-    const originY = shapeY + (height  / 2);
+    const originX = shapeX + width / 2;
+    const originY = shapeY + height / 2;
 
     const oldAngle = Math.atan2(lastY - originY, lastX - originX);
     const newAngle = Math.atan2(newY - originY, newX - originX);
@@ -342,7 +331,7 @@ export default {
    * @method merkaba.Merkaba#handleSelectionRotatorDragStop
    * @param {external:React.SyntheticEvent} e
    */
-  handleSelectionRotatorDragStop (e) {
+  handleSelectionRotatorDragStop(e) {
     this.setState({ isDraggingSelectionRotator: false });
   },
 };

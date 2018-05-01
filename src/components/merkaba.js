@@ -6,20 +6,13 @@ import {
   rotateDEG,
   transform,
   translate,
-  scale
+  scale,
 } from 'transformation-matrix';
 import { Toolbar } from './toolbar';
 import { Canvas } from './canvas';
 import { Details } from './details';
-import {
-  selectedToolType,
-  shapeFocusType,
-  shapeType,
-} from '../enums';
-import {
-  absolutizeCoordinates,
-  computeMidDragMatrix,
-} from '../utils';
+import { selectedToolType, shapeFocusType, shapeType } from '../enums';
+import { absolutizeCoordinates, computeMidDragMatrix } from '../utils';
 import eventHandlers from './merkaba.event-handlers';
 
 /**
@@ -64,7 +57,7 @@ const emptyShape = { type: shapeType.NONE };
  * @extends {external:React.Component}
  */
 export class Merkaba extends Component {
-  constructor () {
+  constructor() {
     super(...arguments);
 
     /**
@@ -96,13 +89,13 @@ export class Merkaba extends Component {
       bufferShapes: [],
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.NONE,
-        bufferIndex: null
+        bufferIndex: null,
       },
     };
 
     // Bind event handlers
     Object.keys(eventHandlers).forEach(
-      method => this[method] = eventHandlers[method].bind(this)
+      method => (this[method] = eventHandlers[method].bind(this))
     );
   }
 
@@ -110,18 +103,15 @@ export class Merkaba extends Component {
    * @method merkaba.Merkaba#getFocusedShape
    * @return {merkaba.svgShape}
    */
-  getFocusedShape () {
+  getFocusedShape() {
     const {
       bufferShapes,
-      focusedShapeCursor: {
-        shapeFocus,
-        bufferIndex
-      }
+      focusedShapeCursor: { shapeFocus, bufferIndex },
     } = this.state;
     const { NONE, LIVE } = shapeFocusType;
 
-    return shapeFocus === NONE || shapeFocus === LIVE ?
-      this.getLiveShape()
+    return shapeFocus === NONE || shapeFocus === LIVE
+      ? this.getLiveShape()
       : Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
   }
 
@@ -130,7 +120,7 @@ export class Merkaba extends Component {
    * @method merkaba.Merkaba#getLiveShape
    * @return {merkaba.svgShape}
    */
-  getLiveShape () {
+  getLiveShape() {
     const {
       selectedTool,
       toolDragStartX,
@@ -145,18 +135,21 @@ export class Merkaba extends Component {
 
     if (toolDragStartX !== null) {
       if (selectedTool === selectedToolType.RECTANGLE) {
-        return Object.assign({
-          type: shapeType.RECT,
-          stroke: toolStrokeColor,
-          fill: toolFillColor,
-          rotate: toolRotate,
-          strokeWidth: toolStrokeWidth,
-        }, absolutizeCoordinates(
-          toolDragStartX,
-          toolDragStartY,
-          toolDragDeltaX,
-          toolDragDeltaY
-        ));
+        return Object.assign(
+          {
+            type: shapeType.RECT,
+            stroke: toolStrokeColor,
+            fill: toolFillColor,
+            rotate: toolRotate,
+            strokeWidth: toolStrokeWidth,
+          },
+          absolutizeCoordinates(
+            toolDragStartX,
+            toolDragStartY,
+            toolDragDeltaX,
+            toolDragDeltaY
+          )
+        );
       }
     }
 
@@ -169,7 +162,7 @@ export class Merkaba extends Component {
    * @param {number} [config.rotationOffset=0]
    * @return {Matrix}
    */
-  getMidDragMatrix ({ rotationOffset = 0 } = {}) {
+  getMidDragMatrix({ rotationOffset = 0 } = {}) {
     const focusedShape = this.getFocusedShape();
     const { x, y, width, height } = focusedShape;
     const rotate = focusedShape.rotate + rotationOffset;
@@ -181,23 +174,19 @@ export class Merkaba extends Component {
       selectionDragStartY: rawSelectionDragStartY,
     } = this.state;
 
-    const {
-      x: selectionDragStartX,
-      y: selectionDragStartY
-    } = applyToPoint(
-      rotateDEG(rotationOffset), {
+    const { x: selectionDragStartX, y: selectionDragStartY } = applyToPoint(
+      rotateDEG(rotationOffset),
+      {
         x: rawSelectionDragStartX,
-        y: rawSelectionDragStartY
+        y: rawSelectionDragStartY,
       }
     );
 
-    const {
-      x: selectionDragX,
-      y: selectionDragY
-    } = applyToPoint(
-      rotateDEG(rotationOffset), {
+    const { x: selectionDragX, y: selectionDragY } = applyToPoint(
+      rotateDEG(rotationOffset),
+      {
         x: rawSelectionDragX || rawSelectionDragStartX,
-        y: rawSelectionDragY || rawSelectionDragStartY
+        y: rawSelectionDragY || rawSelectionDragStartY,
       }
     );
 
@@ -213,7 +202,7 @@ export class Merkaba extends Component {
    * @method merkaba.Merkaba#getAggregateDragMatrix
    * @return {Matrix}
    */
-  getAggregateDragMatrix () {
+  getAggregateDragMatrix() {
     // It would be ideal if this method only needed to call getMidDragMatrix
     // once (and if that method didn't need the rotationOffset option), but it
     // appears that it's all necessary to properly compute the new center
@@ -223,8 +212,8 @@ export class Merkaba extends Component {
     const { x, y, width, height, rotate } = this.getFocusedShape();
 
     const oldCenter = {
-      x: x + (width / 2),
-      y: y + (height / 2),
+      x: x + width / 2,
+      y: y + height / 2,
     };
 
     const newCenter = this.getMidDragMatrix().applyToPoint(
@@ -236,12 +225,10 @@ export class Merkaba extends Component {
     // https://github.com/SVG-Edit/svgedit/blob/396cce40ebfde03f7245c682041f63f07f69e3d3/editor/recalculate.js#L790-L800
     return Matrix.from(
       transform(
-        inverse(
-          rotateDEG(rotate, newCenter.x, newCenter.y)
-        ),
+        inverse(rotateDEG(rotate, newCenter.x, newCenter.y)),
         rotateDEG(rotate, oldCenter.x, oldCenter.y),
         this.getMidDragMatrix({
-          rotationOffset: -rotate
+          rotationOffset: -rotate,
         })
       )
     );
@@ -251,7 +238,7 @@ export class Merkaba extends Component {
    * @method merkaba.Merkaba#applyMatrixToFocusedShape
    * @param {Matrix} matrix
    */
-  applyMatrixToFocusedShape (matrix) {
+  applyMatrixToFocusedShape(matrix) {
     const { x, y, width, height } = this.getFocusedShape();
 
     // Adapted from
@@ -276,12 +263,12 @@ export class Merkaba extends Component {
    * @method merkaba.Merkaba#focusBufferShape
    * @param {SVGElement} shapeEl
    */
-  focusBufferShape (shapeEl) {
+  focusBufferShape(shapeEl) {
     this.setState({
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: +shapeEl.getAttribute('data-buffer-index')
-      }
+        bufferIndex: +shapeEl.getAttribute('data-buffer-index'),
+      },
     });
   }
 
@@ -291,13 +278,14 @@ export class Merkaba extends Component {
    * @param {Object.<any>} newShapeData Any properties to update the buffered
    * shape with.
    */
-  updateBufferShape (shapeIndex, newShapeData) {
-    const {
-      bufferShapes,
-    } = this.state;
+  updateBufferShape(shapeIndex, newShapeData) {
+    const { bufferShapes } = this.state;
     const modifiedBuffer = bufferShapes.slice();
-    modifiedBuffer[shapeIndex] =
-      Object.assign({}, this.getFocusedShape(), newShapeData);
+    modifiedBuffer[shapeIndex] = Object.assign(
+      {},
+      this.getFocusedShape(),
+      newShapeData
+    );
 
     this.setState({ bufferShapes: modifiedBuffer });
   }
@@ -307,7 +295,7 @@ export class Merkaba extends Component {
    * @param {Object.<any>} newShapeData Any properties to update the buffered
    * shape with.
    */
-  updateFocusedBufferShape (newShapeData) {
+  updateFocusedBufferShape(newShapeData) {
     this.updateBufferShape(
       this.state.focusedShapeCursor.bufferIndex,
       newShapeData
@@ -320,8 +308,8 @@ export class Merkaba extends Component {
    * @param {string} name
    * @param {*} value
    */
-  updateBufferShapeProperty (bufferIndex, name, value) {
-    const { bufferShapes, } = this.state;
+  updateBufferShapeProperty(bufferIndex, name, value) {
+    const { bufferShapes } = this.state;
 
     const shape = Object.assign({}, bufferShapes[bufferIndex]);
     shape[name] = value;
@@ -337,7 +325,7 @@ export class Merkaba extends Component {
    * @param {string} name
    * @param {*} value
    */
-  updateFocusedBufferShapeProperty (name, value) {
+  updateFocusedBufferShapeProperty(name, value) {
     this.updateBufferShapeProperty(
       this.state.focusedShapeCursor.bufferIndex,
       name,
@@ -345,7 +333,7 @@ export class Merkaba extends Component {
     );
   }
 
-  render () {
+  render() {
     const {
       state: {
         isDraggingTool,
@@ -364,9 +352,7 @@ export class Merkaba extends Component {
         selectionDragStartY,
         selectionDragX,
         selectionDragY,
-        focusedShapeCursor: {
-          bufferIndex: focusedShapeBufferIndex
-        }
+        focusedShapeCursor: { bufferIndex: focusedShapeBufferIndex },
       },
       handleToolClick,
       handleCanvasMouseDown,
@@ -385,7 +371,7 @@ export class Merkaba extends Component {
         <Toolbar
           {...{
             handleToolClick,
-            selectedTool
+            selectedTool,
           }}
         />
         <Canvas

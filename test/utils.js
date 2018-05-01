@@ -1,9 +1,5 @@
-import {
-  sampleRect
-} from './test-utils.js';
-import {
-  computeMidDragMatrix,
-} from '../src/utils';
+import { sampleRect } from './test-utils.js';
+import { computeMidDragMatrix } from '../src/utils';
 import assert from 'assert';
 
 describe('utils', () => {
@@ -25,14 +21,17 @@ describe('utils', () => {
 
       it('computes the correct data', () => {
         const { a, b, c, d, e, f } = transformData;
-        assert.deepEqual({ a, b, c, d, e, f }, {
-          a: -2,
-          b: 0,
-          c: 0,
-          d: -2,
-          e: 60,
-          f: 75
-        });
+        assert.deepEqual(
+          { a, b, c, d, e, f },
+          {
+            a: -2,
+            b: 0,
+            c: 0,
+            d: -2,
+            e: 60,
+            f: 75,
+          }
+        );
       });
     });
 
@@ -48,14 +47,17 @@ describe('utils', () => {
 
       it('computes the correct data', () => {
         const { a, b, c, d, e, f } = transformData;
-        assert.deepEqual({ a, b, c, d, e, f }, {
-          a: 4,
-          b: 0,
-          c: 0,
-          d: -2,
-          e: -30,
-          f: 75
-        });
+        assert.deepEqual(
+          { a, b, c, d, e, f },
+          {
+            a: 4,
+            b: 0,
+            c: 0,
+            d: -2,
+            e: -30,
+            f: 75,
+          }
+        );
       });
     });
 
@@ -71,14 +73,17 @@ describe('utils', () => {
 
       it('computes the correct data', () => {
         const { a, b, c, d, e, f } = transformData;
-        assert.deepEqual({ a, b, c, d, e, f }, {
-          a: 4,
-          b: 0,
-          c: 0,
-          d: 4,
-          e: -30,
-          f: -45
-        });
+        assert.deepEqual(
+          { a, b, c, d, e, f },
+          {
+            a: 4,
+            b: 0,
+            c: 0,
+            d: 4,
+            e: -30,
+            f: -45,
+          }
+        );
       });
     });
 
@@ -94,14 +99,17 @@ describe('utils', () => {
 
       it('computes the correct data', () => {
         const { a, b, c, d, e, f } = transformData;
-        assert.deepEqual({ a, b, c, d, e, f }, {
-          a: -2,
-          b: 0,
-          c: 0,
-          d: 4,
-          e: 60,
-          f: -45
-        });
+        assert.deepEqual(
+          { a, b, c, d, e, f },
+          {
+            a: -2,
+            b: 0,
+            c: 0,
+            d: 4,
+            e: 60,
+            f: -45,
+          }
+        );
       });
     });
   });

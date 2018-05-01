@@ -1,6 +1,4 @@
-import {
-  shapeType,
-} from '../src/enums';
+import { shapeType } from '../src/enums';
 
 export const sampleRect = () => ({
   type: shapeType.RECT,

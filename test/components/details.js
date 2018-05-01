@@ -1,9 +1,6 @@
 import React from 'react';
 import { Details } from '../../src/components/details';
-import {
-  selectedToolType,
-  shapeType
-} from '../../src/enums';
+import { selectedToolType, shapeType } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
@@ -27,7 +24,7 @@ describe('Details', () => {
   });
 
   describe('nothing selected (default)', () => {
-    it('doesn\'t render anything', () => {
+    it("doesn't render anything", () => {
       assert.equal(component.children().length, 0);
     });
   });
@@ -46,12 +43,9 @@ describe('Details', () => {
         'rotate',
         'strokeWidth',
         'stroke',
-        'fill'
+        'fill',
       ].forEach(property =>
-        assert.equal(
-          component.find(`input[name="${property}"]`).length,
-          1
-        )
+        assert.equal(component.find(`input[name="${property}"]`).length, 1)
       );
     });
 
@@ -64,7 +58,7 @@ describe('Details', () => {
         'rotate',
         'strokeWidth',
         'stroke',
-        'fill'
+        'fill',
       ].forEach(property =>
         assert.equal(
           component.find(`input[name="${property}"]`).prop('value'),

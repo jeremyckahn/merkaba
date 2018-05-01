@@ -6,10 +6,8 @@
  * @param {Array.<string>} keys
  * @return {Object.<string>}
  */
-const enumify = keys => keys.reduce((acc, key) =>
-  Object.assign(acc, { [key]: key }),
-  {}
-);
+const enumify = keys =>
+  keys.reduce((acc, key) => Object.assign(acc, { [key]: key }), {});
 
 /**
  * @property merkaba.module:enums.selectedToolType
@@ -29,15 +27,11 @@ export const selectedToolType = enumify([
  */
 export const shapeType = {
   NONE: 'none',
-  RECT: 'rect'
+  RECT: 'rect',
 };
 
 /**
  * @property merkaba.module:enums.shapeFocusType
  * @enum {string}
  */
-export const shapeFocusType = enumify([
-  'NONE',
-  'LIVE',
-  'BUFFER',
-]);
+export const shapeFocusType = enumify(['NONE', 'LIVE', 'BUFFER']);

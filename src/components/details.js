@@ -5,35 +5,16 @@ import { shapeType } from '../enums';
 const RectUI = ({
   handlePropertyChange = () => {},
   handleColorPropertyChange = () => {},
-  rect: {
-    x,
-    y,
-    width,
-    height,
-    rotate,
-    strokeWidth,
-    stroke,
-    fill,
-  }
-}) =>
+  rect: { x, y, width, height, rotate, strokeWidth, stroke, fill },
+}) => (
   <div>
     <label>
       <p>X:</p>
-      <input
-        name="x"
-        value={x}
-        type="number"
-        onChange={handlePropertyChange}
-      />
+      <input name="x" value={x} type="number" onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Y:</p>
-      <input
-        name="y"
-        value={y}
-        type="number"
-        onChange={handlePropertyChange}
-      />
+      <input name="y" value={y} type="number" onChange={handlePropertyChange} />
     </label>
     <label>
       <p>Width:</p>
@@ -90,6 +71,7 @@ const RectUI = ({
       />
     </label>
   </div>
+);
 
 /**
  * @class merkaba.Details
@@ -99,13 +81,16 @@ export const Details = ({
   focusedShape = {},
   handlePropertyChange,
   handleColorPropertyChange,
-}) =>
+}) => (
   <div className="fill details">
-    {focusedShape.type === shapeType.RECT ?
-      <RectUI {...{
-        rect: focusedShape,
-        handlePropertyChange,
-        handleColorPropertyChange,
-      }} />
-    : null}
+    {focusedShape.type === shapeType.RECT ? (
+      <RectUI
+        {...{
+          rect: focusedShape,
+          handlePropertyChange,
+          handleColorPropertyChange,
+        }}
+      />
+    ) : null}
   </div>
+);

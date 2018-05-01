@@ -47,13 +47,16 @@ describe('Canvas', () => {
       describe('selectedTool === selectedToolType.NONE', () => {
         beforeEach(() => {
           component.setProps({
-            selectedTool: selectedToolType.NONE
+            selectedTool: selectedToolType.NONE,
           });
         });
 
         it('has the class', () => {
           assert(
-            ~component.find('.canvas').props().className.indexOf('no-tool-selected')
+            ~component
+              .find('.canvas')
+              .props()
+              .className.indexOf('no-tool-selected')
           );
         });
       });
@@ -61,13 +64,16 @@ describe('Canvas', () => {
       describe('selectedTool !== selectedToolType.NONE', () => {
         beforeEach(() => {
           component.setProps({
-            selectedTool: selectedToolType.NOT_NONE
+            selectedTool: selectedToolType.NOT_NONE,
           });
         });
 
         it('does not have the class', () => {
           assert(
-            !~component.find('.canvas').props().className.indexOf('no-tool-selected')
+            !~component
+              .find('.canvas')
+              .props()
+              .className.indexOf('no-tool-selected')
           );
         });
       });
@@ -85,29 +91,32 @@ describe('Canvas', () => {
       beforeEach(() => {
         component = mount(
           <Canvas
-            bufferShapes={[{
-              type: shapeType.RECT,
-              x: 5,
-              y: 5,
-              width: 10,
-              height: 10,
-              rx: 0,
-              ry: 0,
-              stroke: 'red',
-              fill: 'red',
-              strokeWidth: 1,
-            }, {
-              type: shapeType.RECT,
-              x: 15,
-              y: 15,
-              width: 10,
-              height: 10,
-              rx: 0,
-              ry: 0,
-              stroke: 'blue',
-              fill: 'blue',
-              strokeWidth: 1,
-            }]}
+            bufferShapes={[
+              {
+                type: shapeType.RECT,
+                x: 5,
+                y: 5,
+                width: 10,
+                height: 10,
+                rx: 0,
+                ry: 0,
+                stroke: 'red',
+                fill: 'red',
+                strokeWidth: 1,
+              },
+              {
+                type: shapeType.RECT,
+                x: 15,
+                y: 15,
+                width: 10,
+                height: 10,
+                rx: 0,
+                ry: 0,
+                stroke: 'blue',
+                fill: 'blue',
+                strokeWidth: 1,
+              },
+            ]}
           />
         );
       });
@@ -127,9 +136,17 @@ describe('Canvas', () => {
 
     describe('a shape is selected', () => {
       beforeEach(() => {
-        component = mount(<Canvas
-          focusedShape={{ type: shapeType.RECT, x: 0, y: 0, width: 0, height: 0 }}
-        />);
+        component = mount(
+          <Canvas
+            focusedShape={{
+              type: shapeType.RECT,
+              x: 0,
+              y: 0,
+              width: 0,
+              height: 0,
+            }}
+          />
+        );
       });
 
       it('renders a selector rect', () => {

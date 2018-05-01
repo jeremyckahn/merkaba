@@ -27,20 +27,19 @@ export const Rect = ({
   className,
   bufferIndex,
   handleShapeClick,
-}) =>
+}) => (
   <rect
     onClick={handleShapeClick}
-    {...Object.assign({
-      className,
-      'data-buffer-index': bufferIndex,
-      fill,
-      stroke,
-      strokeWidth,
-      transform: `rotate(${rotate} ${x + (dx / 2)} ${y + (dy / 2)})`,
-    }, absolutizeCoordinates(
-      x,
-      y,
-      dx,
-      dy
-    ))}
+    {...Object.assign(
+      {
+        className,
+        'data-buffer-index': bufferIndex,
+        fill,
+        stroke,
+        strokeWidth,
+        transform: `rotate(${rotate} ${x + dx / 2} ${y + dy / 2})`,
+      },
+      absolutizeCoordinates(x, y, dx, dy)
+    )}
   />
+);
