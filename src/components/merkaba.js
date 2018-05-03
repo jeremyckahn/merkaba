@@ -4,9 +4,9 @@ import {
   applyToPoint,
   inverse,
   rotateDEG,
+  scale,
   transform,
   translate,
-  scale,
 } from 'transformation-matrix';
 import { Toolbar } from './toolbar';
 import { Canvas } from './canvas';
@@ -27,26 +27,27 @@ import eventHandlers from './merkaba.event-handlers';
 /**
  * @typedef merkaba.state
  * @type {Object}
- * @property {merkaba.module:enums.selectedToolType} selectedTool
- * @property {boolean} isDraggingTool
- * @property {boolean} isDraggingShape
- * @property {boolean} isDraggingSelectionHandle
+ * @property {Array.<merkaba.svgShape>} bufferShapes
  * @property {null|string} draggedHandleOrientation
- * @property {null|number} toolDragStartX
- * @property {null|number} toolDragStartY
- * @property {null|number} toolDragDeltaX
- * @property {null|number} toolDragDeltaY
- * @property {Object|merkaba.svgShape} shapeStateBeforeDragTransform
+ * @property {merkaba.focusedShapeCursor} focusedShapeCursor
+ * @property {boolean} isDraggingSelectionHandle
+ * @property {boolean} isDraggingSelectionRotator
+ * @property {boolean} isDraggingShape
+ * @property {boolean} isDraggingTool
+ * @property {merkaba.module:enums.selectedToolType} selectedTool
  * @property {null|number} selectionDragStartX
  * @property {null|number} selectionDragStartY
  * @property {null|number} selectionDragX
  * @property {null|number} selectionDragY
+ * @property {Object|merkaba.svgShape} shapeStateBeforeDragTransform
  * @property {Object} svgBoundingRect
+ * @property {null|number} toolDragDeltaX
+ * @property {null|number} toolDragDeltaY
+ * @property {null|number} toolDragStartX
+ * @property {null|number} toolDragStartY
+ * @property {null|string} toolFillColor
  * @property {null|string} toolStrokeColor
  * @property {null|number} toolStrokeWidth
- * @property {null|string} toolFillColor
- * @property {Array.<merkaba.svgShape>} bufferShapes
- * @property {merkaba.focusedShapeCursor} focusedShapeCursor
  */
 
 const { indexOf } = Array.prototype;
@@ -65,32 +66,31 @@ export class Merkaba extends Component {
      * @type {merkaba.state}
      */
     this.state = {
-      selectedTool: selectedToolType.NONE,
-      isDraggingTool: false,
-      isDraggingShape: false,
-      isDraggingSelectionHandle: false,
-      isDraggingSelectionRotator: false,
-      draggedHandleOrientation: null,
-      toolDragStartX: null,
-      toolDragStartY: null,
-      toolDragDeltaX: null,
-      toolDragDeltaY: null,
-      shapeStateBeforeDragTransform: {},
-      selectionDragStartX: null,
-      selectionDragStartY: null,
-      selectionDragX: null,
-      selectionDragY: null,
-      svgBoundingRect: {},
-      toolRotate: 0,
-      toolStrokeColor: 'rgba(0, 0, 0, 1)',
-      toolStrokeWidth: 0,
-      toolFillColor: 'rgba(0, 0, 0, 1)',
-
       bufferShapes: [],
+      draggedHandleOrientation: null,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.NONE,
         bufferIndex: null,
       },
+      isDraggingSelectionHandle: false,
+      isDraggingSelectionRotator: false,
+      isDraggingShape: false,
+      isDraggingTool: false,
+      selectedTool: selectedToolType.NONE,
+      selectionDragStartX: null,
+      selectionDragStartY: null,
+      selectionDragX: null,
+      selectionDragY: null,
+      shapeStateBeforeDragTransform: {},
+      svgBoundingRect: {},
+      toolDragDeltaX: null,
+      toolDragDeltaY: null,
+      toolDragStartX: null,
+      toolDragStartY: null,
+      toolFillColor: 'rgba(0, 0, 0, 1)',
+      toolRotate: 0,
+      toolStrokeColor: 'rgba(0, 0, 0, 1)',
+      toolStrokeWidth: 0,
     };
 
     // Bind event handlers
@@ -122,13 +122,13 @@ export class Merkaba extends Component {
   getLiveShape() {
     const {
       selectedTool,
-      toolDragStartX,
-      toolDragStartY,
       toolDragDeltaX,
       toolDragDeltaY,
+      toolDragStartX,
+      toolDragStartY,
+      toolFillColor,
       toolRotate,
       toolStrokeColor,
-      toolFillColor,
       toolStrokeWidth,
     } = this.state;
 
@@ -167,10 +167,10 @@ export class Merkaba extends Component {
     const rotate = focusedShape.rotate + rotationOffset;
     const {
       draggedHandleOrientation,
-      selectionDragX: rawSelectionDragX,
-      selectionDragY: rawSelectionDragY,
       selectionDragStartX: rawSelectionDragStartX,
       selectionDragStartY: rawSelectionDragStartY,
+      selectionDragX: rawSelectionDragX,
+      selectionDragY: rawSelectionDragY,
     } = this.state;
 
     const { x: selectionDragStartX, y: selectionDragStartY } = applyToPoint(
@@ -335,32 +335,32 @@ export class Merkaba extends Component {
   render() {
     const {
       state: {
-        isDraggingTool,
-        draggedHandleOrientation,
-        selectedTool,
-        toolDragStartX,
-        toolDragStartY,
-        toolDragDeltaX,
-        toolDragDeltaY,
-        toolRotate,
-        toolStrokeColor,
-        toolStrokeWidth,
-        toolFillColor,
         bufferShapes,
+        draggedHandleOrientation,
+        focusedShapeCursor: { bufferIndex: focusedShapeBufferIndex },
+        isDraggingTool,
+        selectedTool,
         selectionDragStartX,
         selectionDragStartY,
         selectionDragX,
         selectionDragY,
-        focusedShapeCursor: { bufferIndex: focusedShapeBufferIndex },
+        toolDragDeltaX,
+        toolDragDeltaY,
+        toolDragStartX,
+        toolDragStartY,
+        toolFillColor,
+        toolRotate,
+        toolStrokeColor,
+        toolStrokeWidth,
       },
-      handleToolClick,
-      handleCanvasMouseDown,
-      handleCanvasDragStart,
       handleCanvasDrag,
+      handleCanvasDragStart,
       handleCanvasDragStop,
-      handlePropertyChange,
+      handleCanvasMouseDown,
       handleColorPropertyChange,
+      handlePropertyChange,
       handleShapeClick,
+      handleToolClick,
     } = this;
 
     const focusedShape = this.getFocusedShape();
@@ -375,36 +375,36 @@ export class Merkaba extends Component {
         />
         <Canvas
           {...{
-            handleCanvasMouseDown,
-            handleCanvasDragStart,
+            bufferShapes,
+            draggedHandleOrientation,
+            focusedShape,
+            focusedShapeBufferIndex,
             handleCanvasDrag,
+            handleCanvasDragStart,
             handleCanvasDragStop,
+            handleCanvasMouseDown,
             handleShapeClick,
             isDraggingTool,
-            draggedHandleOrientation,
             selectedTool,
-            toolDragStartX,
-            toolDragStartY,
-            toolDragDeltaX,
-            toolDragDeltaY,
-            toolRotate,
-            toolStrokeColor,
-            toolStrokeWidth,
-            toolFillColor,
-            bufferShapes,
-            focusedShape,
             selectionDragStartX,
             selectionDragStartY,
             selectionDragX,
             selectionDragY,
-            focusedShapeBufferIndex,
+            toolDragDeltaX,
+            toolDragDeltaY,
+            toolDragStartX,
+            toolDragStartY,
+            toolFillColor,
+            toolRotate,
+            toolStrokeColor,
+            toolStrokeWidth,
           }}
         />
         <Details
           {...{
-            handlePropertyChange,
-            handleColorPropertyChange,
             focusedShape,
+            handleColorPropertyChange,
+            handlePropertyChange,
           }}
         />
       </div>
