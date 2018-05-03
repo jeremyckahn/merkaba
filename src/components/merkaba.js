@@ -115,7 +115,6 @@ export class Merkaba extends Component {
       : Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
   }
 
-  // FIXME: Test this function
   /**
    * @method merkaba.Merkaba#getLiveShape
    * @return {merkaba.svgShape}

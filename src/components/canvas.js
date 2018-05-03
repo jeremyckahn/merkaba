@@ -46,6 +46,7 @@ const Buffer = ({
       ) : null
   );
 
+// FIXME: Change orientation values to be enums
 const Selector = ({
   focusedShape: { type, x = 0, y = 0, width = 0, height = 0, rotate = 0 },
   handleConfig = [

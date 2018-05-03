@@ -246,6 +246,63 @@ describe('Merkaba', () => {
     });
   });
 
+  describe('getLiveShape', () => {
+    let shapeObject;
+
+    beforeEach(() => {
+      component.setState({
+        toolDragStartX: 0,
+        toolDragStartY: 0,
+        toolDragDeltaX: 0,
+        toolDragDeltaY: 0,
+        toolRotate: 0,
+        toolStrokeColor: '#000',
+        toolFillColor: '#000',
+        toolStrokeWidth: 0,
+      });
+    });
+
+    describe('selectedTool === selectedToolType.NONE', () => {
+      beforeEach(() => {
+        component.setState({
+          selectedTool: selectedToolType.NONE,
+        });
+
+        shapeObject = component.instance().getLiveShape();
+      });
+
+      it('has the correct properties', () => {
+        assert.deepEqual(shapeObject, {
+          type: 'none',
+        });
+      });
+    });
+
+    describe('selectedTool === selectedToolType.RECTANGLE', () => {
+      beforeEach(() => {
+        component.setState({
+          selectedTool: selectedToolType.RECTANGLE,
+        });
+
+        shapeObject = component.instance().getLiveShape();
+      });
+
+      it('has the correct properties', () => {
+        assert.deepEqual(shapeObject, {
+          fill: '#000',
+          height: 0,
+          rotate: 0,
+          stroke: '#000',
+          strokeWidth: 0,
+          type: 'rect',
+          width: 0,
+          x: 0,
+          y: 0,
+        });
+      });
+    });
+  });
+
   describe('getMidDragMatrix', () => {
     let matrix;
 
