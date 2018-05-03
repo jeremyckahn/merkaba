@@ -5,24 +5,24 @@ import { rotatorHitArea } from '../constants';
 import { Rect } from './shapes';
 
 /**
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {Array.<merkaba.svgShape>} bufferShapes
  * @param {string|null} draggedHandleOrientation
+ * @param {number|null} focusedShapeBufferIndex
+ * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {number|null} selectionDragStartX
  * @param {number|null} selectionDragStartY
  * @param {number|null} selectionDragX
  * @param {number|null} selectionDragY
- * @param {number|null} focusedShapeBufferIndex
  */
 const Buffer = ({
-  handleShapeClick,
   bufferShapes,
   draggedHandleOrientation,
+  focusedShapeBufferIndex,
+  handleShapeClick,
   selectionDragStartX,
   selectionDragStartY,
   selectionDragX,
   selectionDragY,
-  focusedShapeBufferIndex,
 }) =>
   bufferShapes.map(
     ({ type, x, y, width, height, rotate, stroke, fill, strokeWidth }, i) =>
@@ -77,10 +77,10 @@ const Selector = ({
       {handleConfig.map(({ orientation, x, y }, i) => (
         <ellipse
           {...{
-            key: `handle-rotator-${i}`,
             className: 'selection-handle-rotator',
             cx: x,
             cy: y,
+            key: `handle-rotator-${i}`,
             rx: rotatorHitArea,
             ry: rotatorHitArea,
           }}
@@ -88,23 +88,23 @@ const Selector = ({
       ))}
       <Rect
         {...{
-          x,
-          y,
+          className: 'selection',
           dx: width,
           dy: height,
-          key: 0,
           fill: 'none',
-          className: 'selection',
+          key: 0,
+          x,
+          y,
         }}
       />
       {handleConfig.map(({ orientation, x, y }, i) => (
         <ellipse
           {...{
-            key: `handle-${i}`,
             className: `selection-handle ${orientation}`,
-            orientation,
             cx: x,
             cy: y,
+            key: `handle-${i}`,
+            orientation,
             rx: 5,
             ry: 5,
           }}
@@ -114,95 +114,95 @@ const Selector = ({
   );
 
 /**
- * @param {number|null} toolDragStartX
- * @param {number|null} toolDragStartY
- * @param {number|null} toolDragDeltaX
- * @param {number|null} toolDragDeltaY
- * @param {null|string} toolStrokeColor
- * @param {null|number} toolStrokeWidth
- * @param {null|string} toolFillColor
  * @param {boolean} isDraggingTool
  * @param {merkaba.module:enums.selectedToolType} selectedTool
+ * @param {number|null} toolDragDeltaX
+ * @param {number|null} toolDragDeltaY
+ * @param {number|null} toolDragStartX
+ * @param {number|null} toolDragStartY
+ * @param {null|string} toolFillColor
+ * @param {null|string} toolStrokeColor
+ * @param {null|number} toolStrokeWidth
  */
 const LiveShape = ({
   isDraggingTool,
   selectedTool,
-  toolDragStartX,
-  toolDragStartY,
   toolDragDeltaX,
   toolDragDeltaY,
+  toolDragStartX,
+  toolDragStartY,
+  toolFillColor,
   toolRotate,
   toolStrokeColor,
-  toolFillColor,
   toolStrokeWidth,
 }) =>
   isDraggingTool ? (
     selectedTool === selectedToolType.RECTANGLE ? (
       <Rect
         className="live"
-        x={toolDragStartX}
-        y={toolDragStartY}
         dx={toolDragDeltaX}
         dy={toolDragDeltaY}
+        fill={toolFillColor}
         rotate={toolRotate}
         stroke={toolStrokeColor}
-        fill={toolFillColor}
         strokeWidth={toolStrokeWidth}
+        x={toolDragStartX}
+        y={toolDragStartY}
       />
     ) : null
   ) : null;
 
 /**
  * @class merkaba.Canvas
- * @param {Function(external:React.SyntheticEvent)} handleCanvasMouseDown
- * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
- * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
- * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
- * @param {number|null} toolDragStartX
- * @param {number|null} toolDragStartY
- * @param {number|null} toolDragDeltaX
- * @param {number|null} toolDragDeltaY
- * @param {number} toolRotate
- * @param {null|string} toolStrokeColor
- * @param {null|number} toolStrokeWidth
- * @param {null|string} toolFillColor
- * @param {boolean} isDraggingTool
- * @param {string|null} draggedHandleOrientation
- * @param {merkaba.module:enums.selectedToolType} selectedTool
  * @param {Array.<merkaba.svgShape>} bufferShapes
+ * @param {string|null} draggedHandleOrientation
  * @param {merkaba.svgShape} focusedShape
+ * @param {number|null} focusedShapeBufferIndex
+ * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
+ * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
+ * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
+ * @param {Function(external:React.SyntheticEvent)} handleCanvasMouseDown
+ * @param {Function(external:React.SyntheticEvent)} handleShapeClick
+ * @param {boolean} isDraggingTool
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
  * @param {number|null} selectionDragStartX
  * @param {number|null} selectionDragStartY
  * @param {number|null} selectionDragX
  * @param {number|null} selectionDragY
- * @param {number|null} focusedShapeBufferIndex
+ * @param {number|null} toolDragDeltaX
+ * @param {number|null} toolDragDeltaY
+ * @param {number|null} toolDragStartX
+ * @param {number|null} toolDragStartY
+ * @param {null|string} toolFillColor
+ * @param {number} toolRotate
+ * @param {null|string} toolStrokeColor
+ * @param {null|number} toolStrokeWidth
  * @extends {external:React.Component}
  */
 export const Canvas = ({
-  handleCanvasMouseDown,
-  handleCanvasDragStart,
-  handleCanvasDrag,
-  handleCanvasDragStop,
-  handleShapeClick,
-  toolDragStartX,
-  toolDragStartY,
-  toolDragDeltaX,
-  toolDragDeltaY,
-  toolRotate,
-  toolStrokeColor,
-  toolStrokeWidth,
-  toolFillColor,
-  isDraggingTool,
-  draggedHandleOrientation,
-  selectedTool,
   bufferShapes = [],
+  draggedHandleOrientation,
   focusedShape = {},
+  focusedShapeBufferIndex,
+  handleCanvasDrag,
+  handleCanvasDragStart,
+  handleCanvasDragStop,
+  handleCanvasMouseDown,
+  handleShapeClick,
+  isDraggingTool,
+  selectedTool,
   selectionDragStartX,
   selectionDragStartY,
   selectionDragX,
   selectionDragY,
-  focusedShapeBufferIndex,
+  toolDragDeltaX,
+  toolDragDeltaY,
+  toolDragStartX,
+  toolDragStartY,
+  toolFillColor,
+  toolRotate,
+  toolStrokeColor,
+  toolStrokeWidth,
 }) => (
   <DraggableCore
     onStart={handleCanvasDragStart}
@@ -222,14 +222,14 @@ export const Canvas = ({
       >
         <Buffer
           {...{
-            handleShapeClick,
             bufferShapes,
             draggedHandleOrientation,
+            focusedShapeBufferIndex,
+            handleShapeClick,
             selectionDragStartX,
             selectionDragStartY,
             selectionDragX,
             selectionDragY,
-            focusedShapeBufferIndex,
           }}
         />
         {selectedTool !== selectedToolType.NONE ? (
@@ -237,13 +237,13 @@ export const Canvas = ({
             {...{
               isDraggingTool,
               selectedTool,
-              toolDragStartX,
-              toolDragStartY,
               toolDragDeltaX,
               toolDragDeltaY,
+              toolDragStartX,
+              toolDragStartY,
+              toolFillColor,
               toolRotate,
               toolStrokeColor,
-              toolFillColor,
               toolStrokeWidth,
             }}
           />
