@@ -1,11 +1,12 @@
 @import ../variables
+@import compass/css3/flexbox
 
 $dashmark-size: 5
 
 .canvas
   background: $canvas-background
-  left: $toolbar-width
-  right: $details-width
+  position: relative
+  +flex(2)
 
   &.no-tool-selected
     svg > *

@@ -210,7 +210,7 @@ export const Canvas = ({
     onStop={handleCanvasDragStop}
   >
     <div
-      className={`fill canvas ${
+      className={`canvas ${
         selectedTool === selectedToolType.NONE ? 'no-tool-selected' : ''
       }`}
     >

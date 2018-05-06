@@ -8,7 +8,7 @@ import { selectedToolType } from '../enums';
  * @param {merkaba.module:enums.selectedToolType} selectedTool
  */
 export const Toolbar = ({ handleToolClick, selectedTool }) => (
-  <div className="fill toolbar">
+  <div className="toolbar">
     <ul>
       <li
         className={selectedTool === selectedToolType.RECTANGLE ? 'active' : ''}

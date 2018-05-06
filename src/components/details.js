@@ -82,7 +82,7 @@ export const Details = ({
   handleColorPropertyChange,
   handlePropertyChange,
 }) => (
-  <div className="fill details">
+  <div className="details">
     {focusedShape.type === shapeType.RECT ? (
       <RectUI
         {...{

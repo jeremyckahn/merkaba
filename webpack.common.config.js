@@ -23,7 +23,10 @@ module.exports = {
         }, {
           loader: 'sass-loader',
           options: {
-            sourceMap: true
+            sourceMap: true,
+            includePaths: [
+              path.resolve(__dirname, 'node_modules/compass-mixins/lib')
+            ]
           }
         }]
       }
