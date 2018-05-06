@@ -10,20 +10,20 @@ export const ColorInput = ({
 }) => (
   <span>
     <input
-      data-tip
-      data-for={`colorpicker-tooltip-${name}`}
-      data-event="focus"
       data-event-off="blur"
+      data-event="focus"
+      data-for={`colorpicker-tooltip-${name}`}
+      data-tip
       name={name}
-      value={value}
       onChange={handlePropertyChange}
+      value={value}
     />
     <ReactTooltip
+      className="tooltip-class"
+      effect="solid"
       id={`colorpicker-tooltip-${name}`}
       place="left"
       type="light"
-      effect="solid"
-      className="tooltip-class"
     >
       <ChromePicker
         color={value}

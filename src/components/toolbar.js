@@ -4,10 +4,10 @@ import { selectedToolType } from '../enums';
 
 /**
  * @class merkaba.Toolbar
- * @param {merkaba.module:enums.selectedToolType} selectedTool
  * @param {merkaba.Merkaba#handleToolClick} handleToolClick
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
  */
-export const Toolbar = ({ selectedTool, handleToolClick }) => (
+export const Toolbar = ({ handleToolClick, selectedTool }) => (
   <div className="fill toolbar">
     <ul>
       <li

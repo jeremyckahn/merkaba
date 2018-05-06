@@ -20,54 +20,54 @@ const RectUI = ({
       <p>Width:</p>
       <input
         name="width"
-        value={width}
-        type="number"
         onChange={handlePropertyChange}
+        type="number"
+        value={width}
       />
     </label>
     <label>
       <p>Height:</p>
       <input
         name="height"
-        value={height}
-        type="number"
         onChange={handlePropertyChange}
+        type="number"
+        value={height}
       />
     </label>
     <label>
       <p>Rotate:</p>
       <input
         name="rotate"
-        value={rotate}
-        type="number"
         onChange={handlePropertyChange}
+        type="number"
+        value={rotate}
       />
     </label>
     <label>
       <p>Fill Color:</p>
       <ColorInput
-        value={fill}
-        name="fill"
-        handlePropertyChange={handlePropertyChange}
         handleColorPropertyChange={handleColorPropertyChange}
+        handlePropertyChange={handlePropertyChange}
+        name="fill"
+        value={fill}
       />
     </label>
     <label>
       <p>Stroke Width:</p>
       <input
         name="strokeWidth"
-        value={strokeWidth}
-        type="number"
         onChange={handlePropertyChange}
+        type="number"
+        value={strokeWidth}
       />
     </label>
     <label>
       <p>Stroke Color:</p>
       <ColorInput
-        value={stroke}
-        name="stroke"
-        handlePropertyChange={handlePropertyChange}
         handleColorPropertyChange={handleColorPropertyChange}
+        handlePropertyChange={handlePropertyChange}
+        name="stroke"
+        value={stroke}
       />
     </label>
   </div>
@@ -79,16 +79,16 @@ const RectUI = ({
  */
 export const Details = ({
   focusedShape = {},
-  handlePropertyChange,
   handleColorPropertyChange,
+  handlePropertyChange,
 }) => (
   <div className="fill details">
     {focusedShape.type === shapeType.RECT ? (
       <RectUI
         {...{
-          rect: focusedShape,
-          handlePropertyChange,
           handleColorPropertyChange,
+          handlePropertyChange,
+          rect: focusedShape,
         }}
       />
     ) : null}

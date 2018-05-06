@@ -3,30 +3,30 @@ import { DraggableCore } from 'react-draggable';
 import { absolutizeCoordinates } from '../utils';
 
 /**
- * @param {number} x
- * @param {number} y
+ * @param {number} bufferIndex
+ * @param {string} className
  * @param {number} dx
  * @param {number} dy
+ * @param {string} fill
+ * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {number} rotate
  * @param {string} stroke
- * @param {string} fill
  * @param {number} strokeWidth
- * @param {string} className
- * @param {number} bufferIndex
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
+ * @param {number} x
+ * @param {number} y
  */
 export const Rect = ({
-  x,
-  y,
+  bufferIndex,
+  className,
   dx,
   dy,
+  fill,
+  handleShapeClick,
   rotate = 0,
   stroke,
-  fill,
   strokeWidth,
-  className,
-  bufferIndex,
-  handleShapeClick,
+  x,
+  y,
 }) => (
   <rect
     onClick={handleShapeClick}
