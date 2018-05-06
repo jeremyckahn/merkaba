@@ -54,18 +54,27 @@ export default {
     }
 
     const {
+      bottom,
+      height,
+      left,
+      right,
+      top,
+      width,
       x,
       y,
-      width,
-      height,
-      top,
-      right,
-      bottom,
-      left,
     } = target.getBoundingClientRect();
 
     this.setState({
-      svgBoundingRect: { x, y, width, height, top, right, bottom, left },
+      svgBoundingRect: {
+        bottom,
+        height,
+        left,
+        right,
+        top,
+        width,
+        x,
+        y,
+      },
     });
 
     this.setState({
@@ -83,7 +92,7 @@ export default {
    */
   handleCanvasDragStart(e, data) {
     const {
-      target: { nodeName, classList },
+      target: { classList, nodeName },
     } = e;
 
     // Because of limitations of how DraggableCore handles events and the fact
@@ -113,15 +122,15 @@ export default {
     } = data;
 
     this.setState({
-      isDraggingTool: true,
-      toolDragStartX: x - offsetLeft,
-      toolDragStartY: y - offsetTop,
-      toolDragDeltaX: 0,
-      toolDragDeltaY: 0,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.LIVE,
         bufferIndex: null,
       },
+      isDraggingTool: true,
+      toolDragDeltaX: 0,
+      toolDragDeltaY: 0,
+      toolDragStartX: x - offsetLeft,
+      toolDragStartY: y - offsetTop,
     });
   },
 
@@ -191,18 +200,18 @@ export default {
     }
 
     this.setState({
-      isDraggingTool: false,
-      toolDragStartX: null,
-      toolDragStartY: null,
-      toolDragDeltaX: null,
-      toolDragDeltaY: null,
-      toolRotate: 0,
       bufferShapes,
-      selectedTool: selectedToolType.NONE,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
         bufferIndex: 0,
       },
+      isDraggingTool: false,
+      selectedTool: selectedToolType.NONE,
+      toolDragDeltaX: null,
+      toolDragDeltaY: null,
+      toolDragStartX: null,
+      toolDragStartY: null,
+      toolRotate: 0,
     });
   },
 
@@ -283,11 +292,11 @@ export default {
     this.setState({
       draggedHandleOrientation: null,
       isDraggingSelectionHandle: false,
-      shapeStateBeforeDragTransform: {},
       selectionDragStartX: null,
       selectionDragStartY: null,
       selectionDragX: null,
       selectionDragY: null,
+      shapeStateBeforeDragTransform: {},
     });
   },
 
@@ -307,10 +316,10 @@ export default {
   handleSelectionRotatorDrag(e, data) {
     const {
       height,
+      rotate,
       width,
       x: shapeX,
       y: shapeY,
-      rotate,
     } = this.getFocusedShape();
     const { lastX, lastY, x: newX, y: newY } = data;
 
