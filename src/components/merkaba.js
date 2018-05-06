@@ -8,6 +8,7 @@ import {
   transform,
   translate,
 } from 'transformation-matrix';
+import { SortableLayers as Layers } from './layers';
 import { Toolbar } from './toolbar';
 import { Canvas } from './canvas';
 import { Details } from './details';
@@ -272,6 +273,29 @@ export class Merkaba extends Component {
   }
 
   /**
+   * @method merkaba.Merkaba#focusBufferShapeByIndex
+   * @param {number} index
+   */
+  focusBufferShapeByIndex(index) {
+    this.setState({
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: index,
+      },
+    });
+  }
+
+  /**
+   * @method merkaba.Merkaba#focusBufferByLayerIndex
+   * @param {number} layerIndex
+   */
+  focusBufferByLayerIndex(layerIndex) {
+    this.focusBufferShapeByIndex(
+      this.state.bufferShapes.length - 1 - layerIndex
+    );
+  }
+
+  /**
    * @method merkaba.Merkaba#updateBufferShape
    * @param {number} shapeIndex
    * @param {Object.<any>} newShapeData Any properties to update the buffered
@@ -358,6 +382,9 @@ export class Merkaba extends Component {
       handleCanvasDragStop,
       handleCanvasMouseDown,
       handleColorPropertyChange,
+      handleLayerClick,
+      handleLayerSortEnd,
+      handleLayerSortStart,
       handlePropertyChange,
       handleShapeClick,
       handleToolClick,
@@ -367,6 +394,18 @@ export class Merkaba extends Component {
 
     return (
       <div className="fill merkaba">
+        <Layers
+          {...{
+            bufferShapes,
+            distance: 1,
+            focusedShapeBufferIndex,
+            handleLayerClick,
+            helperClass: 'focused',
+            lockAxis: 'y',
+            onSortEnd: handleLayerSortEnd,
+            onSortStart: handleLayerSortStart,
+          }}
+        />
         <Toolbar
           {...{
             handleToolClick,

@@ -49,9 +49,8 @@ export default {
    * @param {external:React.SyntheticEvent} e
    */
   handleCanvasMouseDown({ target, currentTarget }) {
-    if (target.nodeName !== 'svg') {
-      return;
-    }
+    const svg =
+      target.nodeName === 'svg' ? target : target.nearestViewportElement;
 
     const {
       bottom,
@@ -62,7 +61,7 @@ export default {
       width,
       x,
       y,
-    } = target.getBoundingClientRect();
+    } = svg.getBoundingClientRect();
 
     this.setState({
       svgBoundingRect: {
@@ -76,6 +75,10 @@ export default {
         y,
       },
     });
+
+    if (target.nodeName !== 'svg') {
+      return;
+    }
 
     this.setState({
       focusedShapeCursor: {
@@ -322,12 +325,13 @@ export default {
       y: shapeY,
     } = this.getFocusedShape();
     const { lastX, lastY, x: newX, y: newY } = data;
+    const { x: svgX, y: svgY } = this.state.svgBoundingRect;
 
     const originX = shapeX + width / 2;
     const originY = shapeY + height / 2;
 
-    const oldAngle = Math.atan2(lastY - originY, lastX - originX);
-    const newAngle = Math.atan2(newY - originY, newX - originX);
+    const oldAngle = Math.atan2(lastY - svgY - originY, lastX - svgX - originX);
+    const newAngle = Math.atan2(newY - svgY - originY, newX - svgX - originX);
     const deltaDegrees = (newAngle - oldAngle) * 180 / Math.PI;
 
     this.updateFocusedBufferShapeProperty(
@@ -342,5 +346,48 @@ export default {
    */
   handleSelectionRotatorDragStop(e) {
     this.setState({ isDraggingSelectionRotator: false });
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleLayerSortStart
+   * @param {Object} config
+   * @param {number} config.index
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleLayerSortStart({ index: layerIndex }) {
+    this.focusBufferByLayerIndex(layerIndex);
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleLayerSortEnd
+   * @param {Object} config
+   * @param {number} config.oldIndex
+   * @param {number} config.newIndex
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleLayerSortEnd({ oldIndex, newIndex }) {
+    const {
+      focusedShapeCursor,
+      bufferShapes: { length: bufferShapesLength },
+    } = this.state;
+    const reversedNewIndex = bufferShapesLength - 1 - newIndex;
+    const bufferShapes = this.state.bufferShapes.slice();
+    const [shape] = bufferShapes.splice(bufferShapesLength - 1 - oldIndex, 1);
+    bufferShapes.splice(reversedNewIndex, 0, shape);
+
+    const newFocusedShapeCursor = Object.assign({}, focusedShapeCursor, {
+      bufferIndex: reversedNewIndex,
+    });
+
+    this.setState({ bufferShapes, focusedShapeCursor: newFocusedShapeCursor });
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleLayerClick
+   * @param {number} layerIndex
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleLayerClick(layerIndex) {
+    this.focusBufferByLayerIndex(layerIndex);
   },
 };

@@ -11,3 +11,8 @@ $icon-font-path: '../../node_modules/bootstrap-sass/assets/fonts/bootstrap/'
   @import components/toolbar
   @import components/canvas
   @import components/details
+
+// Layer styles need to be outside of the .merkaba-wrapper scope because
+// react-sortable-hoc works by cloning a layer out of the .merkaba-wrapper
+// element
+@import components/layers

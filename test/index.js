@@ -3,6 +3,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import './utils';
 import './components/merkaba';
+import './components/layers';
 import './components/toolbar';
 import './components/canvas';
 import './components/details';

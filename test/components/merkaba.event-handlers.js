@@ -486,6 +486,7 @@ describe('eventHandlers', () => {
             strokeWidth: 1,
           },
         ],
+        svgBoundingRect: { x: 0, y: 0 },
       });
 
       component.instance().handleSelectionRotatorDrag(null, {
@@ -560,6 +561,69 @@ describe('eventHandlers', () => {
         component.state().bufferShapes[0].stroke,
         'rgba(1, 2, 3, 0.5)'
       );
+    });
+  });
+
+  describe('handleLayerSortStart', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect(), sampleRect(), sampleRect()],
+      });
+      component.instance().handleLayerSortStart({ index: 2 });
+    });
+
+    it('focuses the clicked layer', () => {
+      assert.deepEqual(component.state('focusedShapeCursor'), {
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: 0,
+      });
+    });
+  });
+
+  describe('handleLayerSortEnd', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [
+          sampleRect(),
+          sampleRect({ id: 0 }),
+          sampleRect({ id: 1 }),
+        ],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndex: 1,
+        },
+      });
+
+      component.instance().handleLayerSortEnd({ oldIndex: 1, newIndex: 0 });
+    });
+
+    it('sorts the bufferShapes', () => {
+      const {
+        bufferShapes: [, shape1, shape0],
+      } = component.state();
+      assert.equal(shape0.id, 0);
+      assert.equal(shape1.id, 1);
+    });
+
+    it('updates focusedShapeCursor', () => {
+      assert.equal(component.state('focusedShapeCursor').bufferIndex, 2);
+    });
+  });
+
+  describe('handleLayerClick', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect({ id: 0 })],
+      });
+
+      component.instance().handleLayerClick(0);
+    });
+
+    it('focuses the clicked layer', () => {
+      assert.deepEqual(component.state('focusedShapeCursor'), {
+        shapeFocus: shapeFocusType.BUFFER,
+        bufferIndex: 0,
+      });
     });
   });
 });

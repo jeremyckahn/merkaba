@@ -1,0 +1,22 @@
+@import ../variables
+
+.merkaba-wrapper
+  .layers
+    background: $chrome-background-color
+    width: $layers-width
+
+    ol
+      padding: 0
+
+// Please see the note about style scoping related to react-sortable-hoc in
+// index.sass
+li.merkaba-layer
+  color: $chrome-font-color
+  float: left
+  height: 1em
+  list-style: none
+  padding: 1em
+  width: calc(100% - 2em)
+
+  &.focused
+    background: $chrome-active-color
