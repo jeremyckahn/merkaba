@@ -9,7 +9,7 @@ This project is early in development and not useful yet, but you can play with t
 This is the current roadmap:
 
 - [x] Stand up basic environment layout/structure similar to [Vectr](https://vectr.com/new)
-- [ ] Layer reordering
+- [x] Layer reordering
 - [x] Initial primitives support: Rectangles
     - [x] Drag-and-drop:
         - [x] Creation
