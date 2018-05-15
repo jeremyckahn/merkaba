@@ -17,15 +17,6 @@ module.exports = Object.assign(commonConfig, {
     filename: '[name].js',
   },
   plugins: [
-    new Webpack.optimize.UglifyJsPlugin({
-      compress: {
-        dead_code: true,
-        unused: true
-      },
-      output: {
-        comments: false
-      }
-    }),
     new CopyWebpackPlugin([
       { from: 'index.html' }
     ])
