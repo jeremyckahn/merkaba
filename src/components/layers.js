@@ -1,13 +1,19 @@
 import React from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
-const Layer = ({ className, handleLayerClick, shape, shapeIndex }) => (
+const Layer = ({
+  className,
+  handleLayerClick,
+  shape: { fill, type },
+  shapeIndex,
+}) => (
   <li
     {...{
       className,
       onClick: () => handleLayerClick(shapeIndex),
+      style: { borderLeftColor: fill },
     }}
-  >{`${shapeIndex + 1}: ${shape.type}`}</li>
+  >{`${shapeIndex + 1}: ${type}`}</li>
 );
 const SortableLayer = SortableElement(Layer);
 

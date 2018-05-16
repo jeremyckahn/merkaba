@@ -11,12 +11,13 @@
 // Please see the note about style scoping related to react-sortable-hoc in
 // index.sass
 li.merkaba-layer
+  border-left: $layer-color-strip-width solid #000
   color: $chrome-font-color
   float: left
   height: 1em
   list-style: none
   padding: 1em
-  width: calc(100% - 2em)
+  width: calc(100% - 2em - #{$layer-color-strip-width})
 
   &.focused
     background: $chrome-active-color

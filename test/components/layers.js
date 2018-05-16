@@ -11,6 +11,24 @@ describe('Layers', () => {
     component = mount(<Layers />);
   });
 
+  describe('rendering', () => {
+    beforeEach(() => {
+      component.setProps({
+        bufferShapes: [sampleRect({ fill: '#f0f' })],
+      });
+    });
+
+    it('sets the layer color strip', () => {
+      assert.equal(
+        component
+          .find('li')
+          .at(0)
+          .props().style.borderLeftColor,
+        '#f0f'
+      );
+    });
+  });
+
   describe('props', () => {
     describe('bufferShapes', () => {
       beforeEach(() => {
