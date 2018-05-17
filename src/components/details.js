@@ -75,22 +75,26 @@ const RectUI = ({
 
 /**
  * @class merkaba.Details
- * @param {merkaba.svgShape} focusedShape
+ * @param {Array.<merkaba.svgShape>} focusedShapes
  */
 export const Details = ({
-  focusedShape = {},
+  focusedShapes = [],
+  focusedShape = focusedShapes[0],
+  focusedShapesLength = focusedShapes.length,
   handleColorPropertyChange,
   handlePropertyChange,
 }) => (
   <div className="details">
-    {focusedShape.type === shapeType.RECT ? (
-      <RectUI
-        {...{
-          handleColorPropertyChange,
-          handlePropertyChange,
-          rect: focusedShape,
-        }}
-      />
+    {focusedShapesLength === 1 ? (
+      focusedShape.type === shapeType.RECT ? (
+        <RectUI
+          {...{
+            handleColorPropertyChange,
+            handlePropertyChange,
+            rect: focusedShape,
+          }}
+        />
+      ) : null
     ) : null}
   </div>
 );

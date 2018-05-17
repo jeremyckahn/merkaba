@@ -13,7 +13,7 @@ describe('Toolbar', () => {
 
   describe('responding to parameters', () => {
     describe('selectedTool', () => {
-      describe('selectedToolType.NONE (default)', () => {
+      describe('selectedToolType.SELECT (default)', () => {
         it('activates nothing', () => {
           assert.equal(component.find('active').length, 0);
         });

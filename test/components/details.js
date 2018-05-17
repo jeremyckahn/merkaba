@@ -3,23 +3,17 @@ import { Details } from '../../src/components/details';
 import { selectedToolType, shapeType } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
-
-const sampleRect = {
-  type: shapeType.RECT,
-  x: 10,
-  y: 15,
-  width: 10,
-  height: 10,
-  rotate: 0,
-  fill: 'rgba(0, 0, 0, 1)',
-  stroke: 'rgba(0, 0, 0, 1)',
-  strokeWidth: 1,
-};
+import { sampleRect } from '../test-utils.js';
 
 let component;
+let rect;
 
 describe('Details', () => {
   beforeEach(() => {
+    rect = sampleRect({
+      fill: 'rgba(0, 0, 0, 1)',
+      stroke: 'rgba(0, 0, 0, 1)',
+    });
     component = shallow(<Details />);
   });
 
@@ -29,9 +23,29 @@ describe('Details', () => {
     });
   });
 
+  describe('single shape selected', () => {
+    beforeEach(() => {
+      component = mount(<Details focusedShapes={[rect]} />);
+    });
+
+    it('renders controls', () => {
+      assert(component.find('.details').children().length > 0);
+    });
+  });
+
+  describe('multiple shapes selected', () => {
+    beforeEach(() => {
+      component = mount(<Details focusedShapes={[rect, rect]} />);
+    });
+
+    it('renders controls', () => {
+      assert.equal(component.find('.details').children().length, 0);
+    });
+  });
+
   describe('focusedShape.type === shapeType.RECT', () => {
     beforeEach(() => {
-      component = mount(<Details focusedShape={sampleRect} />);
+      component = mount(<Details focusedShapes={[rect]} />);
     });
 
     it('renders inputs for a rect', () => {
@@ -62,7 +76,7 @@ describe('Details', () => {
       ].forEach(property =>
         assert.equal(
           component.find(`input[name="${property}"]`).prop('value'),
-          sampleRect[property]
+          rect[property]
         )
       );
     });

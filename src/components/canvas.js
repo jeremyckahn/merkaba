@@ -7,22 +7,18 @@ import { Rect } from './shapes';
 /**
  * @param {Array.<merkaba.svgShape>} bufferShapes
  * @param {string|null} draggedHandleOrientation
- * @param {number|null} focusedShapeBufferIndex
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
- * @param {number|null} selectionDragStartX
- * @param {number|null} selectionDragStartY
- * @param {number|null} selectionDragX
- * @param {number|null} selectionDragY
+ * @param {number|null} transformDragStartX
+ * @param {number|null} transformDragStartY
+ * @param {number|null} transformDragX
+ * @param {number|null} transformDragY
  */
 const Buffer = ({
   bufferShapes,
   draggedHandleOrientation,
-  focusedShapeBufferIndex,
-  handleShapeClick,
-  selectionDragStartX,
-  selectionDragStartY,
-  selectionDragX,
-  selectionDragY,
+  transformDragStartX,
+  transformDragStartY,
+  transformDragX,
+  transformDragY,
 }) =>
   bufferShapes.map(
     ({ type, x, y, width, height, rotate, stroke, fill, strokeWidth }, i) =>
@@ -40,78 +36,123 @@ const Buffer = ({
             stroke,
             fill,
             strokeWidth,
-            handleShapeClick,
           }}
         />
       ) : null
   );
 
 // FIXME: Change orientation values to be enums
-const Selector = ({
-  focusedShape: { type, x = 0, y = 0, width = 0, height = 0, rotate = 0 },
-  handleConfig = [
-    {
-      orientation: 'top-left',
-      x,
-      y,
-    },
-    {
-      orientation: 'top-right',
-      x: x + width,
-      y,
-    },
-    {
-      orientation: 'bottom-right',
-      x: x + width,
-      y: y + height,
-    },
-    {
-      orientation: 'bottom-left',
-      x,
-      y: y + height,
-    },
-  ],
-}) =>
-  type === shapeType.NONE ? null : (
-    <g transform={`rotate(${rotate} ${x + width / 2} ${y + height / 2})`}>
-      {handleConfig.map(({ orientation, x, y }, i) => (
-        <ellipse
-          {...{
-            className: 'selection-handle-rotator',
-            cx: x,
-            cy: y,
-            key: `handle-rotator-${i}`,
-            rx: rotatorHitArea,
-            ry: rotatorHitArea,
-          }}
-        />
-      ))}
-      <Rect
-        {...{
-          className: 'selection',
-          dx: width,
-          dy: height,
-          fill: 'none',
-          key: 0,
-          x,
-          y,
-        }}
-      />
-      {handleConfig.map(({ orientation, x, y }, i) => (
-        <ellipse
-          {...{
-            className: `selection-handle ${orientation}`,
-            cx: x,
-            cy: y,
-            key: `handle-${i}`,
-            orientation,
-            rx: 5,
-            ry: 5,
-          }}
-        />
-      ))}
-    </g>
+const FocusedShapeFrames = ({ focusedShapes }) =>
+  focusedShapes.map(
+    (
+      {
+        type,
+        x = 0,
+        y = 0,
+        width = 0,
+        height = 0,
+        rotate = 0,
+        handleConfig = [
+          {
+            orientation: 'top-left',
+            x,
+            y,
+          },
+          {
+            orientation: 'top-right',
+            x: x + width,
+            y,
+          },
+          {
+            orientation: 'bottom-right',
+            x: x + width,
+            y: y + height,
+          },
+          {
+            orientation: 'bottom-left',
+            x,
+            y: y + height,
+          },
+        ],
+      },
+      i
+    ) =>
+      type === shapeType.NONE ? null : (
+        <g
+          key={i}
+          transform={`rotate(${rotate} ${x + width / 2} ${y + height / 2})`}
+        >
+          {focusedShapes.length === 1 &&
+            handleConfig.map(({ orientation, x, y }, j) => (
+              <ellipse
+                {...{
+                  className: 'selection-handle-rotator',
+                  cx: x,
+                  cy: y,
+                  key: `handle-rotator-${j}`,
+                  rx: rotatorHitArea,
+                  ry: rotatorHitArea,
+                }}
+              />
+            ))}
+          <Rect
+            {...{
+              className: 'selection',
+              dx: width,
+              dy: height,
+              fill: 'none',
+              key: 0,
+              x,
+              y,
+            }}
+          />
+          {focusedShapes.length === 1 &&
+            handleConfig.map(({ orientation, x, y }, j) => (
+              <ellipse
+                {...{
+                  className: `selection-handle ${orientation}`,
+                  cx: x,
+                  cy: y,
+                  key: `handle-${j}`,
+                  orientation,
+                  rx: 5,
+                  ry: 5,
+                }}
+              />
+            ))}
+        </g>
+      )
   );
+
+/**
+ * @param {boolean} isDraggingTool
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
+ * @param {number|null} toolDragDeltaX
+ * @param {number|null} toolDragDeltaY
+ * @param {number|null} toolDragStartX
+ * @param {number|null} toolDragStartY
+ */
+const Selector = ({
+  isDraggingTool,
+  selectedTool,
+  toolDragDeltaX,
+  toolDragDeltaY,
+  toolDragStartX,
+  toolDragStartY,
+}) =>
+  selectedTool === selectedToolType.SELECT && isDraggingTool ? (
+    <Rect
+      {...{
+        x: toolDragStartX,
+        y: toolDragStartY,
+        dx: toolDragDeltaX,
+        dy: toolDragDeltaY,
+        stroke: 'rgba(0, 146, 255, 1)',
+        strokeWidth: 1,
+        fill: 'rgba(128, 128, 128, 0.1)',
+      }}
+    />
+  ) : null;
 
 /**
  * @param {boolean} isDraggingTool
@@ -156,19 +197,17 @@ const LiveShape = ({
  * @class merkaba.Canvas
  * @param {Array.<merkaba.svgShape>} bufferShapes
  * @param {string|null} draggedHandleOrientation
- * @param {merkaba.svgShape} focusedShape
- * @param {number|null} focusedShapeBufferIndex
+ * @param {Array.<merkaba.svgShape>} focusedShapes
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
  * @param {Function(external:React.SyntheticEvent)} handleCanvasMouseDown
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {boolean} isDraggingTool
  * @param {merkaba.module:enums.selectedToolType} selectedTool
- * @param {number|null} selectionDragStartX
- * @param {number|null} selectionDragStartY
- * @param {number|null} selectionDragX
- * @param {number|null} selectionDragY
+ * @param {number|null} transformDragStartX
+ * @param {number|null} transformDragStartY
+ * @param {number|null} transformDragX
+ * @param {number|null} transformDragY
  * @param {number|null} toolDragDeltaX
  * @param {number|null} toolDragDeltaY
  * @param {number|null} toolDragStartX
@@ -182,19 +221,17 @@ const LiveShape = ({
 export const Canvas = ({
   bufferShapes = [],
   draggedHandleOrientation,
-  focusedShape = {},
-  focusedShapeBufferIndex,
+  focusedShapes = [],
   handleCanvasDrag,
   handleCanvasDragStart,
   handleCanvasDragStop,
   handleCanvasMouseDown,
-  handleShapeClick,
   isDraggingTool,
   selectedTool,
-  selectionDragStartX,
-  selectionDragStartY,
-  selectionDragX,
-  selectionDragY,
+  transformDragStartX,
+  transformDragStartY,
+  transformDragX,
+  transformDragY,
   toolDragDeltaX,
   toolDragDeltaY,
   toolDragStartX,
@@ -211,7 +248,7 @@ export const Canvas = ({
   >
     <div
       className={`canvas ${
-        selectedTool === selectedToolType.NONE ? 'no-tool-selected' : ''
+        selectedTool === selectedToolType.SELECT ? 'no-tool-selected' : ''
       }`}
     >
       <svg
@@ -224,15 +261,13 @@ export const Canvas = ({
           {...{
             bufferShapes,
             draggedHandleOrientation,
-            focusedShapeBufferIndex,
-            handleShapeClick,
-            selectionDragStartX,
-            selectionDragStartY,
-            selectionDragX,
-            selectionDragY,
+            transformDragStartX,
+            transformDragStartY,
+            transformDragX,
+            transformDragY,
           }}
         />
-        {selectedTool !== selectedToolType.NONE ? (
+        {selectedTool !== selectedToolType.SELECT ? (
           <LiveShape
             {...{
               isDraggingTool,
@@ -248,9 +283,19 @@ export const Canvas = ({
             }}
           />
         ) : null}
+        <FocusedShapeFrames
+          {...{
+            focusedShapes,
+          }}
+        />
         <Selector
           {...{
-            focusedShape,
+            isDraggingTool,
+            selectedTool,
+            toolDragDeltaX,
+            toolDragDeltaY,
+            toolDragStartX,
+            toolDragStartY,
           }}
         />
       </svg>

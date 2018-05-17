@@ -13,14 +13,19 @@ import { Toolbar } from './toolbar';
 import { Canvas } from './canvas';
 import { Details } from './details';
 import { selectedToolType, shapeFocusType, shapeType } from '../enums';
-import { absolutizeCoordinates, computeMidDragMatrix } from '../utils';
+import {
+  absolutizeCoordinates,
+  computeMidDragMatrix,
+  computeUnrotatedBoundingBox,
+  doRectsIntersect,
+} from '../utils';
 import eventHandlers from './merkaba.event-handlers';
 
 /**
  * @typedef merkaba.focusedShapeCursor
  * @type {Object}
  * @property {merkaba.module:enums.shapeFocusType} shapeFocus
- * @property {number|null} bufferIndex If shapeFocus is
+ * @property {Array.<number>} bufferIndices If shapeFocus is
  * `shapeFocusType.BUFFER`, this is the index of the buffered shape to focus,
  * otherwise this is `null`.
  */
@@ -36,10 +41,10 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {boolean} isDraggingShape
  * @property {boolean} isDraggingTool
  * @property {merkaba.module:enums.selectedToolType} selectedTool
- * @property {null|number} selectionDragStartX
- * @property {null|number} selectionDragStartY
- * @property {null|number} selectionDragX
- * @property {null|number} selectionDragY
+ * @property {null|number} transformDragStartX
+ * @property {null|number} transformDragStartY
+ * @property {null|number} transformDragX
+ * @property {null|number} transformDragY
  * @property {Object|merkaba.svgShape} shapeStateBeforeDragTransform
  * @property {Object} svgBoundingRect
  * @property {null|number} toolDragDeltaX
@@ -71,17 +76,17 @@ export class Merkaba extends Component {
       draggedHandleOrientation: null,
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.NONE,
-        bufferIndex: null,
+        bufferIndices: [],
       },
       isDraggingSelectionHandle: false,
       isDraggingSelectionRotator: false,
       isDraggingShape: false,
       isDraggingTool: false,
-      selectedTool: selectedToolType.NONE,
-      selectionDragStartX: null,
-      selectionDragStartY: null,
-      selectionDragX: null,
-      selectionDragY: null,
+      selectedTool: selectedToolType.SELECT,
+      transformDragStartX: null,
+      transformDragStartY: null,
+      transformDragX: null,
+      transformDragY: null,
       shapeStateBeforeDragTransform: {},
       svgBoundingRect: {},
       toolDragDeltaX: null,
@@ -101,19 +106,22 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getFocusedShape
-   * @return {merkaba.svgShape}
+   * @method merkaba.Merkaba#getFocusedShapes
+   * @return {Array.<merkaba.svgShape>}
    */
-  getFocusedShape() {
+  getFocusedShapes() {
     const {
       bufferShapes,
-      focusedShapeCursor: { shapeFocus, bufferIndex },
+      focusedShapeCursor: { shapeFocus, bufferIndices },
     } = this.state;
+
     const { NONE, LIVE } = shapeFocusType;
 
     return shapeFocus === NONE || shapeFocus === LIVE
-      ? this.getLiveShape()
-      : Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
+      ? [this.getLiveShape()]
+      : bufferIndices.map(bufferIndex =>
+          Object.assign({}, bufferShapes[bufferIndex] || emptyShape)
+        );
   }
 
   /**
@@ -163,18 +171,18 @@ export class Merkaba extends Component {
    * @return {Matrix}
    */
   getMidDragMatrix({ rotationOffset = 0 } = {}) {
-    const focusedShape = this.getFocusedShape();
+    const [focusedShape] = this.getFocusedShapes();
     const { x, y, width, height } = focusedShape;
     const rotate = focusedShape.rotate + rotationOffset;
     const {
       draggedHandleOrientation,
-      selectionDragStartX: rawSelectionDragStartX,
-      selectionDragStartY: rawSelectionDragStartY,
-      selectionDragX: rawSelectionDragX,
-      selectionDragY: rawSelectionDragY,
+      transformDragStartX: rawSelectionDragStartX,
+      transformDragStartY: rawSelectionDragStartY,
+      transformDragX: rawSelectionDragX,
+      transformDragY: rawSelectionDragY,
     } = this.state;
 
-    const { x: selectionDragStartX, y: selectionDragStartY } = applyToPoint(
+    const { x: transformDragStartX, y: transformDragStartY } = applyToPoint(
       rotateDEG(rotationOffset),
       {
         x: rawSelectionDragStartX,
@@ -182,7 +190,7 @@ export class Merkaba extends Component {
       }
     );
 
-    const { x: selectionDragX, y: selectionDragY } = applyToPoint(
+    const { x: transformDragX, y: transformDragY } = applyToPoint(
       rotateDEG(rotationOffset),
       {
         x: rawSelectionDragX || rawSelectionDragStartX,
@@ -193,8 +201,8 @@ export class Merkaba extends Component {
     return computeMidDragMatrix(
       { x, y, width, height, rotate },
       draggedHandleOrientation,
-      selectionDragX - selectionDragStartX,
-      selectionDragY - selectionDragStartY
+      transformDragX - transformDragStartX,
+      transformDragY - transformDragStartY
     );
   }
 
@@ -209,7 +217,7 @@ export class Merkaba extends Component {
     // point.
     //
     // Perhaps somebody who is better at math can come along and simplify this!
-    const { x, y, width, height, rotate } = this.getFocusedShape();
+    const [{ x, y, width, height, rotate }] = this.getFocusedShapes();
 
     const oldCenter = {
       x: x + width / 2,
@@ -239,7 +247,7 @@ export class Merkaba extends Component {
    * @param {Matrix} matrix
    */
   applyMatrixToFocusedShape(matrix) {
-    const { x, y, width, height } = this.getFocusedShape();
+    const [{ x, y, width, height }] = this.getFocusedShapes();
 
     // Adapted from
     // https://github.com/SVG-Edit/svgedit/blob/396cce40ebfde03f7245c682041f63f07f69e3d3/editor/coords.js#L139-L145
@@ -251,7 +259,7 @@ export class Merkaba extends Component {
     const absoluteWidth = Math.abs(scaledWidth);
     const absoluteHeight = Math.abs(scaledHeight);
 
-    this.updateFocusedBufferShape({
+    this.updateFocusedBufferShapes({
       x: scaledX,
       y: scaledY,
       width: absoluteWidth,
@@ -267,7 +275,7 @@ export class Merkaba extends Component {
     this.setState({
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: +shapeEl.getAttribute('data-buffer-index'),
+        bufferIndices: [+shapeEl.getAttribute('data-buffer-index')],
       },
     });
   }
@@ -280,7 +288,7 @@ export class Merkaba extends Component {
     this.setState({
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: index,
+        bufferIndices: [index],
       },
     });
   }
@@ -303,44 +311,42 @@ export class Merkaba extends Component {
    */
   updateBufferShape(shapeIndex, newShapeData) {
     const { bufferShapes } = this.state;
-    const modifiedBuffer = bufferShapes.slice();
-    modifiedBuffer[shapeIndex] = Object.assign(
-      {},
-      this.getFocusedShape(),
-      newShapeData
-    );
-
-    this.setState({ bufferShapes: modifiedBuffer });
+    Object.assign(bufferShapes[shapeIndex], newShapeData);
+    this.setState({ bufferShapes });
   }
 
   /**
-   * @method merkaba.Merkaba#updateFocusedBufferShape
+   * @method merkaba.Merkaba#updateFocusedBufferShapes
    * @param {Object.<any>} newShapeData Any properties to update the buffered
    * shape with.
    */
-  updateFocusedBufferShape(newShapeData) {
-    this.updateBufferShape(
-      this.state.focusedShapeCursor.bufferIndex,
-      newShapeData
+  updateFocusedBufferShapes(newShapeData) {
+    this.state.focusedShapeCursor.bufferIndices.forEach(bufferIndex =>
+      this.updateBufferShape(bufferIndex, newShapeData)
     );
   }
 
   /**
    * @method merkaba.Merkaba#updateBufferShapeProperty
-   * @param {number} bufferIndex
+   * @param {Array.<number>} bufferIndices
    * @param {string} name
    * @param {*} value
    */
-  updateBufferShapeProperty(bufferIndex, name, value) {
-    const { bufferShapes } = this.state;
+  updateBufferShapeProperty(bufferIndices, name, value) {
+    const bufferShapes = this.state.bufferShapes.slice();
 
-    const shape = Object.assign({}, bufferShapes[bufferIndex]);
-    shape[name] = value;
+    bufferIndices.forEach(
+      bufferIndex =>
+        (bufferShapes[bufferIndex] = Object.assign(
+          {},
+          bufferShapes[bufferIndex],
+          {
+            [name]: value,
+          }
+        ))
+    );
 
-    const newBuffer = bufferShapes.slice();
-    newBuffer[bufferIndex] = shape;
-
-    this.setState({ bufferShapes: newBuffer });
+    this.setState({ bufferShapes });
   }
 
   /**
@@ -350,10 +356,43 @@ export class Merkaba extends Component {
    */
   updateFocusedBufferShapeProperty(name, value) {
     this.updateBufferShapeProperty(
-      this.state.focusedShapeCursor.bufferIndex,
+      this.state.focusedShapeCursor.bufferIndices,
       name,
       value
     );
+  }
+
+  /**
+   * @method merkaba.Merkaba#getSelectedShapeBufferIndices
+   * @return {Array.<number>}
+   */
+  getSelectedShapeBufferIndices() {
+    const {
+      toolDragStartX,
+      toolDragStartY,
+      toolDragDeltaX,
+      toolDragDeltaY,
+    } = this.state;
+
+    const { x, y, height, width } = absolutizeCoordinates(
+      toolDragStartX,
+      toolDragStartY,
+      toolDragDeltaX,
+      toolDragDeltaY
+    );
+
+    const selectorBox = { x, y, height, width };
+
+    return this.state.bufferShapes
+      .map((shape, i) => ({
+        i,
+        doesIntersect: doRectsIntersect(
+          selectorBox,
+          computeUnrotatedBoundingBox(shape)
+        ),
+      }))
+      .filter(shape => shape.doesIntersect)
+      .map(shape => shape.i);
   }
 
   render() {
@@ -361,13 +400,13 @@ export class Merkaba extends Component {
       state: {
         bufferShapes,
         draggedHandleOrientation,
-        focusedShapeCursor: { bufferIndex: focusedShapeBufferIndex },
+        focusedShapeCursor: { bufferIndices: focusedShapeBufferIndices },
         isDraggingTool,
         selectedTool,
-        selectionDragStartX,
-        selectionDragStartY,
-        selectionDragX,
-        selectionDragY,
+        transformDragStartX,
+        transformDragStartY,
+        transformDragX,
+        transformDragY,
         toolDragDeltaX,
         toolDragDeltaY,
         toolDragStartX,
@@ -386,11 +425,10 @@ export class Merkaba extends Component {
       handleLayerSortEnd,
       handleLayerSortStart,
       handlePropertyChange,
-      handleShapeClick,
       handleToolClick,
     } = this;
 
-    const focusedShape = this.getFocusedShape();
+    const focusedShapes = this.getFocusedShapes();
 
     return (
       <div className="fill merkaba">
@@ -398,7 +436,7 @@ export class Merkaba extends Component {
           {...{
             bufferShapes,
             distance: 1,
-            focusedShapeBufferIndex,
+            focusedShapeBufferIndices,
             handleLayerClick,
             helperClass: 'focused',
             lockAxis: 'y',
@@ -416,19 +454,17 @@ export class Merkaba extends Component {
           {...{
             bufferShapes,
             draggedHandleOrientation,
-            focusedShape,
-            focusedShapeBufferIndex,
+            focusedShapes,
             handleCanvasDrag,
             handleCanvasDragStart,
             handleCanvasDragStop,
             handleCanvasMouseDown,
-            handleShapeClick,
             isDraggingTool,
             selectedTool,
-            selectionDragStartX,
-            selectionDragStartY,
-            selectionDragX,
-            selectionDragY,
+            transformDragStartX,
+            transformDragStartY,
+            transformDragX,
+            transformDragY,
             toolDragDeltaX,
             toolDragDeltaY,
             toolDragStartX,
@@ -441,7 +477,7 @@ export class Merkaba extends Component {
         />
         <Details
           {...{
-            focusedShape,
+            focusedShapes,
             handleColorPropertyChange,
             handlePropertyChange,
           }}

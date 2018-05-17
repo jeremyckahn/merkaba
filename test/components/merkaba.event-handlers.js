@@ -28,7 +28,7 @@ describe('eventHandlers', () => {
       component.setState({
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 1,
+          bufferIndices: [1],
         },
       });
 
@@ -43,7 +43,7 @@ describe('eventHandlers', () => {
     it('resets the drag and focus state', () => {
       assert.deepEqual(component.state('focusedShapeCursor'), {
         shapeFocus: shapeFocusType.NONE,
-        bufferIndex: null,
+        bufferIndices: [],
       });
     });
 
@@ -54,55 +54,97 @@ describe('eventHandlers', () => {
   });
 
   describe('Merkaba#handleCanvasDragStart', () => {
-    beforeEach(() => {
-      component.setState({
-        selectedTool: selectedToolType.NOT_NONE,
+    const eventHandlerData = { target: { nodeName: 'svg' } };
+    const dragData = {
+      x: 10,
+      y: 15,
+      node: { offsetLeft: 5, offsetTop: 5 },
+    };
+
+    describe('drag state', () => {
+      beforeEach(() => {
+        component.setState({
+          selectedTool: selectedToolType.NONE,
+        });
+
+        component.instance().handleCanvasDragStart(eventHandlerData, dragData);
       });
 
-      component.instance().handleCanvasDragStart(
-        {
-          target: { nodeName: 'svg' },
-        },
-        {
-          x: 10,
-          y: 15,
-          node: { offsetLeft: 5, offsetTop: 5 },
-        }
-      );
-    });
+      it('sets the focusedShapeCursor state', () => {
+        assert.deepEqual(component.state('focusedShapeCursor'), {
+          shapeFocus: shapeFocusType.LIVE,
+          bufferIndices: [],
+        });
+      });
 
-    it('sets the focusedShapeCursor state', () => {
-      assert.deepEqual(component.state('focusedShapeCursor'), {
-        shapeFocus: shapeFocusType.LIVE,
-        bufferIndex: null,
+      it('sets the isDraggingTool state', () => {
+        assert.equal(component.state('isDraggingTool'), true);
+      });
+
+      it('sets the toolDragStartX state', () => {
+        assert.equal(component.state('toolDragStartX'), 5);
+      });
+
+      it('sets the toolDragStartY state', () => {
+        assert.equal(component.state('toolDragStartY'), 10);
+      });
+
+      it('sets the toolDragDeltaX state', () => {
+        assert.equal(component.state('toolDragDeltaX'), 0);
+      });
+
+      it('sets the toolDragDeltaY state', () => {
+        assert.equal(component.state('toolDragDeltaY'), 0);
       });
     });
 
-    it('sets the isDraggingTool state', () => {
-      assert.equal(component.state('isDraggingTool'), true);
-    });
+    describe('selectedTool branching', () => {
+      describe('focusedShapeCursor', () => {
+        describe('selectedTool !== selectedToolType.SELECT', () => {
+          beforeEach(() => {
+            component.setState({
+              selectedTool: selectedToolType.NONE,
+            });
 
-    it('sets the toolDragStartX state', () => {
-      assert.equal(component.state('toolDragStartX'), 5);
-    });
+            component
+              .instance()
+              .handleCanvasDragStart(eventHandlerData, dragData);
+          });
 
-    it('sets the toolDragStartY state', () => {
-      assert.equal(component.state('toolDragStartY'), 10);
-    });
+          it('sets correct shapeFocusType', () => {
+            assert.equal(
+              component.state('focusedShapeCursor').shapeFocus,
+              shapeFocusType.LIVE
+            );
+          });
+        });
 
-    it('sets the toolDragDeltaX state', () => {
-      assert.equal(component.state('toolDragDeltaX'), 0);
-    });
+        describe('selectedTool === selectedToolType.SELECT', () => {
+          beforeEach(() => {
+            component.setState({
+              selectedTool: selectedToolType.SELECT,
+            });
 
-    it('sets the toolDragDeltaY state', () => {
-      assert.equal(component.state('toolDragDeltaY'), 0);
+            component
+              .instance()
+              .handleCanvasDragStart(eventHandlerData, dragData);
+          });
+
+          it('sets correct shapeFocusType', () => {
+            assert.equal(
+              component.state('focusedShapeCursor').shapeFocus,
+              shapeFocusType.NONE
+            );
+          });
+        });
+      });
     });
   });
 
   describe('Merkaba#handleCanvasDrag', () => {
     beforeEach(() => {
       component.setState({
-        selectedTool: selectedToolType.NOT_NONE,
+        selectedTool: selectedToolType.NONE,
       });
 
       component.setState({
@@ -120,33 +162,95 @@ describe('eventHandlers', () => {
     it('sets the toolDragDeltaY state', () => {
       assert.equal(component.state('toolDragDeltaY'), 20);
     });
+
+    describe('focusedShapeCursor state', () => {
+      describe('selectedTool !== selectedToolType.SELECT', () => {
+        beforeEach(() => {
+          component.setState({
+            selectedTool: selectedToolType.NONE,
+          });
+
+          component.instance().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+        });
+
+        it('does not change focusedShapeCursor', () => {
+          assert.deepEqual(component.state('focusedShapeCursor'), {
+            shapeFocus: shapeFocusType.NONE,
+            bufferIndices: [],
+          });
+        });
+      });
+
+      describe('selectedTool === selectedToolType.SELECT', () => {
+        describe('some shapes selected', () => {
+          beforeEach(() => {
+            component.setState({
+              bufferShapes: [
+                sampleRect({ x: 0, y: 0, height: 10, width: 10 }),
+                sampleRect({ x: 10, y: 10, height: 10, width: 10 }),
+              ],
+              selectedTool: selectedToolType.SELECT,
+              toolDragStartX: 0,
+              toolDragStartY: 0,
+              toolDragDeltaX: 20,
+              toolDragDeltaY: 20,
+            });
+
+            component.instance().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+          });
+
+          it('sets correct focusedShapeCursor', () => {
+            assert.deepEqual(component.state('focusedShapeCursor'), {
+              shapeFocus: shapeFocusType.BUFFER,
+              bufferIndices: [0, 1],
+            });
+          });
+        });
+
+        describe('no shapes selected', () => {
+          beforeEach(() => {
+            component.setState({
+              selectedTool: selectedToolType.SELECT,
+            });
+
+            component.instance().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+          });
+
+          it('sets correct focusedShapeCursor', () => {
+            assert.deepEqual(component.state('focusedShapeCursor'), {
+              shapeFocus: shapeFocusType.NONE,
+              bufferIndices: [],
+            });
+          });
+        });
+      });
+    });
   });
 
   describe('Merkaba#handleCanvasDragStop', () => {
+    beforeEach(() => {
+      component.setState({
+        isDraggingTool: true,
+        selectedTool: selectedToolType.NONE,
+        toolDragStartX: 10,
+        toolDragStartY: 15,
+        toolRotate: 30,
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.LIVE,
+          bufferIndices: [],
+        },
+      });
+    });
+
     describe('state management', () => {
       beforeEach(() => {
-        component.setState({
-          selectedTool: selectedToolType.NOT_NONE,
-        });
-
-        component.setState({
-          isDraggingTool: true,
-          toolDragStartX: 10,
-          toolDragStartY: 15,
-          toolRotate: 30,
-          focusedShapeCursor: {
-            shapeFocus: shapeFocusType.LIVE,
-            bufferIndex: null,
-          },
-        });
-
         component.instance().handleCanvasDragStop();
       });
 
       it('sets the focusedShapeCursor state', () => {
         assert.deepEqual(component.state('focusedShapeCursor'), {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         });
       });
 
@@ -177,7 +281,7 @@ describe('eventHandlers', () => {
       it('sets the selectedTool state', () => {
         assert.equal(
           String(component.state('selectedTool')),
-          selectedToolType.NONE
+          selectedToolType.SELECT
         );
       });
     });
@@ -224,7 +328,7 @@ describe('eventHandlers', () => {
               y: 15,
               width: 10,
               height: 10,
-              rotate: 0,
+              rotate: 30,
               fill: 'rgba(0, 0, 0, 1)',
               stroke: 'rgba(0, 0, 0, 1)',
               strokeWidth: 0,
@@ -233,24 +337,24 @@ describe('eventHandlers', () => {
         });
       });
     });
-  });
 
-  describe('Merkaba#handleShapeClick', () => {
-    describe('clicking on a shape', () => {
-      beforeEach(() => {
-        component.setState({
-          bufferShapes: [sampleRect()],
-        });
+    describe('selectedTool branching', () => {
+      describe('focusedShapeCursor', () => {
+        describe('selectedTool !== selectedToolType.SELECT', () => {
+          beforeEach(() => {
+            component.setState({
+              selectedTool: selectedToolType.NONE,
+            });
 
-        component.instance().handleShapeClick({
-          target: { getAttribute: () => 1 },
-        });
-      });
+            component.instance().handleCanvasDragStop();
+          });
 
-      it('focuses the clicked shape', () => {
-        assert.deepEqual(component.state('focusedShapeCursor'), {
-          shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 1,
+          it('sets correct focusedShapeCursor', () => {
+            assert.deepEqual(component.state('focusedShapeCursor'), {
+              shapeFocus: shapeFocusType.BUFFER,
+              bufferIndices: [0],
+            });
+          });
         });
       });
     });
@@ -267,25 +371,52 @@ describe('eventHandlers', () => {
       });
     });
 
-    it('focuses the clicked shape', () => {
-      assert.deepEqual(component.state('focusedShapeCursor'), {
-        shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: 1,
+    it('updates isDraggingTool state', () => {
+      assert(component.state('isDraggingShape'));
+    });
+
+    describe('focusedShapeCursor.shapeFocus === shapeFocusType.NONE', () => {
+      it('focuses the clicked shape', () => {
+        assert.deepEqual(component.state('focusedShapeCursor'), {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndices: [1],
+        });
       });
     });
 
-    it('updates isDraggingTool state', () => {
-      assert(component.state('isDraggingShape'));
+    describe('dragged shape is already represented in focusedShapeCursor.bufferIndices', () => {
+      beforeEach(() => {
+        component.setState({
+          focusedShapeCursor: {
+            bufferIndices: [1, 2],
+            shapeFocus: shapeFocusType.BUFFER,
+          },
+        });
+
+        component.instance().handleBufferedShapeDragStart({
+          target: { getAttribute: () => 2 },
+        });
+      });
+
+      it('does not change the focusedShapeCursor state', () => {
+        assert.deepEqual(component.state('focusedShapeCursor'), {
+          bufferIndices: [1, 2],
+          shapeFocus: shapeFocusType.BUFFER,
+        });
+      });
     });
   });
 
   describe('Merkaba#handleBufferedShapeDrag', () => {
     beforeEach(() => {
       component.setState({
-        bufferShapes: [sampleRect()],
+        bufferShapes: [
+          sampleRect({ x: 10, y: 10 }),
+          sampleRect({ x: 20, y: 20 }),
+        ],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0, 1],
         },
       });
 
@@ -295,10 +426,12 @@ describe('eventHandlers', () => {
     });
 
     it('modifies the bufferShapes data', () => {
-      const [shapeData] = component.state('bufferShapes');
+      const [shape1, shape2] = component.state('bufferShapes');
       const { x, y } = sampleRect();
-      assert.equal(shapeData.x, x + 10);
-      assert.equal(shapeData.y, y - 10);
+      assert.equal(shape1.x, 20);
+      assert.equal(shape1.y, 0);
+      assert.equal(shape2.x, 30);
+      assert.equal(shape2.y, 10);
     });
   });
 
@@ -326,7 +459,7 @@ describe('eventHandlers', () => {
         svgBoundingRect: { x: 0, y: 0 },
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
 
@@ -361,12 +494,12 @@ describe('eventHandlers', () => {
       assert.equal(component.state('draggedHandleOrientation'), 'top-left');
     });
 
-    it('updates selectionDragStartX state', () => {
-      assert.equal(component.state('selectionDragStartX'), 5);
+    it('updates transformDragStartX state', () => {
+      assert.equal(component.state('transformDragStartX'), 5);
     });
 
-    it('updates selectionDragStartY state', () => {
-      assert.equal(component.state('selectionDragStartY'), 10);
+    it('updates transformDragStartY state', () => {
+      assert.equal(component.state('transformDragStartY'), 10);
     });
   });
 
@@ -380,7 +513,7 @@ describe('eventHandlers', () => {
         svgBoundingRect: { x: 0, y: 0 },
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
     });
@@ -390,16 +523,18 @@ describe('eventHandlers', () => {
         component.instance().handleSelectionHandleDrag(null, { x, y });
       });
 
-      it('updates the selectionDragX state', () => {
-        assert.equal(component.state('selectionDragX'), x);
+      it('updates the transformDragX state', () => {
+        assert.equal(component.state('transformDragX'), x);
       });
 
-      it('updates the selectionDragY state', () => {
-        assert.equal(component.state('selectionDragY'), y);
+      it('updates the transformDragY state', () => {
+        assert.equal(component.state('transformDragY'), y);
       });
 
       it('updates the focused shape', () => {
-        const { height, width, x, y } = component.instance().getFocusedShape();
+        const [
+          { height, width, x, y },
+        ] = component.instance().getFocusedShapes();
         assert.deepEqual(
           { height, width, x, y },
           {
@@ -419,10 +554,10 @@ describe('eventHandlers', () => {
         draggedHandleOrientation: 'top-left',
         isDraggingSelectionHandle: true,
         shapeStateBeforeDragTransform: sampleRect(),
-        selectionDragStartX: 5,
-        selectionDragStartY: 10,
-        selectionDragX: 0,
-        selectionDragY: 5,
+        transformDragStartX: 5,
+        transformDragStartY: 10,
+        transformDragX: 0,
+        transformDragY: 5,
       });
       component.instance().handleSelectionHandleDragStop();
     });
@@ -439,20 +574,20 @@ describe('eventHandlers', () => {
       assert.deepEqual(component.state('shapeStateBeforeDragTransform'), {});
     });
 
-    it('updates selectionDragStartX state', () => {
-      assert.equal(component.state('selectionDragStartX'), null);
+    it('updates transformDragStartX state', () => {
+      assert.equal(component.state('transformDragStartX'), null);
     });
 
-    it('updates selectionDragStartY state', () => {
-      assert.equal(component.state('selectionDragStartY'), null);
+    it('updates transformDragStartY state', () => {
+      assert.equal(component.state('transformDragStartY'), null);
     });
 
-    it('updates the selectionDragX state', () => {
-      assert.equal(component.state('selectionDragX'), null);
+    it('updates the transformDragX state', () => {
+      assert.equal(component.state('transformDragX'), null);
     });
 
-    it('updates the selectionDragY state', () => {
-      assert.equal(component.state('selectionDragY'), null);
+    it('updates the transformDragY state', () => {
+      assert.equal(component.state('transformDragY'), null);
     });
   });
 
@@ -471,7 +606,7 @@ describe('eventHandlers', () => {
       component.setState({
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
         bufferShapes: [
           {
@@ -519,7 +654,7 @@ describe('eventHandlers', () => {
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
 
@@ -544,7 +679,7 @@ describe('eventHandlers', () => {
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
 
@@ -575,7 +710,7 @@ describe('eventHandlers', () => {
     it('focuses the clicked layer', () => {
       assert.deepEqual(component.state('focusedShapeCursor'), {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: 0,
+        bufferIndices: [0],
       });
     });
   });
@@ -590,7 +725,7 @@ describe('eventHandlers', () => {
         ],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 1,
+          bufferIndices: [1],
         },
       });
 
@@ -606,7 +741,9 @@ describe('eventHandlers', () => {
     });
 
     it('updates focusedShapeCursor', () => {
-      assert.equal(component.state('focusedShapeCursor').bufferIndex, 2);
+      assert.deepEqual(component.state('focusedShapeCursor').bufferIndices, [
+        2,
+      ]);
     });
   });
 
@@ -622,7 +759,7 @@ describe('eventHandlers', () => {
     it('focuses the clicked layer', () => {
       assert.deepEqual(component.state('focusedShapeCursor'), {
         shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: 0,
+        bufferIndices: [0],
       });
     });
   });

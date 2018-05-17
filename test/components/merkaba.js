@@ -15,7 +15,7 @@ describe('Merkaba', () => {
   describe('state', () => {
     describe('selectedTool', () => {
       it('has a default value', () => {
-        assert.equal(component.state('selectedTool'), selectedToolType.NONE);
+        assert.equal(component.state('selectedTool'), selectedToolType.SELECT);
       });
     });
 
@@ -79,27 +79,27 @@ describe('Merkaba', () => {
       });
     });
 
-    describe('selectionDragStartX', () => {
+    describe('transformDragStartX', () => {
       it('has a default value', () => {
-        assert.equal(String(component.state('selectionDragStartX')), 'null');
+        assert.equal(String(component.state('transformDragStartX')), 'null');
       });
     });
 
-    describe('selectionDragStartY', () => {
+    describe('transformDragStartY', () => {
       it('has a default value', () => {
-        assert.equal(String(component.state('selectionDragStartY')), 'null');
+        assert.equal(String(component.state('transformDragStartY')), 'null');
       });
     });
 
-    describe('selectionDragX', () => {
+    describe('transformDragX', () => {
       it('has a default value', () => {
-        assert.equal(String(component.state('selectionDragX')), 'null');
+        assert.equal(String(component.state('transformDragX')), 'null');
       });
     });
 
-    describe('selectionDragY', () => {
+    describe('transformDragY', () => {
       it('has a default value', () => {
-        assert.equal(String(component.state('selectionDragY')), 'null');
+        assert.equal(String(component.state('transformDragY')), 'null');
       });
     });
 
@@ -143,24 +143,26 @@ describe('Merkaba', () => {
       it('has a default value', () => {
         assert.deepEqual(component.state('focusedShapeCursor'), {
           shapeFocus: shapeFocusType.NONE,
-          bufferIndex: null,
+          bufferIndices: [],
         });
       });
     });
   });
 
-  describe('getFocusedShape', () => {
-    let focusedShape;
+  describe('getFocusedShapes', () => {
+    let focusedShapes;
 
     describe('state.focusedShapeCursor.shapeFocus === shapeFocusType.NONE', () => {
       beforeEach(() => {
-        focusedShape = component.instance().getFocusedShape();
+        focusedShapes = component.instance().getFocusedShapes();
       });
 
       it('returns empty shape data', () => {
-        assert.deepEqual(focusedShape, {
-          type: shapeType.NONE,
-        });
+        assert.deepEqual(focusedShapes, [
+          {
+            type: shapeType.NONE,
+          },
+        ]);
       });
     });
 
@@ -169,7 +171,7 @@ describe('Merkaba', () => {
         component.setState({
           focusedShapeCursor: {
             shapeFocus: shapeFocusType.LIVE,
-            bufferIndex: null,
+            bufferIndices: [],
           },
           selectedTool: selectedToolType.RECTANGLE,
           toolDragStartX: 10,
@@ -178,69 +180,63 @@ describe('Merkaba', () => {
           toolDragDeltaY: 10,
         });
 
-        focusedShape = component.instance().getFocusedShape();
+        focusedShapes = component.instance().getFocusedShapes();
       });
 
       it('returns live shape data', () => {
-        assert.deepEqual(focusedShape, {
-          type: shapeType.RECT,
-          x: 10,
-          y: 15,
-          width: 10,
-          height: 10,
-          rotate: 0,
-          fill: 'rgba(0, 0, 0, 1)',
-          stroke: 'rgba(0, 0, 0, 1)',
-          strokeWidth: 0,
-        });
+        assert.deepEqual(focusedShapes, [
+          {
+            type: shapeType.RECT,
+            x: 10,
+            y: 15,
+            width: 10,
+            height: 10,
+            rotate: 0,
+            fill: 'rgba(0, 0, 0, 1)',
+            stroke: 'rgba(0, 0, 0, 1)',
+            strokeWidth: 0,
+          },
+        ]);
       });
     });
 
     describe('state.focusedShapeCursor.shapeFocus === shapeFocusType.BUFFER', () => {
-      const bufferShape = {
-        type: shapeType.RECT,
-        x: 10,
-        y: 15,
-        width: 10,
-        height: 10,
-        fill: null,
-        stroke: null,
-        strokeWidth: 0,
-      };
+      const bufferShape1 = sampleRect({ id: 1 });
+      const bufferShape2 = sampleRect({ id: 2 });
 
-      describe('valid bufferIndex', () => {
+      describe('valid bufferIndices', () => {
         beforeEach(() => {
           component.setState({
             focusedShapeCursor: {
               shapeFocus: shapeFocusType.BUFFER,
-              bufferIndex: 0,
+              bufferIndices: [0, 1],
             },
-            bufferShapes: [bufferShape],
+            bufferShapes: [bufferShape1, bufferShape2],
           });
 
-          focusedShape = component.instance().getFocusedShape();
+          focusedShapes = component.instance().getFocusedShapes();
         });
 
         it('returns empty shape data', () => {
-          assert.deepEqual(focusedShape, bufferShape);
+          assert.deepEqual(focusedShapes, [bufferShape1, bufferShape2]);
         });
       });
 
-      describe('invalid bufferIndex', () => {
+      describe('invalid bufferIndices', () => {
         beforeEach(() => {
           component.setState({
             focusedShapeCursor: {
               shapeFocus: shapeFocusType.BUFFER,
-              bufferIndex: 1,
+              bufferIndices: [1],
             },
-            bufferShapes: [bufferShape],
+            bufferShapes: [bufferShape1],
           });
 
-          focusedShape = component.instance().getFocusedShape();
+          focusedShapes = component.instance().getFocusedShapes();
         });
 
         it('returns empty shape data', () => {
-          assert.deepEqual(focusedShape, { type: shapeType.NONE });
+          assert.deepEqual(focusedShapes, [{ type: shapeType.NONE }]);
         });
       });
     });
@@ -262,10 +258,10 @@ describe('Merkaba', () => {
       });
     });
 
-    describe('selectedTool === selectedToolType.NONE', () => {
+    describe('selectedTool === selectedToolType.SELECT', () => {
       beforeEach(() => {
         component.setState({
-          selectedTool: selectedToolType.NONE,
+          selectedTool: selectedToolType.SELECT,
         });
 
         shapeObject = component.instance().getLiveShape();
@@ -309,14 +305,14 @@ describe('Merkaba', () => {
     beforeEach(() => {
       component.setState({
         draggedHandleOrientation: 'top-left',
-        selectionDragStartX: 10,
-        selectionDragStartY: 10,
-        selectionDragX: 50,
-        selectionDragY: 50,
+        transformDragStartX: 10,
+        transformDragStartY: 10,
+        transformDragX: 50,
+        transformDragY: 50,
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
     });
@@ -372,14 +368,14 @@ describe('Merkaba', () => {
     beforeEach(() => {
       component.setState({
         draggedHandleOrientation: 'top-left',
-        selectionDragStartX: 10,
-        selectionDragStartY: 10,
-        selectionDragX: 50,
-        selectionDragY: 50,
+        transformDragStartX: 10,
+        transformDragStartY: 10,
+        transformDragX: 50,
+        transformDragY: 50,
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
 
@@ -406,14 +402,14 @@ describe('Merkaba', () => {
     beforeEach(() => {
       component.setState({
         draggedHandleOrientation: 'top-left',
-        selectionDragStartX: 10,
-        selectionDragStartY: 10,
-        selectionDragX: 50,
-        selectionDragY: 50,
+        transformDragStartX: 10,
+        transformDragStartY: 10,
+        transformDragX: 50,
+        transformDragY: 50,
         bufferShapes: [sampleRect()],
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
-          bufferIndex: 0,
+          bufferIndices: [0],
         },
       });
 
@@ -422,7 +418,7 @@ describe('Merkaba', () => {
     });
 
     it('sets the matrix values to the focused shape', () => {
-      const { height, width, x, y } = component.instance().getFocusedShape();
+      const [{ height, width, x, y }] = component.instance().getFocusedShapes();
       assert.deepEqual(
         { height, width, x, y },
         {
@@ -432,6 +428,52 @@ describe('Merkaba', () => {
           y: 25,
         }
       );
+    });
+  });
+
+  describe('updateBufferShape', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect()],
+      });
+    });
+
+    describe('single focused shape', () => {
+      beforeEach(() => {
+        component.instance().updateBufferShape(0, { foo: 'bar' });
+      });
+
+      it('updates the focused shape', () => {
+        assert.equal(component.state().bufferShapes[0].foo, 'bar');
+      });
+    });
+
+    describe('multiple focused shapes', () => {
+      beforeEach(() => {
+        component.setState({
+          bufferShapes: [sampleRect(), sampleRect()],
+        });
+      });
+
+      describe('index === 0', () => {
+        beforeEach(() => {
+          component.instance().updateBufferShape(0, { foo: 'bar' });
+        });
+
+        it('updates the specific focused shape', () => {
+          assert.equal(component.state().bufferShapes[0].foo, 'bar');
+        });
+      });
+
+      describe('index > 0', () => {
+        beforeEach(() => {
+          component.instance().updateBufferShape(1, { foo: 'bar' });
+        });
+
+        it('updates the specific focused shape', () => {
+          assert.equal(component.state().bufferShapes[1].foo, 'bar');
+        });
+      });
     });
   });
 });

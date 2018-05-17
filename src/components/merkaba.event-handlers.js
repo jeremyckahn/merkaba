@@ -10,15 +10,6 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleShapeClick
-   * @param {external:React.SyntheticEvent} e
-   * @param {external:Draggable.DraggableData} data
-   */
-  handleShapeClick(e) {
-    this.focusBufferShape(e.target);
-  },
-
-  /**
    * @method merkaba.Merkaba#handlePropertyChange
    * @param {external:React.SyntheticEvent} e
    */
@@ -83,7 +74,7 @@ export default {
     this.setState({
       focusedShapeCursor: {
         shapeFocus: shapeFocusType.NONE,
-        bufferIndex: null,
+        bufferIndices: [],
       },
     });
   },
@@ -114,8 +105,6 @@ export default {
       } else if (classList.contains('selection-handle-rotator')) {
         return this.handleSelectionRotatorDragStart(...arguments);
       }
-    } else if (this.state.selectedTool === selectedToolType.NONE) {
-      return;
     }
 
     const {
@@ -124,11 +113,16 @@ export default {
       node: { offsetLeft, offsetTop },
     } = data;
 
+    const focusedShapeCursor = {
+      shapeFocus:
+        this.state.selectedTool === selectedToolType.SELECT
+          ? shapeFocusType.NONE
+          : shapeFocusType.LIVE,
+      bufferIndices: [],
+    };
+
     this.setState({
-      focusedShapeCursor: {
-        shapeFocus: shapeFocusType.LIVE,
-        bufferIndex: null,
-      },
+      focusedShapeCursor,
       isDraggingTool: true,
       toolDragDeltaX: 0,
       toolDragDeltaY: 0,
@@ -158,11 +152,23 @@ export default {
       return this.handleSelectionHandleDrag(...arguments);
     } else if (isDraggingSelectionRotator) {
       return this.handleSelectionRotatorDrag(...arguments);
-    } else if (selectedTool === selectedToolType.NONE) {
-      return;
     }
 
+    const isUsingSelectTool = selectedTool === selectedToolType.SELECT;
+    const selectedShapeIndices =
+      isUsingSelectTool && this.getSelectedShapeBufferIndices();
+
+    const focusedShapeCursor = isUsingSelectTool
+      ? {
+          shapeFocus: selectedShapeIndices.length
+            ? shapeFocusType.BUFFER
+            : shapeFocusType.NONE,
+          bufferIndices: selectedShapeIndices,
+        }
+      : this.state.focusedShapeCursor;
+
     this.setState({
+      focusedShapeCursor,
       toolDragDeltaX: toolDragDeltaX + deltaX,
       toolDragDeltaY: toolDragDeltaY + deltaY,
     });
@@ -192,24 +198,27 @@ export default {
       return this.handleSelectionHandleDragStop(...arguments);
     } else if (isDraggingSelectionRotator) {
       return this.handleSelectionRotatorDragStop(...arguments);
-    } else if (selectedTool === selectedToolType.NONE) {
-      return;
     }
 
     const bufferShapes = this.state.bufferShapes.slice();
+    const isUsingSelectTool = selectedTool === selectedToolType.SELECT;
 
-    if (toolDragDeltaX && toolDragDeltaY) {
+    if (!isUsingSelectTool && toolDragDeltaX && toolDragDeltaY) {
       bufferShapes.unshift(this.getLiveShape());
     }
 
+    const focusedShapeCursor = isUsingSelectTool
+      ? this.state.focusedShapeCursor
+      : {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndices: [0],
+        };
+
     this.setState({
       bufferShapes,
-      focusedShapeCursor: {
-        shapeFocus: shapeFocusType.BUFFER,
-        bufferIndex: 0,
-      },
+      focusedShapeCursor,
       isDraggingTool: false,
-      selectedTool: selectedToolType.NONE,
+      selectedTool: selectedToolType.SELECT,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
       toolDragStartX: null,
@@ -224,7 +233,14 @@ export default {
    * @param {external:Draggable.DraggableData} data
    */
   handleBufferedShapeDragStart(e) {
-    this.focusBufferShape(e.target);
+    if (
+      !~this.state.focusedShapeCursor.bufferIndices.indexOf(
+        Number(e.target.getAttribute('data-buffer-index'))
+      )
+    ) {
+      this.focusBufferShape(e.target);
+    }
+
     this.setState({ isDraggingShape: true });
   },
 
@@ -234,11 +250,18 @@ export default {
    * @param {external:Draggable.DraggableData} data
    */
   handleBufferedShapeDrag(e, { deltaX, deltaY }) {
-    const focusedShape = this.getFocusedShape();
+    const {
+      focusedShapeCursor: { bufferIndices },
+      bufferShapes,
+    } = this.state;
 
-    this.updateFocusedBufferShape({
-      x: focusedShape.x + deltaX,
-      y: focusedShape.y + deltaY,
+    bufferIndices.forEach(bufferIndex => {
+      const { x, y } = bufferShapes[bufferIndex];
+
+      this.updateBufferShape(bufferIndex, {
+        x: x + deltaX,
+        y: y + deltaY,
+      });
     });
   },
 
@@ -263,9 +286,9 @@ export default {
     this.setState({
       draggedHandleOrientation,
       isDraggingSelectionHandle: true,
-      selectionDragStartX: x - svgBoundingRect.x,
-      selectionDragStartY: y - svgBoundingRect.y,
-      shapeStateBeforeDragTransform: this.getFocusedShape(),
+      transformDragStartX: x - svgBoundingRect.x,
+      transformDragStartY: y - svgBoundingRect.y,
+      shapeStateBeforeDragTransform: this.getFocusedShapes()[0],
     });
   },
 
@@ -278,11 +301,11 @@ export default {
     const { svgBoundingRect, shapeStateBeforeDragTransform } = this.state;
 
     this.setState({
-      selectionDragX: x - svgBoundingRect.x,
-      selectionDragY: y - svgBoundingRect.y,
+      transformDragX: x - svgBoundingRect.x,
+      transformDragY: y - svgBoundingRect.y,
     });
 
-    this.updateFocusedBufferShape(shapeStateBeforeDragTransform);
+    this.updateFocusedBufferShapes(shapeStateBeforeDragTransform);
 
     this.applyMatrixToFocusedShape(this.getAggregateDragMatrix());
   },
@@ -295,10 +318,10 @@ export default {
     this.setState({
       draggedHandleOrientation: null,
       isDraggingSelectionHandle: false,
-      selectionDragStartX: null,
-      selectionDragStartY: null,
-      selectionDragX: null,
-      selectionDragY: null,
+      transformDragStartX: null,
+      transformDragStartY: null,
+      transformDragX: null,
+      transformDragY: null,
       shapeStateBeforeDragTransform: {},
     });
   },
@@ -317,13 +340,9 @@ export default {
    * @param {external:Draggable.DraggableData} data
    */
   handleSelectionRotatorDrag(e, data) {
-    const {
-      height,
-      rotate,
-      width,
-      x: shapeX,
-      y: shapeY,
-    } = this.getFocusedShape();
+    const [
+      { height, rotate, width, x: shapeX, y: shapeY },
+    ] = this.getFocusedShapes();
     const { lastX, lastY, x: newX, y: newY } = data;
     const { x: svgX, y: svgY } = this.state.svgBoundingRect;
 
@@ -376,7 +395,7 @@ export default {
     bufferShapes.splice(reversedNewIndex, 0, shape);
 
     const newFocusedShapeCursor = Object.assign({}, focusedShapeCursor, {
-      bufferIndex: reversedNewIndex,
+      bufferIndices: [reversedNewIndex],
     });
 
     this.setState({ bufferShapes, focusedShapeCursor: newFocusedShapeCursor });

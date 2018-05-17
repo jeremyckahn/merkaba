@@ -1,5 +1,9 @@
 import { sampleRect } from './test-utils.js';
-import { computeMidDragMatrix } from '../src/utils';
+import {
+  computeMidDragMatrix,
+  computeUnrotatedBoundingBox,
+  doRectsIntersect,
+} from '../src/utils';
 import assert from 'assert';
 
 describe('utils', () => {
@@ -114,5 +118,100 @@ describe('utils', () => {
     });
   });
 
-  describe('computeMidDragMatrix', () => {});
+  describe('computeUnrotatedBoundingBox', () => {
+    let unrotatedBoundingBox;
+
+    describe('no rotation', () => {
+      beforeEach(() => {
+        unrotatedBoundingBox = computeUnrotatedBoundingBox({
+          rotate: 0,
+          x: 0,
+          y: 0,
+          height: 100,
+          width: 100,
+        });
+      });
+
+      it('computes the unrotated bounding box', () => {
+        assert.deepEqual(unrotatedBoundingBox, {
+          x: 0,
+          y: 0,
+          height: 100,
+          width: 100,
+        });
+      });
+    });
+
+    describe('half rotation', () => {
+      beforeEach(() => {
+        unrotatedBoundingBox = computeUnrotatedBoundingBox({
+          rotate: 180,
+          x: 0,
+          y: 0,
+          height: 100,
+          width: 100,
+        });
+      });
+
+      it('computes the unrotated bounding box', () => {
+        assert.deepEqual(unrotatedBoundingBox, {
+          x: 0,
+          y: 0,
+          height: 100,
+          width: 100,
+        });
+      });
+    });
+
+    describe('rotation with different bounding box', () => {
+      beforeEach(() => {
+        unrotatedBoundingBox = computeUnrotatedBoundingBox({
+          rotate: 45,
+          x: 0,
+          y: 0,
+          height: 100,
+          width: 100,
+        });
+      });
+
+      it('computes the unrotated bounding box', () => {
+        assert.deepEqual(unrotatedBoundingBox, {
+          x: -21,
+          y: -21,
+          height: 141,
+          width: 141,
+        });
+      });
+    });
+  });
+
+  describe('doRectsIntersect', () => {
+    let rectsIntersect;
+
+    describe('rects do intersect', () => {
+      beforeEach(() => {
+        rectsIntersect = doRectsIntersect(
+          { x: 0, y: 0, height: 100, width: 100 },
+          { x: 50, y: 50, height: 100, width: 100 }
+        );
+      });
+
+      it('computes correct result', () => {
+        assert(rectsIntersect);
+      });
+    });
+
+    describe('rects do not intersect', () => {
+      beforeEach(() => {
+        rectsIntersect = doRectsIntersect(
+          { x: 0, y: 0, height: 100, width: 100 },
+          { x: 150, y: 150, height: 100, width: 100 }
+        );
+      });
+
+      it('computes correct result', () => {
+        assert.equal(rectsIntersect, false);
+      });
+    });
+  });
 });

@@ -14,8 +14,8 @@ const enumify = keys =>
  * @enum {string}
  */
 export const selectedToolType = enumify([
-  'NONE',
-  'NOT_NONE', // strictly for testing
+  'SELECT',
+  'NONE', // strictly for testing
   'RECTANGLE',
 ]);
 

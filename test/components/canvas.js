@@ -1,6 +1,7 @@
 import React from 'react';
 import { Canvas } from '../../src/components/canvas';
 import { selectedToolType, shapeType } from '../../src/enums';
+import { sampleRect } from '../test-utils';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 
@@ -44,10 +45,10 @@ describe('Canvas', () => {
 
   describe('state classes', () => {
     describe('no-tool-selected', () => {
-      describe('selectedTool === selectedToolType.NONE', () => {
+      describe('selectedTool === selectedToolType.SELECT', () => {
         beforeEach(() => {
           component.setProps({
-            selectedTool: selectedToolType.NONE,
+            selectedTool: selectedToolType.SELECT,
           });
         });
 
@@ -61,10 +62,10 @@ describe('Canvas', () => {
         });
       });
 
-      describe('selectedTool !== selectedToolType.NONE', () => {
+      describe('selectedTool !== selectedToolType.SELECT', () => {
         beforeEach(() => {
           component.setProps({
-            selectedTool: selectedToolType.NOT_NONE,
+            selectedTool: selectedToolType.NONE,
           });
         });
 
@@ -134,23 +135,31 @@ describe('Canvas', () => {
       });
     });
 
-    describe('a shape is selected', () => {
+    describe('a single shape is selected', () => {
       beforeEach(() => {
-        component = mount(
-          <Canvas
-            focusedShape={{
-              type: shapeType.RECT,
-              x: 0,
-              y: 0,
-              width: 0,
-              height: 0,
-            }}
-          />
-        );
+        component = mount(<Canvas focusedShapes={[sampleRect()]} />);
       });
 
       it('renders a selector rect', () => {
         assert.equal(component.find('.selection rect').length, 1);
+      });
+
+      it('renders shape handles', () => {
+        assert.equal(component.find('.selection-handle-rotator').length, 4);
+        assert.equal(component.find('.selection-handle').length, 4);
+      });
+    });
+
+    describe('multiple shapes are selected', () => {
+      beforeEach(() => {
+        component = mount(
+          <Canvas focusedShapes={[sampleRect(), sampleRect()]} />
+        );
+      });
+
+      it('does not render shape handles', () => {
+        assert.equal(component.find('.selection-handle-rotator').length, 0);
+        assert.equal(component.find('.selection-handle').length, 0);
       });
     });
   });

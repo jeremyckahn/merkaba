@@ -42,15 +42,22 @@ describe('Layers', () => {
       });
     });
 
-    describe('focusedShapeBufferIndex', () => {
+    describe('focusedShapeBufferIndices', () => {
       beforeEach(() => {
         component.setProps({
           bufferShapes: [sampleRect(), sampleRect(), sampleRect()],
-          focusedShapeBufferIndex: 0,
+          focusedShapeBufferIndices: [0, 1],
         });
       });
 
       it('renderers the focused class', () => {
+        assert(
+          component
+            .find('li')
+            .at(1)
+            .hasClass('focused')
+        );
+
         assert(
           component
             .find('li')

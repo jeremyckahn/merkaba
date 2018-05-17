@@ -20,13 +20,14 @@ const SortableLayer = SortableElement(Layer);
 /**
  * @class merkaba.SortableLayers
  * @param {Array.<merkaba.svgShape>} bufferShapes
- * @param {number} focusedShapeBufferIndex
+ * @param {Array.<number>} focusedShapeBufferIndices
  * @param {Function} handleLayerClick
  */
 const Layers = ({
   bufferShapes = [],
   bufferShapesLength = bufferShapes.length,
-  focusedShapeBufferIndex,
+  focusedShapeBufferIndices = [],
+  focusedShapeBufferIndex = focusedShapeBufferIndices[0],
   handleLayerClick,
 }) => (
   <div className="layers">
@@ -37,8 +38,7 @@ const Layers = ({
         .map((bufferShape, i) => (
           <SortableLayer
             className={`merkaba-layer${
-              focusedShapeBufferIndex !== null &&
-              i === bufferShapesLength - 1 - focusedShapeBufferIndex
+              ~focusedShapeBufferIndices.indexOf(bufferShapesLength - 1 - i)
                 ? ' focused'
                 : ''
             }`}

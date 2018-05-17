@@ -8,7 +8,6 @@ import { absolutizeCoordinates } from '../utils';
  * @param {number} dx
  * @param {number} dy
  * @param {string} fill
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {number} rotate
  * @param {string} stroke
  * @param {number} strokeWidth
@@ -21,7 +20,6 @@ export const Rect = ({
   dx,
   dy,
   fill,
-  handleShapeClick,
   rotate = 0,
   stroke,
   strokeWidth,
@@ -29,7 +27,6 @@ export const Rect = ({
   y,
 }) => (
   <rect
-    onClick={handleShapeClick}
     {...Object.assign(
       {
         className,
