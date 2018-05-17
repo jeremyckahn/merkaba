@@ -20,7 +20,7 @@ This is the current roadmap:
         - [x] Color selection via color picker element
         - [x] Stroke/fill support
 - [ ] Undo/redo support
-- [ ] Oher tools
+- [ ] Other tools
     - [ ] Rectangle select
         - [ ] Grouping support
 - [ ] Keyboard shortcuts/keybindings
