@@ -19,6 +19,7 @@ This is the current roadmap:
         - [x] Direct positional/display value editing
         - [x] Color selection via color picker element
         - [x] Stroke/fill support
+- [ ] Shape deleting
 - [ ] Undo/redo support
 - [ ] Other tools
     - [ ] Rectangle select
