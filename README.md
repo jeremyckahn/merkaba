@@ -21,9 +21,8 @@ This is the current roadmap:
         - [x] Stroke/fill support
 - [ ] Shape deleting
 - [ ] Undo/redo support
-- [ ] Other tools
-    - [ ] Rectangle select
-        - [ ] Grouping support
+- [x] Other tools
+    - [x] Group selection
 - [ ] Keyboard shortcuts/keybindings
     - [ ] Delete selected elements
     - [ ] Position nudging via arrow keys
