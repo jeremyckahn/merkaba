@@ -42201,22 +42201,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * @param {Array.<merkaba.svgShape>} bufferShapes
  * @param {string|null} draggedHandleOrientation
- * @param {number|null} focusedShapeBufferIndex
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
- * @param {number|null} selectionDragStartX
- * @param {number|null} selectionDragStartY
- * @param {number|null} selectionDragX
- * @param {number|null} selectionDragY
+ * @param {number|null} transformDragStartX
+ * @param {number|null} transformDragStartY
+ * @param {number|null} transformDragX
+ * @param {number|null} transformDragY
  */
 var Buffer = function Buffer(_ref) {
   var bufferShapes = _ref.bufferShapes,
       draggedHandleOrientation = _ref.draggedHandleOrientation,
-      focusedShapeBufferIndex = _ref.focusedShapeBufferIndex,
-      handleShapeClick = _ref.handleShapeClick,
-      selectionDragStartX = _ref.selectionDragStartX,
-      selectionDragStartY = _ref.selectionDragStartY,
-      selectionDragX = _ref.selectionDragX,
-      selectionDragY = _ref.selectionDragY;
+      transformDragStartX = _ref.transformDragStartX,
+      transformDragStartY = _ref.transformDragStartY,
+      transformDragX = _ref.transformDragX,
+      transformDragY = _ref.transformDragY;
   return bufferShapes.map(function (_ref2, i) {
     var type = _ref2.type,
         x = _ref2.x,
@@ -42239,84 +42235,114 @@ var Buffer = function Buffer(_ref) {
       rotate: rotate,
       stroke: stroke,
       fill: fill,
-      strokeWidth: strokeWidth,
-      handleShapeClick: handleShapeClick
+      strokeWidth: strokeWidth
     })) : null;
   });
 };
 
 // FIXME: Change orientation values to be enums
-var Selector = function Selector(_ref3) {
-  var _ref3$focusedShape = _ref3.focusedShape,
-      type = _ref3$focusedShape.type,
-      _ref3$focusedShape$x = _ref3$focusedShape.x,
-      x = _ref3$focusedShape$x === undefined ? 0 : _ref3$focusedShape$x,
-      _ref3$focusedShape$y = _ref3$focusedShape.y,
-      y = _ref3$focusedShape$y === undefined ? 0 : _ref3$focusedShape$y,
-      _ref3$focusedShape$wi = _ref3$focusedShape.width,
-      width = _ref3$focusedShape$wi === undefined ? 0 : _ref3$focusedShape$wi,
-      _ref3$focusedShape$he = _ref3$focusedShape.height,
-      height = _ref3$focusedShape$he === undefined ? 0 : _ref3$focusedShape$he,
-      _ref3$focusedShape$ro = _ref3$focusedShape.rotate,
-      rotate = _ref3$focusedShape$ro === undefined ? 0 : _ref3$focusedShape$ro,
-      _ref3$handleConfig = _ref3.handleConfig,
-      handleConfig = _ref3$handleConfig === undefined ? [{
-    orientation: 'top-left',
-    x: x,
-    y: y
-  }, {
-    orientation: 'top-right',
-    x: x + width,
-    y: y
-  }, {
-    orientation: 'bottom-right',
-    x: x + width,
-    y: y + height
-  }, {
-    orientation: 'bottom-left',
-    x: x,
-    y: y + height
-  }] : _ref3$handleConfig;
-  return type === _enums.shapeType.NONE ? null : _react2.default.createElement(
-    'g',
-    { transform: 'rotate(' + rotate + ' ' + (x + width / 2) + ' ' + (y + height / 2) + ')' },
-    handleConfig.map(function (_ref4, i) {
-      var orientation = _ref4.orientation,
-          x = _ref4.x,
-          y = _ref4.y;
-      return _react2.default.createElement('ellipse', {
-        className: 'selection-handle-rotator',
-        cx: x,
-        cy: y,
-        key: 'handle-rotator-' + i,
-        rx: _constants.rotatorHitArea,
-        ry: _constants.rotatorHitArea
-      });
-    }),
-    _react2.default.createElement(_shapes.Rect, {
-      className: 'selection',
-      dx: width,
-      dy: height,
-      fill: 'none',
-      key: 0,
+var FocusedShapeFrames = function FocusedShapeFrames(_ref3) {
+  var focusedShapes = _ref3.focusedShapes;
+  return focusedShapes.map(function (_ref4, i) {
+    var type = _ref4.type,
+        _ref4$x = _ref4.x,
+        x = _ref4$x === undefined ? 0 : _ref4$x,
+        _ref4$y = _ref4.y,
+        y = _ref4$y === undefined ? 0 : _ref4$y,
+        _ref4$width = _ref4.width,
+        width = _ref4$width === undefined ? 0 : _ref4$width,
+        _ref4$height = _ref4.height,
+        height = _ref4$height === undefined ? 0 : _ref4$height,
+        _ref4$rotate = _ref4.rotate,
+        rotate = _ref4$rotate === undefined ? 0 : _ref4$rotate,
+        _ref4$handleConfig = _ref4.handleConfig,
+        handleConfig = _ref4$handleConfig === undefined ? [{
+      orientation: 'top-left',
       x: x,
       y: y
-    }),
-    handleConfig.map(function (_ref5, i) {
-      var orientation = _ref5.orientation,
-          x = _ref5.x,
-          y = _ref5.y;
-      return _react2.default.createElement('ellipse', {
-        className: 'selection-handle ' + orientation,
-        cx: x,
-        cy: y,
-        key: 'handle-' + i,
-        orientation: orientation,
-        rx: 5,
-        ry: 5
-      });
-    })
-  );
+    }, {
+      orientation: 'top-right',
+      x: x + width,
+      y: y
+    }, {
+      orientation: 'bottom-right',
+      x: x + width,
+      y: y + height
+    }, {
+      orientation: 'bottom-left',
+      x: x,
+      y: y + height
+    }] : _ref4$handleConfig;
+    return type === _enums.shapeType.NONE ? null : _react2.default.createElement(
+      'g',
+      {
+        key: i,
+        transform: 'rotate(' + rotate + ' ' + (x + width / 2) + ' ' + (y + height / 2) + ')'
+      },
+      focusedShapes.length === 1 && handleConfig.map(function (_ref5, j) {
+        var orientation = _ref5.orientation,
+            x = _ref5.x,
+            y = _ref5.y;
+        return _react2.default.createElement('ellipse', {
+          className: 'selection-handle-rotator',
+          cx: x,
+          cy: y,
+          key: 'handle-rotator-' + j,
+          rx: _constants.rotatorHitArea,
+          ry: _constants.rotatorHitArea
+        });
+      }),
+      _react2.default.createElement(_shapes.Rect, {
+        className: 'selection',
+        dx: width,
+        dy: height,
+        fill: 'none',
+        key: 0,
+        x: x,
+        y: y
+      }),
+      focusedShapes.length === 1 && handleConfig.map(function (_ref6, j) {
+        var orientation = _ref6.orientation,
+            x = _ref6.x,
+            y = _ref6.y;
+        return _react2.default.createElement('ellipse', {
+          className: 'selection-handle ' + orientation,
+          cx: x,
+          cy: y,
+          key: 'handle-' + j,
+          orientation: orientation,
+          rx: 5,
+          ry: 5
+        });
+      })
+    );
+  });
+};
+
+/**
+ * @param {boolean} isDraggingTool
+ * @param {merkaba.module:enums.selectedToolType} selectedTool
+ * @param {number|null} toolDragDeltaX
+ * @param {number|null} toolDragDeltaY
+ * @param {number|null} toolDragStartX
+ * @param {number|null} toolDragStartY
+ */
+var Selector = function Selector(_ref7) {
+  var isDraggingTool = _ref7.isDraggingTool,
+      selectedTool = _ref7.selectedTool,
+      toolDragDeltaX = _ref7.toolDragDeltaX,
+      toolDragDeltaY = _ref7.toolDragDeltaY,
+      toolDragStartX = _ref7.toolDragStartX,
+      toolDragStartY = _ref7.toolDragStartY;
+  return selectedTool === _enums.selectedToolType.SELECT && isDraggingTool ? _react2.default.createElement(_shapes.Rect, {
+    x: toolDragStartX,
+    y: toolDragStartY,
+    dx: toolDragDeltaX,
+    dy: toolDragDeltaY,
+    stroke: 'rgba(0, 146, 255, 1)',
+    strokeWidth: 1,
+    fill: 'rgba(128, 128, 128, 0.1)'
+  }) : null;
 };
 
 /**
@@ -42330,17 +42356,17 @@ var Selector = function Selector(_ref3) {
  * @param {null|string} toolStrokeColor
  * @param {null|number} toolStrokeWidth
  */
-var LiveShape = function LiveShape(_ref6) {
-  var isDraggingTool = _ref6.isDraggingTool,
-      selectedTool = _ref6.selectedTool,
-      toolDragDeltaX = _ref6.toolDragDeltaX,
-      toolDragDeltaY = _ref6.toolDragDeltaY,
-      toolDragStartX = _ref6.toolDragStartX,
-      toolDragStartY = _ref6.toolDragStartY,
-      toolFillColor = _ref6.toolFillColor,
-      toolRotate = _ref6.toolRotate,
-      toolStrokeColor = _ref6.toolStrokeColor,
-      toolStrokeWidth = _ref6.toolStrokeWidth;
+var LiveShape = function LiveShape(_ref8) {
+  var isDraggingTool = _ref8.isDraggingTool,
+      selectedTool = _ref8.selectedTool,
+      toolDragDeltaX = _ref8.toolDragDeltaX,
+      toolDragDeltaY = _ref8.toolDragDeltaY,
+      toolDragStartX = _ref8.toolDragStartX,
+      toolDragStartY = _ref8.toolDragStartY,
+      toolFillColor = _ref8.toolFillColor,
+      toolRotate = _ref8.toolRotate,
+      toolStrokeColor = _ref8.toolStrokeColor,
+      toolStrokeWidth = _ref8.toolStrokeWidth;
   return isDraggingTool ? selectedTool === _enums.selectedToolType.RECTANGLE ? _react2.default.createElement(_shapes.Rect, {
     className: 'live',
     dx: toolDragDeltaX,
@@ -42358,19 +42384,17 @@ var LiveShape = function LiveShape(_ref6) {
  * @class merkaba.Canvas
  * @param {Array.<merkaba.svgShape>} bufferShapes
  * @param {string|null} draggedHandleOrientation
- * @param {merkaba.svgShape} focusedShape
- * @param {number|null} focusedShapeBufferIndex
+ * @param {Array.<merkaba.svgShape>} focusedShapes
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
  * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
  * @param {Function(external:React.SyntheticEvent)} handleCanvasMouseDown
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {boolean} isDraggingTool
  * @param {merkaba.module:enums.selectedToolType} selectedTool
- * @param {number|null} selectionDragStartX
- * @param {number|null} selectionDragStartY
- * @param {number|null} selectionDragX
- * @param {number|null} selectionDragY
+ * @param {number|null} transformDragStartX
+ * @param {number|null} transformDragStartY
+ * @param {number|null} transformDragX
+ * @param {number|null} transformDragY
  * @param {number|null} toolDragDeltaX
  * @param {number|null} toolDragDeltaY
  * @param {number|null} toolDragStartX
@@ -42381,32 +42405,30 @@ var LiveShape = function LiveShape(_ref6) {
  * @param {null|number} toolStrokeWidth
  * @extends {external:React.Component}
  */
-var Canvas = exports.Canvas = function Canvas(_ref7) {
-  var _ref7$bufferShapes = _ref7.bufferShapes,
-      bufferShapes = _ref7$bufferShapes === undefined ? [] : _ref7$bufferShapes,
-      draggedHandleOrientation = _ref7.draggedHandleOrientation,
-      _ref7$focusedShape = _ref7.focusedShape,
-      focusedShape = _ref7$focusedShape === undefined ? {} : _ref7$focusedShape,
-      focusedShapeBufferIndex = _ref7.focusedShapeBufferIndex,
-      handleCanvasDrag = _ref7.handleCanvasDrag,
-      handleCanvasDragStart = _ref7.handleCanvasDragStart,
-      handleCanvasDragStop = _ref7.handleCanvasDragStop,
-      handleCanvasMouseDown = _ref7.handleCanvasMouseDown,
-      handleShapeClick = _ref7.handleShapeClick,
-      isDraggingTool = _ref7.isDraggingTool,
-      selectedTool = _ref7.selectedTool,
-      selectionDragStartX = _ref7.selectionDragStartX,
-      selectionDragStartY = _ref7.selectionDragStartY,
-      selectionDragX = _ref7.selectionDragX,
-      selectionDragY = _ref7.selectionDragY,
-      toolDragDeltaX = _ref7.toolDragDeltaX,
-      toolDragDeltaY = _ref7.toolDragDeltaY,
-      toolDragStartX = _ref7.toolDragStartX,
-      toolDragStartY = _ref7.toolDragStartY,
-      toolFillColor = _ref7.toolFillColor,
-      toolRotate = _ref7.toolRotate,
-      toolStrokeColor = _ref7.toolStrokeColor,
-      toolStrokeWidth = _ref7.toolStrokeWidth;
+var Canvas = exports.Canvas = function Canvas(_ref9) {
+  var _ref9$bufferShapes = _ref9.bufferShapes,
+      bufferShapes = _ref9$bufferShapes === undefined ? [] : _ref9$bufferShapes,
+      draggedHandleOrientation = _ref9.draggedHandleOrientation,
+      _ref9$focusedShapes = _ref9.focusedShapes,
+      focusedShapes = _ref9$focusedShapes === undefined ? [] : _ref9$focusedShapes,
+      handleCanvasDrag = _ref9.handleCanvasDrag,
+      handleCanvasDragStart = _ref9.handleCanvasDragStart,
+      handleCanvasDragStop = _ref9.handleCanvasDragStop,
+      handleCanvasMouseDown = _ref9.handleCanvasMouseDown,
+      isDraggingTool = _ref9.isDraggingTool,
+      selectedTool = _ref9.selectedTool,
+      transformDragStartX = _ref9.transformDragStartX,
+      transformDragStartY = _ref9.transformDragStartY,
+      transformDragX = _ref9.transformDragX,
+      transformDragY = _ref9.transformDragY,
+      toolDragDeltaX = _ref9.toolDragDeltaX,
+      toolDragDeltaY = _ref9.toolDragDeltaY,
+      toolDragStartX = _ref9.toolDragStartX,
+      toolDragStartY = _ref9.toolDragStartY,
+      toolFillColor = _ref9.toolFillColor,
+      toolRotate = _ref9.toolRotate,
+      toolStrokeColor = _ref9.toolStrokeColor,
+      toolStrokeWidth = _ref9.toolStrokeWidth;
   return _react2.default.createElement(
     _reactDraggable.DraggableCore,
     {
@@ -42417,7 +42439,7 @@ var Canvas = exports.Canvas = function Canvas(_ref7) {
     _react2.default.createElement(
       'div',
       {
-        className: 'canvas ' + (selectedTool === _enums.selectedToolType.NONE ? 'no-tool-selected' : '')
+        className: 'canvas ' + (selectedTool === _enums.selectedToolType.SELECT ? 'no-tool-selected' : '')
       },
       _react2.default.createElement(
         'svg',
@@ -42430,14 +42452,12 @@ var Canvas = exports.Canvas = function Canvas(_ref7) {
         _react2.default.createElement(Buffer, {
           bufferShapes: bufferShapes,
           draggedHandleOrientation: draggedHandleOrientation,
-          focusedShapeBufferIndex: focusedShapeBufferIndex,
-          handleShapeClick: handleShapeClick,
-          selectionDragStartX: selectionDragStartX,
-          selectionDragStartY: selectionDragStartY,
-          selectionDragX: selectionDragX,
-          selectionDragY: selectionDragY
+          transformDragStartX: transformDragStartX,
+          transformDragStartY: transformDragStartY,
+          transformDragX: transformDragX,
+          transformDragY: transformDragY
         }),
-        selectedTool !== _enums.selectedToolType.NONE ? _react2.default.createElement(LiveShape, {
+        selectedTool !== _enums.selectedToolType.SELECT ? _react2.default.createElement(LiveShape, {
           isDraggingTool: isDraggingTool,
           selectedTool: selectedTool,
           toolDragDeltaX: toolDragDeltaX,
@@ -42449,8 +42469,16 @@ var Canvas = exports.Canvas = function Canvas(_ref7) {
           toolStrokeColor: toolStrokeColor,
           toolStrokeWidth: toolStrokeWidth
         }) : null,
+        _react2.default.createElement(FocusedShapeFrames, {
+          focusedShapes: focusedShapes
+        }),
         _react2.default.createElement(Selector, {
-          focusedShape: focusedShape
+          isDraggingTool: isDraggingTool,
+          selectedTool: selectedTool,
+          toolDragDeltaX: toolDragDeltaX,
+          toolDragDeltaY: toolDragDeltaY,
+          toolDragStartX: toolDragStartX,
+          toolDragStartY: toolDragStartY
         })
       )
     )
@@ -42681,21 +42709,25 @@ var RectUI = function RectUI(_ref) {
 
 /**
  * @class merkaba.Details
- * @param {merkaba.svgShape} focusedShape
+ * @param {Array.<merkaba.svgShape>} focusedShapes
  */
 var Details = exports.Details = function Details(_ref2) {
-  var _ref2$focusedShape = _ref2.focusedShape,
-      focusedShape = _ref2$focusedShape === undefined ? {} : _ref2$focusedShape,
+  var _ref2$focusedShapes = _ref2.focusedShapes,
+      focusedShapes = _ref2$focusedShapes === undefined ? [] : _ref2$focusedShapes,
+      _ref2$focusedShape = _ref2.focusedShape,
+      focusedShape = _ref2$focusedShape === undefined ? focusedShapes[0] : _ref2$focusedShape,
+      _ref2$focusedShapesLe = _ref2.focusedShapesLength,
+      focusedShapesLength = _ref2$focusedShapesLe === undefined ? focusedShapes.length : _ref2$focusedShapesLe,
       handleColorPropertyChange = _ref2.handleColorPropertyChange,
       handlePropertyChange = _ref2.handlePropertyChange;
   return _react2.default.createElement(
     'div',
     { className: 'details' },
-    focusedShape.type === _enums.shapeType.RECT ? _react2.default.createElement(RectUI, {
+    focusedShapesLength === 1 ? focusedShape.type === _enums.shapeType.RECT ? _react2.default.createElement(RectUI, {
       handleColorPropertyChange: handleColorPropertyChange,
       handlePropertyChange: handlePropertyChange,
       rect: focusedShape
-    }) : null
+    }) : null : null
   );
 };
 
@@ -42776,7 +42808,7 @@ var SortableLayer = (0, _reactSortableHoc.SortableElement)(Layer);
 /**
  * @class merkaba.SortableLayers
  * @param {Array.<merkaba.svgShape>} bufferShapes
- * @param {number} focusedShapeBufferIndex
+ * @param {Array.<number>} focusedShapeBufferIndices
  * @param {Function} handleLayerClick
  */
 var Layers = function Layers(_ref2) {
@@ -42784,7 +42816,10 @@ var Layers = function Layers(_ref2) {
       bufferShapes = _ref2$bufferShapes === undefined ? [] : _ref2$bufferShapes,
       _ref2$bufferShapesLen = _ref2.bufferShapesLength,
       bufferShapesLength = _ref2$bufferShapesLen === undefined ? bufferShapes.length : _ref2$bufferShapesLen,
-      focusedShapeBufferIndex = _ref2.focusedShapeBufferIndex,
+      _ref2$focusedShapeBuf = _ref2.focusedShapeBufferIndices,
+      focusedShapeBufferIndices = _ref2$focusedShapeBuf === undefined ? [] : _ref2$focusedShapeBuf,
+      _ref2$focusedShapeBuf2 = _ref2.focusedShapeBufferIndex,
+      focusedShapeBufferIndex = _ref2$focusedShapeBuf2 === undefined ? focusedShapeBufferIndices[0] : _ref2$focusedShapeBuf2,
       handleLayerClick = _ref2.handleLayerClick;
   return _react2.default.createElement(
     'div',
@@ -42794,7 +42829,7 @@ var Layers = function Layers(_ref2) {
       null,
       bufferShapes.slice().reverse().map(function (bufferShape, i) {
         return _react2.default.createElement(SortableLayer, {
-          className: 'merkaba-layer' + (focusedShapeBufferIndex !== null && i === bufferShapesLength - 1 - focusedShapeBufferIndex ? ' focused' : ''),
+          className: 'merkaba-layer' + (~focusedShapeBufferIndices.indexOf(bufferShapesLength - 1 - i) ? ' focused' : ''),
           key: 'shape-' + i,
           index: i,
           shapeIndex: i,
@@ -42834,16 +42869,6 @@ exports.default = {
    */
   handleToolClick: function handleToolClick(selectedTool) {
     this.setState({ selectedTool: selectedTool });
-  },
-
-
-  /**
-   * @method merkaba.Merkaba#handleShapeClick
-   * @param {external:React.SyntheticEvent} e
-   * @param {external:Draggable.DraggableData} data
-   */
-  handleShapeClick: function handleShapeClick(e) {
-    this.focusBufferShape(e.target);
   },
 
 
@@ -42920,7 +42945,7 @@ exports.default = {
     this.setState({
       focusedShapeCursor: {
         shapeFocus: _enums.shapeFocusType.NONE,
-        bufferIndex: null
+        bufferIndices: []
       }
     });
   },
@@ -42953,8 +42978,6 @@ exports.default = {
       } else if (classList.contains('selection-handle-rotator')) {
         return this.handleSelectionRotatorDragStart.apply(this, arguments);
       }
-    } else if (this.state.selectedTool === _enums.selectedToolType.NONE) {
-      return;
     }
 
     var x = data.x,
@@ -42964,11 +42987,13 @@ exports.default = {
         offsetTop = _data$node.offsetTop;
 
 
+    var focusedShapeCursor = {
+      shapeFocus: this.state.selectedTool === _enums.selectedToolType.SELECT ? _enums.shapeFocusType.NONE : _enums.shapeFocusType.LIVE,
+      bufferIndices: []
+    };
+
     this.setState({
-      focusedShapeCursor: {
-        shapeFocus: _enums.shapeFocusType.LIVE,
-        bufferIndex: null
-      },
+      focusedShapeCursor: focusedShapeCursor,
       isDraggingTool: true,
       toolDragDeltaX: 0,
       toolDragDeltaY: 0,
@@ -43001,11 +43026,18 @@ exports.default = {
       return this.handleSelectionHandleDrag.apply(this, arguments);
     } else if (isDraggingSelectionRotator) {
       return this.handleSelectionRotatorDrag.apply(this, arguments);
-    } else if (selectedTool === _enums.selectedToolType.NONE) {
-      return;
     }
 
+    var isUsingSelectTool = selectedTool === _enums.selectedToolType.SELECT;
+    var selectedShapeIndices = isUsingSelectTool && this.getSelectedShapeBufferIndices();
+
+    var focusedShapeCursor = isUsingSelectTool ? {
+      shapeFocus: selectedShapeIndices.length ? _enums.shapeFocusType.BUFFER : _enums.shapeFocusType.NONE,
+      bufferIndices: selectedShapeIndices
+    } : this.state.focusedShapeCursor;
+
     this.setState({
+      focusedShapeCursor: focusedShapeCursor,
       toolDragDeltaX: toolDragDeltaX + deltaX,
       toolDragDeltaY: toolDragDeltaY + deltaY
     });
@@ -43036,24 +43068,25 @@ exports.default = {
       return this.handleSelectionHandleDragStop.apply(this, arguments);
     } else if (isDraggingSelectionRotator) {
       return this.handleSelectionRotatorDragStop.apply(this, arguments);
-    } else if (selectedTool === _enums.selectedToolType.NONE) {
-      return;
     }
 
     var bufferShapes = this.state.bufferShapes.slice();
+    var isUsingSelectTool = selectedTool === _enums.selectedToolType.SELECT;
 
-    if (toolDragDeltaX && toolDragDeltaY) {
+    if (!isUsingSelectTool && toolDragDeltaX && toolDragDeltaY) {
       bufferShapes.unshift(this.getLiveShape());
     }
 
+    var focusedShapeCursor = isUsingSelectTool ? this.state.focusedShapeCursor : {
+      shapeFocus: _enums.shapeFocusType.BUFFER,
+      bufferIndices: [0]
+    };
+
     this.setState({
       bufferShapes: bufferShapes,
-      focusedShapeCursor: {
-        shapeFocus: _enums.shapeFocusType.BUFFER,
-        bufferIndex: 0
-      },
+      focusedShapeCursor: focusedShapeCursor,
       isDraggingTool: false,
-      selectedTool: _enums.selectedToolType.NONE,
+      selectedTool: _enums.selectedToolType.SELECT,
       toolDragDeltaX: null,
       toolDragDeltaY: null,
       toolDragStartX: null,
@@ -43069,7 +43102,10 @@ exports.default = {
    * @param {external:Draggable.DraggableData} data
    */
   handleBufferedShapeDragStart: function handleBufferedShapeDragStart(e) {
-    this.focusBufferShape(e.target);
+    if (!~this.state.focusedShapeCursor.bufferIndices.indexOf(Number(e.target.getAttribute('data-buffer-index')))) {
+      this.focusBufferShape(e.target);
+    }
+
     this.setState({ isDraggingShape: true });
   },
 
@@ -43080,14 +43116,25 @@ exports.default = {
    * @param {external:Draggable.DraggableData} data
    */
   handleBufferedShapeDrag: function handleBufferedShapeDrag(e, _ref3) {
+    var _this = this;
+
     var deltaX = _ref3.deltaX,
         deltaY = _ref3.deltaY;
+    var _state3 = this.state,
+        bufferIndices = _state3.focusedShapeCursor.bufferIndices,
+        bufferShapes = _state3.bufferShapes;
 
-    var focusedShape = this.getFocusedShape();
 
-    this.updateFocusedBufferShape({
-      x: focusedShape.x + deltaX,
-      y: focusedShape.y + deltaY
+    bufferIndices.forEach(function (bufferIndex) {
+      var _bufferShapes$bufferI = bufferShapes[bufferIndex],
+          x = _bufferShapes$bufferI.x,
+          y = _bufferShapes$bufferI.y;
+
+
+      _this.updateBufferShape(bufferIndex, {
+        x: x + deltaX,
+        y: y + deltaY
+      });
     });
   },
 
@@ -43118,9 +43165,9 @@ exports.default = {
     this.setState({
       draggedHandleOrientation: draggedHandleOrientation,
       isDraggingSelectionHandle: true,
-      selectionDragStartX: x - svgBoundingRect.x,
-      selectionDragStartY: y - svgBoundingRect.y,
-      shapeStateBeforeDragTransform: this.getFocusedShape()
+      transformDragStartX: x - svgBoundingRect.x,
+      transformDragStartY: y - svgBoundingRect.y,
+      shapeStateBeforeDragTransform: this.getFocusedShapes()[0]
     });
   },
 
@@ -43133,17 +43180,17 @@ exports.default = {
   handleSelectionHandleDrag: function handleSelectionHandleDrag(e, _ref5) {
     var x = _ref5.x,
         y = _ref5.y;
-    var _state3 = this.state,
-        svgBoundingRect = _state3.svgBoundingRect,
-        shapeStateBeforeDragTransform = _state3.shapeStateBeforeDragTransform;
+    var _state4 = this.state,
+        svgBoundingRect = _state4.svgBoundingRect,
+        shapeStateBeforeDragTransform = _state4.shapeStateBeforeDragTransform;
 
 
     this.setState({
-      selectionDragX: x - svgBoundingRect.x,
-      selectionDragY: y - svgBoundingRect.y
+      transformDragX: x - svgBoundingRect.x,
+      transformDragY: y - svgBoundingRect.y
     });
 
-    this.updateFocusedBufferShape(shapeStateBeforeDragTransform);
+    this.updateFocusedBufferShapes(shapeStateBeforeDragTransform);
 
     this.applyMatrixToFocusedShape(this.getAggregateDragMatrix());
   },
@@ -43157,10 +43204,10 @@ exports.default = {
     this.setState({
       draggedHandleOrientation: null,
       isDraggingSelectionHandle: false,
-      selectionDragStartX: null,
-      selectionDragStartY: null,
-      selectionDragX: null,
-      selectionDragY: null,
+      transformDragStartX: null,
+      transformDragStartY: null,
+      transformDragX: null,
+      transformDragY: null,
       shapeStateBeforeDragTransform: {}
     });
   },
@@ -43181,12 +43228,14 @@ exports.default = {
    * @param {external:Draggable.DraggableData} data
    */
   handleSelectionRotatorDrag: function handleSelectionRotatorDrag(e, data) {
-    var _getFocusedShape = this.getFocusedShape(),
-        height = _getFocusedShape.height,
-        rotate = _getFocusedShape.rotate,
-        width = _getFocusedShape.width,
-        shapeX = _getFocusedShape.x,
-        shapeY = _getFocusedShape.y;
+    var _getFocusedShapes = this.getFocusedShapes(),
+        _getFocusedShapes2 = _slicedToArray(_getFocusedShapes, 1),
+        _getFocusedShapes2$ = _getFocusedShapes2[0],
+        height = _getFocusedShapes2$.height,
+        rotate = _getFocusedShapes2$.rotate,
+        width = _getFocusedShapes2$.width,
+        shapeX = _getFocusedShapes2$.x,
+        shapeY = _getFocusedShapes2$.y;
 
     var lastX = data.lastX,
         lastY = data.lastY,
@@ -43240,9 +43289,9 @@ exports.default = {
   handleLayerSortEnd: function handleLayerSortEnd(_ref7) {
     var oldIndex = _ref7.oldIndex,
         newIndex = _ref7.newIndex;
-    var _state4 = this.state,
-        focusedShapeCursor = _state4.focusedShapeCursor,
-        bufferShapesLength = _state4.bufferShapes.length;
+    var _state5 = this.state,
+        focusedShapeCursor = _state5.focusedShapeCursor,
+        bufferShapesLength = _state5.bufferShapes.length;
 
     var reversedNewIndex = bufferShapesLength - 1 - newIndex;
     var bufferShapes = this.state.bufferShapes.slice();
@@ -43254,7 +43303,7 @@ exports.default = {
     bufferShapes.splice(reversedNewIndex, 0, shape);
 
     var newFocusedShapeCursor = Object.assign({}, focusedShapeCursor, {
-      bufferIndex: reversedNewIndex
+      bufferIndices: [reversedNewIndex]
     });
 
     this.setState({ bufferShapes: bufferShapes, focusedShapeCursor: newFocusedShapeCursor });
@@ -43288,6 +43337,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Merkaba = undefined;
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
@@ -43316,6 +43367,8 @@ var _merkaba2 = _interopRequireDefault(_merkaba);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -43326,7 +43379,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @typedef merkaba.focusedShapeCursor
  * @type {Object}
  * @property {merkaba.module:enums.shapeFocusType} shapeFocus
- * @property {number|null} bufferIndex If shapeFocus is
+ * @property {Array.<number>} bufferIndices If shapeFocus is
  * `shapeFocusType.BUFFER`, this is the index of the buffered shape to focus,
  * otherwise this is `null`.
  */
@@ -43342,10 +43395,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @property {boolean} isDraggingShape
  * @property {boolean} isDraggingTool
  * @property {merkaba.module:enums.selectedToolType} selectedTool
- * @property {null|number} selectionDragStartX
- * @property {null|number} selectionDragStartY
- * @property {null|number} selectionDragX
- * @property {null|number} selectionDragY
+ * @property {null|number} transformDragStartX
+ * @property {null|number} transformDragStartY
+ * @property {null|number} transformDragX
+ * @property {null|number} transformDragY
  * @property {Object|merkaba.svgShape} shapeStateBeforeDragTransform
  * @property {Object} svgBoundingRect
  * @property {null|number} toolDragDeltaX
@@ -43383,17 +43436,17 @@ var Merkaba = exports.Merkaba = function (_Component) {
       draggedHandleOrientation: null,
       focusedShapeCursor: {
         shapeFocus: _enums.shapeFocusType.NONE,
-        bufferIndex: null
+        bufferIndices: []
       },
       isDraggingSelectionHandle: false,
       isDraggingSelectionRotator: false,
       isDraggingShape: false,
       isDraggingTool: false,
-      selectedTool: _enums.selectedToolType.NONE,
-      selectionDragStartX: null,
-      selectionDragStartY: null,
-      selectionDragX: null,
-      selectionDragY: null,
+      selectedTool: _enums.selectedToolType.SELECT,
+      transformDragStartX: null,
+      transformDragStartY: null,
+      transformDragX: null,
+      transformDragY: null,
       shapeStateBeforeDragTransform: {},
       svgBoundingRect: {},
       toolDragDeltaX: null,
@@ -43414,24 +43467,26 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }
 
   /**
-   * @method merkaba.Merkaba#getFocusedShape
-   * @return {merkaba.svgShape}
+   * @method merkaba.Merkaba#getFocusedShapes
+   * @return {Array.<merkaba.svgShape>}
    */
 
 
   _createClass(Merkaba, [{
-    key: 'getFocusedShape',
-    value: function getFocusedShape() {
+    key: 'getFocusedShapes',
+    value: function getFocusedShapes() {
       var _state = this.state,
           bufferShapes = _state.bufferShapes,
           _state$focusedShapeCu = _state.focusedShapeCursor,
           shapeFocus = _state$focusedShapeCu.shapeFocus,
-          bufferIndex = _state$focusedShapeCu.bufferIndex;
+          bufferIndices = _state$focusedShapeCu.bufferIndices;
       var NONE = _enums.shapeFocusType.NONE,
           LIVE = _enums.shapeFocusType.LIVE;
 
 
-      return shapeFocus === NONE || shapeFocus === LIVE ? this.getLiveShape() : Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
+      return shapeFocus === NONE || shapeFocus === LIVE ? [this.getLiveShape()] : bufferIndices.map(function (bufferIndex) {
+        return Object.assign({}, bufferShapes[bufferIndex] || emptyShape);
+      });
     }
 
     /**
@@ -43483,7 +43538,10 @@ var Merkaba = exports.Merkaba = function (_Component) {
           _ref$rotationOffset = _ref.rotationOffset,
           rotationOffset = _ref$rotationOffset === undefined ? 0 : _ref$rotationOffset;
 
-      var focusedShape = this.getFocusedShape();
+      var _getFocusedShapes = this.getFocusedShapes(),
+          _getFocusedShapes2 = _slicedToArray(_getFocusedShapes, 1),
+          focusedShape = _getFocusedShapes2[0];
+
       var x = focusedShape.x,
           y = focusedShape.y,
           width = focusedShape.width,
@@ -43492,26 +43550,26 @@ var Merkaba = exports.Merkaba = function (_Component) {
       var rotate = focusedShape.rotate + rotationOffset;
       var _state3 = this.state,
           draggedHandleOrientation = _state3.draggedHandleOrientation,
-          rawSelectionDragStartX = _state3.selectionDragStartX,
-          rawSelectionDragStartY = _state3.selectionDragStartY,
-          rawSelectionDragX = _state3.selectionDragX,
-          rawSelectionDragY = _state3.selectionDragY;
+          rawSelectionDragStartX = _state3.transformDragStartX,
+          rawSelectionDragStartY = _state3.transformDragStartY,
+          rawSelectionDragX = _state3.transformDragX,
+          rawSelectionDragY = _state3.transformDragY;
 
       var _applyToPoint = (0, _transformationMatrix.applyToPoint)((0, _transformationMatrix.rotateDEG)(rotationOffset), {
         x: rawSelectionDragStartX,
         y: rawSelectionDragStartY
       }),
-          selectionDragStartX = _applyToPoint.x,
-          selectionDragStartY = _applyToPoint.y;
+          transformDragStartX = _applyToPoint.x,
+          transformDragStartY = _applyToPoint.y;
 
       var _applyToPoint2 = (0, _transformationMatrix.applyToPoint)((0, _transformationMatrix.rotateDEG)(rotationOffset), {
         x: rawSelectionDragX || rawSelectionDragStartX,
         y: rawSelectionDragY || rawSelectionDragStartY
       }),
-          selectionDragX = _applyToPoint2.x,
-          selectionDragY = _applyToPoint2.y;
+          transformDragX = _applyToPoint2.x,
+          transformDragY = _applyToPoint2.y;
 
-      return (0, _utils.computeMidDragMatrix)({ x: x, y: y, width: width, height: height, rotate: rotate }, draggedHandleOrientation, selectionDragX - selectionDragStartX, selectionDragY - selectionDragStartY);
+      return (0, _utils.computeMidDragMatrix)({ x: x, y: y, width: width, height: height, rotate: rotate }, draggedHandleOrientation, transformDragX - transformDragStartX, transformDragY - transformDragStartY);
     }
 
     /**
@@ -43527,13 +43585,14 @@ var Merkaba = exports.Merkaba = function (_Component) {
       // appears that it's all necessary to properly compute the new center
       // point.
       //
-      // Perhaps somebody who is better at math can come along and simplify this!
-      var _getFocusedShape = this.getFocusedShape(),
-          x = _getFocusedShape.x,
-          y = _getFocusedShape.y,
-          width = _getFocusedShape.width,
-          height = _getFocusedShape.height,
-          rotate = _getFocusedShape.rotate;
+      var _getFocusedShapes3 = this.getFocusedShapes(),
+          _getFocusedShapes4 = _slicedToArray(_getFocusedShapes3, 1),
+          _getFocusedShapes4$ = _getFocusedShapes4[0],
+          x = _getFocusedShapes4$.x,
+          y = _getFocusedShapes4$.y,
+          width = _getFocusedShapes4$.width,
+          height = _getFocusedShapes4$.height,
+          rotate = _getFocusedShapes4$.rotate;
 
       var oldCenter = {
         x: x + width / 2,
@@ -43557,11 +43616,13 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'applyMatrixToFocusedShape',
     value: function applyMatrixToFocusedShape(matrix) {
-      var _getFocusedShape2 = this.getFocusedShape(),
-          x = _getFocusedShape2.x,
-          y = _getFocusedShape2.y,
-          width = _getFocusedShape2.width,
-          height = _getFocusedShape2.height;
+      var _getFocusedShapes5 = this.getFocusedShapes(),
+          _getFocusedShapes6 = _slicedToArray(_getFocusedShapes5, 1),
+          _getFocusedShapes6$ = _getFocusedShapes6[0],
+          x = _getFocusedShapes6$.x,
+          y = _getFocusedShapes6$.y,
+          width = _getFocusedShapes6$.width,
+          height = _getFocusedShapes6$.height;
 
       // Adapted from
       // https://github.com/SVG-Edit/svgedit/blob/396cce40ebfde03f7245c682041f63f07f69e3d3/editor/coords.js#L139-L145
@@ -43575,7 +43636,7 @@ var Merkaba = exports.Merkaba = function (_Component) {
       var absoluteWidth = Math.abs(scaledWidth);
       var absoluteHeight = Math.abs(scaledHeight);
 
-      this.updateFocusedBufferShape({
+      this.updateFocusedBufferShapes({
         x: scaledX,
         y: scaledY,
         width: absoluteWidth,
@@ -43594,7 +43655,7 @@ var Merkaba = exports.Merkaba = function (_Component) {
       this.setState({
         focusedShapeCursor: {
           shapeFocus: _enums.shapeFocusType.BUFFER,
-          bufferIndex: +shapeEl.getAttribute('data-buffer-index')
+          bufferIndices: [+shapeEl.getAttribute('data-buffer-index')]
         }
       });
     }
@@ -43610,7 +43671,7 @@ var Merkaba = exports.Merkaba = function (_Component) {
       this.setState({
         focusedShapeCursor: {
           shapeFocus: _enums.shapeFocusType.BUFFER,
-          bufferIndex: index
+          bufferIndices: [index]
         }
       });
     }
@@ -43638,44 +43699,43 @@ var Merkaba = exports.Merkaba = function (_Component) {
     value: function updateBufferShape(shapeIndex, newShapeData) {
       var bufferShapes = this.state.bufferShapes;
 
-      var modifiedBuffer = bufferShapes.slice();
-      modifiedBuffer[shapeIndex] = Object.assign({}, this.getFocusedShape(), newShapeData);
-
-      this.setState({ bufferShapes: modifiedBuffer });
+      Object.assign(bufferShapes[shapeIndex], newShapeData);
+      this.setState({ bufferShapes: bufferShapes });
     }
 
     /**
-     * @method merkaba.Merkaba#updateFocusedBufferShape
+     * @method merkaba.Merkaba#updateFocusedBufferShapes
      * @param {Object.<any>} newShapeData Any properties to update the buffered
      * shape with.
      */
 
   }, {
-    key: 'updateFocusedBufferShape',
-    value: function updateFocusedBufferShape(newShapeData) {
-      this.updateBufferShape(this.state.focusedShapeCursor.bufferIndex, newShapeData);
+    key: 'updateFocusedBufferShapes',
+    value: function updateFocusedBufferShapes(newShapeData) {
+      var _this2 = this;
+
+      this.state.focusedShapeCursor.bufferIndices.forEach(function (bufferIndex) {
+        return _this2.updateBufferShape(bufferIndex, newShapeData);
+      });
     }
 
     /**
      * @method merkaba.Merkaba#updateBufferShapeProperty
-     * @param {number} bufferIndex
+     * @param {Array.<number>} bufferIndices
      * @param {string} name
      * @param {*} value
      */
 
   }, {
     key: 'updateBufferShapeProperty',
-    value: function updateBufferShapeProperty(bufferIndex, name, value) {
-      var bufferShapes = this.state.bufferShapes;
+    value: function updateBufferShapeProperty(bufferIndices, name, value) {
+      var bufferShapes = this.state.bufferShapes.slice();
 
+      bufferIndices.forEach(function (bufferIndex) {
+        return bufferShapes[bufferIndex] = Object.assign({}, bufferShapes[bufferIndex], _defineProperty({}, name, value));
+      });
 
-      var shape = Object.assign({}, bufferShapes[bufferIndex]);
-      shape[name] = value;
-
-      var newBuffer = bufferShapes.slice();
-      newBuffer[bufferIndex] = shape;
-
-      this.setState({ bufferShapes: newBuffer });
+      this.setState({ bufferShapes: bufferShapes });
     }
 
     /**
@@ -43687,29 +43747,63 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'updateFocusedBufferShapeProperty',
     value: function updateFocusedBufferShapeProperty(name, value) {
-      this.updateBufferShapeProperty(this.state.focusedShapeCursor.bufferIndex, name, value);
+      this.updateBufferShapeProperty(this.state.focusedShapeCursor.bufferIndices, name, value);
+    }
+
+    /**
+     * @method merkaba.Merkaba#getSelectedShapeBufferIndices
+     * @return {Array.<number>}
+     */
+
+  }, {
+    key: 'getSelectedShapeBufferIndices',
+    value: function getSelectedShapeBufferIndices() {
+      var _state4 = this.state,
+          toolDragStartX = _state4.toolDragStartX,
+          toolDragStartY = _state4.toolDragStartY,
+          toolDragDeltaX = _state4.toolDragDeltaX,
+          toolDragDeltaY = _state4.toolDragDeltaY;
+
+      var _absolutizeCoordinate = (0, _utils.absolutizeCoordinates)(toolDragStartX, toolDragStartY, toolDragDeltaX, toolDragDeltaY),
+          x = _absolutizeCoordinate.x,
+          y = _absolutizeCoordinate.y,
+          height = _absolutizeCoordinate.height,
+          width = _absolutizeCoordinate.width;
+
+      var selectorBox = { x: x, y: y, height: height, width: width };
+
+      return this.state.bufferShapes.map(function (shape, i) {
+        return {
+          i: i,
+          doesIntersect: (0, _utils.doRectsIntersect)(selectorBox, (0, _utils.computeUnrotatedBoundingBox)(shape))
+        };
+      }).filter(function (shape) {
+        return shape.doesIntersect;
+      }).map(function (shape) {
+        return shape.i;
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _state4 = this.state,
-          bufferShapes = _state4.bufferShapes,
-          draggedHandleOrientation = _state4.draggedHandleOrientation,
-          focusedShapeBufferIndex = _state4.focusedShapeCursor.bufferIndex,
-          isDraggingTool = _state4.isDraggingTool,
-          selectedTool = _state4.selectedTool,
-          selectionDragStartX = _state4.selectionDragStartX,
-          selectionDragStartY = _state4.selectionDragStartY,
-          selectionDragX = _state4.selectionDragX,
-          selectionDragY = _state4.selectionDragY,
-          toolDragDeltaX = _state4.toolDragDeltaX,
-          toolDragDeltaY = _state4.toolDragDeltaY,
-          toolDragStartX = _state4.toolDragStartX,
-          toolDragStartY = _state4.toolDragStartY,
-          toolFillColor = _state4.toolFillColor,
-          toolRotate = _state4.toolRotate,
-          toolStrokeColor = _state4.toolStrokeColor,
-          toolStrokeWidth = _state4.toolStrokeWidth,
+      var _state5 = this.state,
+          bufferShapes = _state5.bufferShapes,
+          draggedHandleOrientation = _state5.draggedHandleOrientation,
+          focusedShapeBufferIndices = _state5.focusedShapeCursor.bufferIndices,
+          isDraggingTool = _state5.isDraggingTool,
+          selectedTool = _state5.selectedTool,
+          transformDragStartX = _state5.transformDragStartX,
+          transformDragStartY = _state5.transformDragStartY,
+          transformDragX = _state5.transformDragX,
+          transformDragY = _state5.transformDragY,
+          toolDragDeltaX = _state5.toolDragDeltaX,
+          toolDragDeltaY = _state5.toolDragDeltaY,
+          toolDragStartX = _state5.toolDragStartX,
+          toolDragStartY = _state5.toolDragStartY,
+          toolFillColor = _state5.toolFillColor,
+          toolRotate = _state5.toolRotate,
+          toolStrokeColor = _state5.toolStrokeColor,
+          toolStrokeWidth = _state5.toolStrokeWidth,
           handleCanvasDrag = this.handleCanvasDrag,
           handleCanvasDragStart = this.handleCanvasDragStart,
           handleCanvasDragStop = this.handleCanvasDragStop,
@@ -43719,11 +43813,10 @@ var Merkaba = exports.Merkaba = function (_Component) {
           handleLayerSortEnd = this.handleLayerSortEnd,
           handleLayerSortStart = this.handleLayerSortStart,
           handlePropertyChange = this.handlePropertyChange,
-          handleShapeClick = this.handleShapeClick,
           handleToolClick = this.handleToolClick;
 
 
-      var focusedShape = this.getFocusedShape();
+      var focusedShapes = this.getFocusedShapes();
 
       return _react2.default.createElement(
         'div',
@@ -43731,7 +43824,7 @@ var Merkaba = exports.Merkaba = function (_Component) {
         _react2.default.createElement(_layers.SortableLayers, {
           bufferShapes: bufferShapes,
           distance: 1,
-          focusedShapeBufferIndex: focusedShapeBufferIndex,
+          focusedShapeBufferIndices: focusedShapeBufferIndices,
           handleLayerClick: handleLayerClick,
           helperClass: 'focused',
           lockAxis: 'y',
@@ -43745,19 +43838,17 @@ var Merkaba = exports.Merkaba = function (_Component) {
         _react2.default.createElement(_canvas.Canvas, {
           bufferShapes: bufferShapes,
           draggedHandleOrientation: draggedHandleOrientation,
-          focusedShape: focusedShape,
-          focusedShapeBufferIndex: focusedShapeBufferIndex,
+          focusedShapes: focusedShapes,
           handleCanvasDrag: handleCanvasDrag,
           handleCanvasDragStart: handleCanvasDragStart,
           handleCanvasDragStop: handleCanvasDragStop,
           handleCanvasMouseDown: handleCanvasMouseDown,
-          handleShapeClick: handleShapeClick,
           isDraggingTool: isDraggingTool,
           selectedTool: selectedTool,
-          selectionDragStartX: selectionDragStartX,
-          selectionDragStartY: selectionDragStartY,
-          selectionDragX: selectionDragX,
-          selectionDragY: selectionDragY,
+          transformDragStartX: transformDragStartX,
+          transformDragStartY: transformDragStartY,
+          transformDragX: transformDragX,
+          transformDragY: transformDragY,
           toolDragDeltaX: toolDragDeltaX,
           toolDragDeltaY: toolDragDeltaY,
           toolDragStartX: toolDragStartX,
@@ -43768,7 +43859,7 @@ var Merkaba = exports.Merkaba = function (_Component) {
           toolStrokeWidth: toolStrokeWidth
         }),
         _react2.default.createElement(_details.Details, {
-          focusedShape: focusedShape,
+          focusedShapes: focusedShapes,
           handleColorPropertyChange: handleColorPropertyChange,
           handlePropertyChange: handlePropertyChange
         })
@@ -43796,8 +43887,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Rect = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -43814,7 +43903,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param {number} dx
  * @param {number} dy
  * @param {string} fill
- * @param {Function(external:React.SyntheticEvent)} handleShapeClick
  * @param {number} rotate
  * @param {string} stroke
  * @param {number} strokeWidth
@@ -43827,23 +43915,20 @@ var Rect = exports.Rect = function Rect(_ref) {
       dx = _ref.dx,
       dy = _ref.dy,
       fill = _ref.fill,
-      handleShapeClick = _ref.handleShapeClick,
       _ref$rotate = _ref.rotate,
       rotate = _ref$rotate === undefined ? 0 : _ref$rotate,
       stroke = _ref.stroke,
       strokeWidth = _ref.strokeWidth,
       x = _ref.x,
       y = _ref.y;
-  return _react2.default.createElement('rect', _extends({
-    onClick: handleShapeClick
-  }, Object.assign({
+  return _react2.default.createElement('rect', Object.assign({
     className: className,
     'data-buffer-index': bufferIndex,
     fill: fill,
     stroke: stroke,
     strokeWidth: strokeWidth,
     transform: 'rotate(' + rotate + ' ' + (x + dx / 2) + ' ' + (y + dy / 2) + ')'
-  }, (0, _utils.absolutizeCoordinates)(x, y, dx, dy))));
+  }, (0, _utils.absolutizeCoordinates)(x, y, dx, dy)));
 };
 
 /***/ }),
@@ -43957,7 +44042,7 @@ var enumify = function enumify(keys) {
  * @property merkaba.module:enums.selectedToolType
  * @enum {string}
  */
-var selectedToolType = exports.selectedToolType = enumify(['NONE', 'NOT_NONE', // strictly for testing
+var selectedToolType = exports.selectedToolType = enumify(['SELECT', 'NONE', // strictly for testing
 'RECTANGLE']);
 
 /**
@@ -44050,11 +44135,26 @@ if(false) {}
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.computeMidDragMatrix = exports.absolutizeCoordinates = undefined;
+exports.doRectsIntersect = exports.computeUnrotatedBoundingBox = exports.computeMidDragMatrix = exports.absolutizeCoordinates = undefined;
 
 var _transformationMatrixJs = __webpack_require__(/*! transformation-matrix-js */ "./node_modules/transformation-matrix-js/matrix.js");
 
 var _transformationMatrix = __webpack_require__(/*! transformation-matrix */ "./node_modules/transformation-matrix/build-umd/transformation-matrix.min.js");
+
+// TODO: Update file to use these aliases
+var cos = Math.cos,
+    sin = Math.sin,
+    min = Math.min,
+    max = Math.max,
+    sqrt = Math.sqrt,
+    atan2 = Math.atan2,
+    round = Math.round,
+    PI = Math.PI;
+
+
+var degToRadian = function degToRadian(deg) {
+  return deg * PI / 180;
+};
 
 /**
  * @method merkaba.utils#absolutizeCoordinates
@@ -44142,6 +44242,69 @@ var computeMidDragMatrix = exports.computeMidDragMatrix = function computeMidDra
       transformY = _computeMidDragTransf.transformY;
 
   return _transformationMatrixJs.Matrix.from((0, _transformationMatrix.transform)([(0, _transformationMatrix.rotateDEG)(rotate, originX, originY), (0, _transformationMatrix.translate)(transformX, transformY), (0, _transformationMatrix.scale)(scaleX, scaleY), (0, _transformationMatrix.translate)(-transformX, -transformY)]));
+};
+
+/**
+ * @param {Object} config
+ * @param {number} config.rotate
+ * @param {number} config.x
+ * @param {number} config.y
+ * @param {number} config.height
+ * @param {number} config.width
+ * @return {Object}
+ */
+var computeUnrotatedBoundingBox = exports.computeUnrotatedBoundingBox = function computeUnrotatedBoundingBox(_ref2) {
+  var rotate = _ref2.rotate,
+      height = _ref2.height,
+      width = _ref2.width,
+      x = _ref2.x,
+      y = _ref2.y;
+
+  // Port of https://github.com/SVG-Edit/svgedit/blob/b84f776816bbb0eaa711862300e245de01fe8e58/editor/svgcanvas.js#L643-L671
+
+  if (rotate % 90 === 0) {
+    return { x: x, y: y, height: height, width: width };
+  }
+
+  var angle = degToRadian(rotate);
+  var MAX_VALUE = Number.MAX_VALUE,
+      MIN_VALUE = Number.MIN_VALUE;
+
+  var rMinX = MAX_VALUE;
+  var rMinY = MAX_VALUE;
+  var rMaxX = MIN_VALUE;
+  var rMaxY = MIN_VALUE;
+
+  var centerX = x + width / 2;
+  var centerY = y + height / 2;
+  var pts = [[x - centerX, y - centerY], [x + width - centerX, y - centerY], [x + width - centerX, y + height - centerY], [x - centerX, y + height - centerY]];
+
+  var i = 4;
+  while (i--) {
+    var _x = pts[i][0];
+    var _y = pts[i][1];
+    var r = sqrt(_x * _x + _y * _y);
+    var theta = atan2(_y, _x) + angle;
+    _x = r * cos(theta) + centerX;
+    _y = r * sin(theta) + centerY;
+
+    rMinX = min(_x, rMinX);
+    rMinY = min(_y, rMinY);
+    rMaxX = max(_x, rMaxX);
+    rMaxY = max(_y, rMaxY);
+  }
+
+  return {
+    x: round(rMinX),
+    y: round(rMinY),
+    width: round(rMaxX - rMinX),
+    height: round(rMaxY - rMinY)
+  };
+};
+
+// Port of https://github.com/SVG-Edit/svgedit/blob/b84f776816bbb0eaa711862300e245de01fe8e58/editor/math.js#L212-L223
+var doRectsIntersect = exports.doRectsIntersect = function doRectsIntersect(rect1, rect2) {
+  return rect2.x < rect1.x + rect1.width && rect2.x + rect2.width > rect1.x && rect2.y < rect1.y + rect1.height && rect2.y + rect2.height > rect1.y;
 };
 
 /***/ })
