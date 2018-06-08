@@ -1,19 +1,30 @@
 import React from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { Icon } from './icon';
 
 const Layer = ({
+  bufferIndex,
   className,
+  handleDeleteShapeClick,
   handleLayerClick,
   shape: { fill, type },
-  shapeIndex,
+  layerIndex,
 }) => (
   <li
     {...{
       className,
-      onClick: () => handleLayerClick(shapeIndex),
+      onClick: () => handleLayerClick(layerIndex),
       style: { borderLeftColor: fill },
     }}
-  >{`${shapeIndex + 1}: ${type}`}</li>
+  >
+    <label>{`${layerIndex + 1}: ${type}`}</label>
+    <button
+      className="delete"
+      onClick={() => handleDeleteShapeClick(bufferIndex)}
+    >
+      <Icon type="remove" />
+    </button>
+  </li>
 );
 const SortableLayer = SortableElement(Layer);
 
@@ -28,6 +39,7 @@ const Layers = ({
   bufferShapesLength = bufferShapes.length,
   focusedShapeBufferIndices = [],
   focusedShapeBufferIndex = focusedShapeBufferIndices[0],
+  handleDeleteShapeClick,
   handleLayerClick,
 }) => (
   <div className="layers">
@@ -37,6 +49,7 @@ const Layers = ({
         .reverse()
         .map((bufferShape, i) => (
           <SortableLayer
+            bufferIndex={bufferShapesLength - 1 - i}
             className={`merkaba-layer${
               ~focusedShapeBufferIndices.indexOf(bufferShapesLength - 1 - i)
                 ? ' focused'
@@ -44,8 +57,9 @@ const Layers = ({
             }`}
             key={`shape-${i}`}
             index={i}
-            shapeIndex={i}
+            layerIndex={i}
             shape={bufferShape}
+            handleDeleteShapeClick={handleDeleteShapeClick}
             handleLayerClick={handleLayerClick}
           />
         ))}

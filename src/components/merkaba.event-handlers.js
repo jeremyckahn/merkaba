@@ -409,4 +409,16 @@ export default {
   handleLayerClick(layerIndex) {
     this.focusBufferByLayerIndex(layerIndex);
   },
+
+  /**
+   * @method merkaba.Merkaba#handleDeleteShapeClick
+   * @param {number} bufferShapeIndex
+   */
+  handleDeleteShapeClick(bufferShapeIndex) {
+    this.setState({
+      bufferShapes: this.state.bufferShapes.filter(
+        (_, i) => i !== bufferShapeIndex
+      ),
+    });
+  },
 };

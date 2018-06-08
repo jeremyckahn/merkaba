@@ -196,7 +196,9 @@ describe('eventHandlers', () => {
               toolDragDeltaY: 20,
             });
 
-            component.instance().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+            component
+              .instance()
+              .handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
           });
 
           it('sets correct focusedShapeCursor', () => {
@@ -213,7 +215,9 @@ describe('eventHandlers', () => {
               selectedTool: selectedToolType.SELECT,
             });
 
-            component.instance().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+            component
+              .instance()
+              .handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
           });
 
           it('sets correct focusedShapeCursor', () => {
@@ -761,6 +765,22 @@ describe('eventHandlers', () => {
         shapeFocus: shapeFocusType.BUFFER,
         bufferIndices: [0],
       });
+    });
+  });
+
+  describe('handleDeleteShapeClick', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect({ id: 0 }), sampleRect({ id: 1 })],
+      });
+
+      component.instance().handleDeleteShapeClick(0);
+    });
+
+    it('deletes the specified shape', () => {
+      assert.deepEqual(component.state('bufferShapes'), [
+        sampleRect({ id: 1 }),
+      ]);
     });
   });
 });
