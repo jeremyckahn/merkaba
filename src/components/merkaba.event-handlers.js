@@ -415,10 +415,9 @@ export default {
    * @param {number} bufferShapeIndex
    */
   handleDeleteShapeClick(bufferShapeIndex) {
-    this.setState({
-      bufferShapes: this.state.bufferShapes.filter(
-        (_, i) => i !== bufferShapeIndex
-      ),
-    });
+    const bufferShapes = [...this.state.bufferShapes];
+    bufferShapes.splice(bufferShapeIndex, 1);
+
+    this.setState({ bufferShapes });
   },
 };
