@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { HotKeys } from 'react-hotkeys';
 import { Matrix } from 'transformation-matrix-js';
 import {
   applyToPoint,
@@ -103,6 +104,18 @@ export class Merkaba extends Component {
     Object.keys(eventHandlers).forEach(
       method => (this[method] = eventHandlers[method].bind(this))
     );
+
+    // TODO: Make this preventable via a prop
+    this.initKeyHandlers();
+  }
+
+  initKeyHandlers() {
+    const { handleToolClick } = this;
+    this.keyMap = { selectRectangleTool: 'r', selectSelectTool: 's' };
+    this.keyHandlers = {
+      selectRectangleTool: () => handleToolClick(selectedToolType.RECTANGLE),
+      selectSelectTool: () => handleToolClick(selectedToolType.SELECT),
+    };
   }
 
   /**
@@ -427,64 +440,68 @@ export class Merkaba extends Component {
       handleLayerSortStart,
       handlePropertyChange,
       handleToolClick,
+      keyHandlers,
+      keyMap,
     } = this;
 
     const focusedShapes = this.getFocusedShapes();
 
     return (
-      <div className="fill merkaba">
-        <Layers
-          {...{
-            bufferShapes,
-            distance: 1,
-            focusedShapeBufferIndices,
-            handleDeleteShapeClick,
-            handleLayerClick,
-            helperClass: 'focused',
-            lockAxis: 'y',
-            onSortEnd: handleLayerSortEnd,
-            onSortStart: handleLayerSortStart,
-          }}
-        />
-        <Toolbar
-          {...{
-            handleToolClick,
-            selectedTool,
-          }}
-        />
-        <Canvas
-          {...{
-            bufferShapes,
-            draggedHandleOrientation,
-            focusedShapes,
-            handleCanvasDrag,
-            handleCanvasDragStart,
-            handleCanvasDragStop,
-            handleCanvasMouseDown,
-            isDraggingTool,
-            selectedTool,
-            transformDragStartX,
-            transformDragStartY,
-            transformDragX,
-            transformDragY,
-            toolDragDeltaX,
-            toolDragDeltaY,
-            toolDragStartX,
-            toolDragStartY,
-            toolFillColor,
-            toolRotate,
-            toolStrokeColor,
-            toolStrokeWidth,
-          }}
-        />
-        <Details
-          {...{
-            focusedShapes,
-            handleColorPropertyChange,
-            handlePropertyChange,
-          }}
-        />
-      </div>
+      <HotKeys className="hotkeys" keyMap={keyMap} handlers={keyHandlers}>
+        <div className="fill merkaba">
+          <Layers
+            {...{
+              bufferShapes,
+              distance: 1,
+              focusedShapeBufferIndices,
+              handleDeleteShapeClick,
+              handleLayerClick,
+              helperClass: 'focused',
+              lockAxis: 'y',
+              onSortEnd: handleLayerSortEnd,
+              onSortStart: handleLayerSortStart,
+            }}
+          />
+          <Toolbar
+            {...{
+              handleToolClick,
+              selectedTool,
+            }}
+          />
+          <Canvas
+            {...{
+              bufferShapes,
+              draggedHandleOrientation,
+              focusedShapes,
+              handleCanvasDrag,
+              handleCanvasDragStart,
+              handleCanvasDragStop,
+              handleCanvasMouseDown,
+              isDraggingTool,
+              selectedTool,
+              transformDragStartX,
+              transformDragStartY,
+              transformDragX,
+              transformDragY,
+              toolDragDeltaX,
+              toolDragDeltaY,
+              toolDragStartX,
+              toolDragStartY,
+              toolFillColor,
+              toolRotate,
+              toolStrokeColor,
+              toolStrokeWidth,
+            }}
+          />
+          <Details
+            {...{
+              focusedShapes,
+              handleColorPropertyChange,
+              handlePropertyChange,
+            }}
+          />
+        </div>
+      </HotKeys>
     );
   }
 }
