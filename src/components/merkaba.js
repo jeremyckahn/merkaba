@@ -149,15 +149,17 @@ export class Merkaba extends Component {
    * @return {undefined}
    */
   deleteFocusedShapes() {
-    const { bufferIndices } = this.state.focusedShapeCursor;
-
-    // TODO: Make this O(n) instead of O(n^2)
-    const bufferShapes = this.state.bufferShapes.filter(
-      (_, i) => !~bufferIndices.indexOf(i)
-    );
+    const {
+      focusedShapeCursor: { bufferIndices },
+      bufferShapes,
+    } = this.state;
 
     this.setState({
-      bufferShapes,
+      bufferShapes: bufferIndices.reverse().reduce((acc, index) => {
+        acc.splice(index, 1);
+        return acc;
+      }, bufferShapes),
+
       focusedShapeCursor: {
         bufferIndices: [],
         shapeFocus: shapeFocusType.NONE,
