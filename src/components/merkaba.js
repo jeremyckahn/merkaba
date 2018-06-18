@@ -111,8 +111,15 @@ export class Merkaba extends Component {
 
   initKeyHandlers() {
     const { handleToolClick } = this;
-    this.keyMap = { selectRectangleTool: 'r', selectSelectTool: 's' };
+    const deleteFocusedShapes = this.deleteFocusedShapes.bind(this);
+
+    this.keyMap = {
+      deleteFocusedShape: ['del', 'backspace'],
+      selectRectangleTool: 'r',
+      selectSelectTool: 's',
+    };
     this.keyHandlers = {
+      deleteFocusedShape: () => deleteFocusedShapes(),
       selectRectangleTool: () => handleToolClick(selectedToolType.RECTANGLE),
       selectSelectTool: () => handleToolClick(selectedToolType.SELECT),
     };
@@ -135,6 +142,27 @@ export class Merkaba extends Component {
       : bufferIndices.map(bufferIndex =>
           Object.assign({}, bufferShapes[bufferIndex] || emptyShape)
         );
+  }
+
+  /**
+   * @method merkaba.Merkaba#deleteFocusedShapes
+   * @return {undefined}
+   */
+  deleteFocusedShapes() {
+    const { bufferIndices } = this.state.focusedShapeCursor;
+
+    // TODO: Make this O(n) instead of O(n^2)
+    const bufferShapes = this.state.bufferShapes.filter(
+      (_, i) => !~bufferIndices.indexOf(i)
+    );
+
+    this.setState({
+      bufferShapes,
+      focusedShapeCursor: {
+        bufferIndices: [],
+        shapeFocus: shapeFocusType.NONE,
+      },
+    });
   }
 
   /**

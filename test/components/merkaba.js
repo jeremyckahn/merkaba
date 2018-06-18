@@ -242,6 +242,37 @@ describe('Merkaba', () => {
     });
   });
 
+  describe('deleteFocusedShapes', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [
+          sampleRect({ id: 0 }),
+          sampleRect({ id: 1 }),
+          sampleRect({ id: 2 }),
+        ],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndices: [0, 2],
+        },
+      });
+
+      component.instance().deleteFocusedShapes();
+    });
+
+    it('updates the bufferShapes state', () => {
+      assert.deepEqual(component.state('bufferShapes'), [
+        sampleRect({ id: 1 }),
+      ]);
+    });
+
+    it('updates the focusedShapeCursor state', () => {
+      assert.equal(
+        component.state('focusedShapeCursor').shapeFocus,
+        shapeFocusType.NONE
+      );
+    });
+  });
+
   describe('getLiveShape', () => {
     let shapeObject;
 
