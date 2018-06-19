@@ -426,5 +426,42 @@ export default {
    */
   handleDeleteKeyPress() {
     this.deleteFocusedShapes();
-  }
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleNudgeKeyPress
+   * @param {external:React.SyntheticEvent} e
+   */
+  handleNudgeKeyPress({ key }) {
+    const {
+      bufferShapes,
+      focusedShapeCursor: { bufferIndices },
+    } = this.state;
+
+    let deltaX = 0;
+    let deltaY = 0;
+
+    switch (key) {
+      case 'ArrowUp':
+        deltaY = -1;
+        break;
+      case 'ArrowRight':
+        deltaX = 1;
+        break;
+      case 'ArrowDown':
+        deltaY = 1;
+        break;
+      case 'ArrowLeft':
+        deltaX = -1;
+        break;
+    }
+
+    bufferIndices.forEach(index => {
+      const { x, y } = bufferShapes[index];
+      this.updateBufferShape(index, {
+        x: x + deltaX,
+        y: y + deltaY,
+      });
+    });
+  },
 };

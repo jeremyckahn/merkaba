@@ -783,4 +783,87 @@ describe('eventHandlers', () => {
       ]);
     });
   });
+
+  describe('handleNudgeKeyPress', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [
+          sampleRect({ x: 10, y: 10 }),
+          sampleRect({ x: 20, y: 20 }),
+        ],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndices: [0, 1],
+        }
+      });
+    });
+
+    describe('up', () => {
+      beforeEach(() => {
+        component.instance().handleNudgeKeyPress({ key: 'ArrowUp' });
+      });
+
+      it('nudges all shapes up', () => {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = component.state(
+          'bufferShapes'
+        );
+
+        assert.equal(x1, 10);
+        assert.equal(y1, 9);
+        assert.equal(x2, 20);
+        assert.equal(y2, 19);
+      });
+    });
+
+    describe('right', () => {
+      beforeEach(() => {
+        component.instance().handleNudgeKeyPress({ key: 'ArrowRight' });
+      });
+
+      it('nudges all shapes right', () => {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = component.state(
+          'bufferShapes'
+        );
+
+        assert.equal(x1, 11);
+        assert.equal(y1, 10);
+        assert.equal(x2, 21);
+        assert.equal(y2, 20);
+      });
+    });
+
+    describe('down', () => {
+      beforeEach(() => {
+        component.instance().handleNudgeKeyPress({ key: 'ArrowDown' });
+      });
+
+      it('nudges all shapes down', () => {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = component.state(
+          'bufferShapes'
+        );
+
+        assert.equal(x1, 10);
+        assert.equal(y1, 11);
+        assert.equal(x2, 20);
+        assert.equal(y2, 21);
+      });
+    });
+
+    describe('left', () => {
+      beforeEach(() => {
+        component.instance().handleNudgeKeyPress({ key: 'ArrowLeft' });
+      });
+
+      it('nudges all shapes right', () => {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = component.state(
+          'bufferShapes'
+        );
+
+        assert.equal(x1, 9);
+        assert.equal(y1, 10);
+        assert.equal(x2, 19);
+        assert.equal(y2, 20);
+      });
+    });
+  });
 });

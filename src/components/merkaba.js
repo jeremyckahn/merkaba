@@ -110,16 +110,24 @@ export class Merkaba extends Component {
   }
 
   initKeyHandlers() {
-    const { handleDeleteKeyPress, handleToolClick } = this;
+    const { handleDeleteKeyPress, handleNudgeKeyPress, handleToolClick } = this;
 
     this.keyMap = {
       deleteFocusedShape: ['del', 'backspace'],
+      nudgeUp: 'up',
+      nudgeRight: 'right',
+      nudgeDown: 'down',
+      nudgeLeft: 'left',
       selectRectangleTool: 'r',
       selectSelectTool: 's',
     };
 
     this.keyHandlers = {
-      deleteFocusedShape: () => handleDeleteKeyPress(),
+      deleteFocusedShape: handleDeleteKeyPress,
+      nudgeUp: handleNudgeKeyPress,
+      nudgeRight: handleNudgeKeyPress,
+      nudgeDown: handleNudgeKeyPress,
+      nudgeLeft: handleNudgeKeyPress,
       selectRectangleTool: () => handleToolClick(selectedToolType.RECTANGLE),
       selectSelectTool: () => handleToolClick(selectedToolType.SELECT),
     };
