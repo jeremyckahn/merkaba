@@ -110,16 +110,16 @@ export class Merkaba extends Component {
   }
 
   initKeyHandlers() {
-    const { handleToolClick } = this;
-    const deleteFocusedShapes = this.deleteFocusedShapes.bind(this);
+    const { handleDeleteKeyPress, handleToolClick } = this;
 
     this.keyMap = {
       deleteFocusedShape: ['del', 'backspace'],
       selectRectangleTool: 'r',
       selectSelectTool: 's',
     };
+
     this.keyHandlers = {
-      deleteFocusedShape: () => deleteFocusedShapes(),
+      deleteFocusedShape: () => handleDeleteKeyPress(),
       selectRectangleTool: () => handleToolClick(selectedToolType.RECTANGLE),
       selectSelectTool: () => handleToolClick(selectedToolType.SELECT),
     };

@@ -24,7 +24,7 @@ This is the current roadmap:
 - [x] Other tools
     - [x] Group selection
 - [ ] Keyboard shortcuts/keybindings
-    - [ ] Delete selected elements
+    - [x] Delete selected elements
     - [ ] Position nudging via arrow keys
 - [ ] Data import/export
     - [ ] JSON (format TBD)

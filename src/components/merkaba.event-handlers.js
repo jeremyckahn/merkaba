@@ -420,4 +420,11 @@ export default {
 
     this.setState({ bufferShapes });
   },
+
+  /**
+   * @method merkaba.Merkaba#handleDeleteKeyPress
+   */
+  handleDeleteKeyPress() {
+    this.deleteFocusedShapes();
+  }
 };
