@@ -854,7 +854,7 @@ describe('eventHandlers', () => {
         component.instance().handleNudgeKeyPress({ key: 'ArrowLeft' });
       });
 
-      it('nudges all shapes right', () => {
+      it('nudges all shapes left', () => {
         const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = component.state(
           'bufferShapes'
         );
