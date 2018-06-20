@@ -11,6 +11,14 @@ import './styles/index.sass';
  */
 
 /**
+ * @typedef merkaba.snapshot
+ * @type {Object}
+ * @property {Array.<merkaba.svgShape>} bufferShapes
+ * @property {merkaba.focusedShapeCursor} focusedShapeCursor
+ * @property {merkaba.module:enums.selectedToolType} selectedTool
+ */
+
+/**
  * @typedef merkaba.svgRect
  * @see https://www.w3.org/TR/SVG/shapes.html#InterfaceSVGRectElement
  * @type {merkaba.svgShape}

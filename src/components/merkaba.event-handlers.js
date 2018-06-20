@@ -464,4 +464,26 @@ export default {
       });
     });
   },
+
+  /**
+   * @method merkaba.Merkaba#handleUndoKeypress
+   */
+  handleUndoKeypress() {
+    this.revertToSnapshot();
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleRedoKeypress
+   */
+  handleRedoKeypress() {
+    this.proceedToSnapshot();
+  },
+
+  /**
+   * @method merkaba.Merkaba#handleDetailsInputFocus
+   */
+  handleDetailsInputFocus() {
+    // Intentionally defined as an empty function; this needs to be stubbed so
+    // that it can be wrapped by merkaba.Merkaba#setUpUndoableActions
+  },
 };

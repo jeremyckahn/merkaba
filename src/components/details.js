@@ -76,15 +76,19 @@ const RectUI = ({
 /**
  * @class merkaba.Details
  * @param {Array.<merkaba.svgShape>} focusedShapes
+ * @param {Function(external:React.SyntheticEvent)} handleColorPropertyChange
+ * @param {Function(external:React.SyntheticEvent)} handleDetailsInputFocus
+ * @param {Function(external:React.SyntheticEvent)} handlePropertyChange
  */
 export const Details = ({
   focusedShapes = [],
   focusedShape = focusedShapes[0],
   focusedShapesLength = focusedShapes.length,
   handleColorPropertyChange,
+  handleDetailsInputFocus,
   handlePropertyChange,
 }) => (
-  <div className="details">
+  <div className="details" onFocus={handleDetailsInputFocus}>
     {focusedShapesLength === 1 ? (
       focusedShape.type === shapeType.RECT ? (
         <RectUI

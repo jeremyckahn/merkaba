@@ -20,6 +20,7 @@ import {
   computeUnrotatedBoundingBox,
   doRectsIntersect,
 } from '../utils';
+import { historyLimit } from '../constants';
 import eventHandlers from './merkaba.event-handlers';
 
 /**
@@ -37,6 +38,8 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {Array.<merkaba.svgShape>} bufferShapes
  * @property {null|string} draggedHandleOrientation
  * @property {merkaba.focusedShapeCursor} focusedShapeCursor
+ * @property {Array.<snapshot>} historyPast
+ * @property {Array.<snapshot>} historyFuture
  * @property {boolean} isDraggingSelectionHandle
  * @property {boolean} isDraggingSelectionRotator
  * @property {boolean} isDraggingShape
@@ -68,6 +71,8 @@ export class Merkaba extends Component {
   constructor() {
     super(...arguments);
 
+    this.historyLimit = historyLimit;
+
     /**
      * @member merkaba.Merkaba#state
      * @type {merkaba.state}
@@ -79,6 +84,8 @@ export class Merkaba extends Component {
         shapeFocus: shapeFocusType.NONE,
         bufferIndices: [],
       },
+      historyPast: [],
+      historyFuture: [],
       isDraggingSelectionHandle: false,
       isDraggingSelectionRotator: false,
       isDraggingShape: false,
@@ -105,12 +112,20 @@ export class Merkaba extends Component {
       method => (this[method] = eventHandlers[method].bind(this))
     );
 
+    this.setUpUndoableActions();
+
     // TODO: Make this preventable via a prop
     this.initKeyHandlers();
   }
 
   initKeyHandlers() {
-    const { handleDeleteKeyPress, handleNudgeKeyPress, handleToolClick } = this;
+    const {
+      handleDeleteKeyPress,
+      handleNudgeKeyPress,
+      handleRedoKeypress,
+      handleToolClick,
+      handleUndoKeypress,
+    } = this;
 
     this.keyMap = {
       deleteFocusedShape: ['del', 'backspace'],
@@ -118,8 +133,10 @@ export class Merkaba extends Component {
       nudgeRight: 'right',
       nudgeDown: 'down',
       nudgeLeft: 'left',
+      redo: 'meta+shift+z',
       selectRectangleTool: 'r',
       selectSelectTool: 's',
+      undo: 'meta+z',
     };
 
     this.keyHandlers = {
@@ -128,9 +145,62 @@ export class Merkaba extends Component {
       nudgeRight: handleNudgeKeyPress,
       nudgeDown: handleNudgeKeyPress,
       nudgeLeft: handleNudgeKeyPress,
+      redo: handleRedoKeypress,
       selectRectangleTool: () => handleToolClick(selectedToolType.RECTANGLE),
       selectSelectTool: () => handleToolClick(selectedToolType.SELECT),
+      undo: handleUndoKeypress,
     };
+
+    this.keyHandlers = Object.keys(this.keyHandlers).reduce((acc, key) => {
+      const original = this.keyHandlers[key];
+
+      acc[key] = function() {
+        const {
+          isDraggingTool,
+          isDraggingSelectionHandle,
+          isDraggingSelectionRotator,
+          isDraggingShape,
+        } = this.state;
+
+        if (
+          // User is focused on an input element
+          document.activeElement.className !== 'hotkeys' ||
+
+          // User is dragging something
+          isDraggingTool ||
+          isDraggingSelectionHandle ||
+          isDraggingSelectionRotator ||
+          isDraggingShape
+        ) {
+          return;
+        }
+
+        original(...arguments);
+      }.bind(this);
+
+      return acc;
+    }, {});
+  }
+
+  /**
+   * @method merkaba.Merkaba#setUpUndoableActions
+   */
+  setUpUndoableActions() {
+    [
+      'handleToolClick',
+      'handleCanvasDragStart',
+      'handleDeleteShapeClick',
+      'handleDetailsInputFocus',
+      'handleLayerSortStart',
+    ].forEach(handlerName => {
+      const original = this[handlerName];
+
+      this[handlerName] = function() {
+        const args = [...arguments];
+        this.recordSnapshot();
+        original(...args);
+      }.bind(this);
+    });
   }
 
   /**
@@ -446,6 +516,71 @@ export class Merkaba extends Component {
       .map(shape => shape.i);
   }
 
+  getSnapshot() {
+    const { bufferShapes, focusedShapeCursor, selectedTool } = this.state;
+
+    // Explore using https://github.com/fastify/fast-json-stringify
+    return JSON.stringify({
+      bufferShapes,
+      focusedShapeCursor,
+      selectedTool,
+    });
+  }
+
+  recordSnapshot() {
+    const {
+      historyLimit,
+      state: { historyPast },
+    } = this;
+
+    const snapshot = this.getSnapshot();
+
+    if (snapshot === historyPast[historyPast.length - 1]) {
+      return;
+    }
+
+    if (historyPast.length >= historyLimit) {
+      historyPast.shift();
+    }
+
+    historyPast.push(snapshot);
+    this.setState({ historyFuture: [], historyPast });
+  }
+
+  revertToSnapshot() {
+    const { historyFuture, historyPast } = this.state;
+
+    if (!historyPast.length) {
+      return;
+    }
+
+    historyFuture.unshift(this.getSnapshot());
+
+    this.setState(
+      Object.assign({}, JSON.parse(historyPast.pop()), {
+        historyFuture,
+        historyPast,
+      })
+    );
+  }
+
+  proceedToSnapshot() {
+    const { historyFuture, historyPast } = this.state;
+
+    if (!historyFuture.length) {
+      return;
+    }
+
+    historyPast.push(this.getSnapshot());
+
+    this.setState(
+      Object.assign({}, JSON.parse(historyFuture.shift()), {
+        historyFuture,
+        historyPast,
+      })
+    );
+  }
+
   render() {
     const {
       state: {
@@ -473,6 +608,7 @@ export class Merkaba extends Component {
       handleCanvasMouseDown,
       handleColorPropertyChange,
       handleDeleteShapeClick,
+      handleDetailsInputFocus,
       handleLayerClick,
       handleLayerSortEnd,
       handleLayerSortStart,
@@ -535,6 +671,7 @@ export class Merkaba extends Component {
             {...{
               focusedShapes,
               handleColorPropertyChange,
+              handleDetailsInputFocus,
               handlePropertyChange,
             }}
           />

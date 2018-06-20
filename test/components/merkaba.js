@@ -147,6 +147,18 @@ describe('Merkaba', () => {
         });
       });
     });
+
+    describe('historyPast', () => {
+      it('has a default value', () => {
+        assert.deepEqual(component.state('historyPast'), []);
+      });
+    });
+
+    describe('historyFuture', () => {
+      it('has a default value', () => {
+        assert.deepEqual(component.state('historyFuture'), []);
+      });
+    });
   });
 
   describe('getFocusedShapes', () => {
@@ -504,6 +516,244 @@ describe('Merkaba', () => {
         it('updates the specific focused shape', () => {
           assert.equal(component.state().bufferShapes[1].foo, 'bar');
         });
+      });
+    });
+  });
+
+  describe('recordSnapshot', () => {
+    const sampleSnapshot = JSON.stringify({
+      bufferShapes: [sampleRect({ id: 'snapshot' })],
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndices: [],
+      },
+      selectedTool: selectedToolType.SELECT,
+    });
+
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect()],
+        historyFuture: [sampleSnapshot],
+      });
+
+      component.instance().recordSnapshot();
+    });
+
+    it('records a snaphot', () => {
+      assert.deepEqual(component.state('historyPast'), [
+        JSON.stringify({
+          bufferShapes: [sampleRect()],
+          focusedShapeCursor: {
+            shapeFocus: shapeFocusType.NONE,
+            bufferIndices: [],
+          },
+          selectedTool: selectedToolType.SELECT,
+        }),
+      ]);
+    });
+
+    it('clears out historyFuture', () => {
+      assert.equal(component.state('historyFuture').length, 0);
+    });
+
+    describe('duplicate snapshots', () => {
+      beforeEach(() => {
+        component.setState(
+          Object.assign({}, JSON.parse(sampleSnapshot), {
+            historyPast: [sampleSnapshot],
+          })
+        );
+
+        component.instance().recordSnapshot();
+      });
+
+      it('does not record duplicate snapshots', () => {
+        assert.deepEqual(component.state('historyPast'), [sampleSnapshot]);
+      });
+    });
+
+    describe('history limits', () => {
+      beforeEach(() => {
+        component.setState({
+          bufferShapes: [sampleRect({ id: 'current' })],
+          focusedShapeCursor: {
+            shapeFocus: shapeFocusType.NONE,
+            bufferIndices: [],
+          },
+          selectedTool: selectedToolType.SELECT,
+          historyPast: [sampleSnapshot, sampleSnapshot],
+        });
+
+        component.instance().historyLimit = 2;
+        component.instance().recordSnapshot();
+      });
+
+      it('truncates the snapshot history', () => {
+        assert.deepEqual(component.state('historyPast'), [
+          sampleSnapshot,
+          JSON.stringify({
+            bufferShapes: [sampleRect({ id: 'current' })],
+            focusedShapeCursor: {
+              shapeFocus: shapeFocusType.NONE,
+              bufferIndices: [],
+            },
+            selectedTool: selectedToolType.SELECT,
+          }),
+        ]);
+      });
+    });
+  });
+
+  describe('revertToSnapshot', () => {
+    const sampleSnapshot = JSON.stringify({
+      bufferShapes: [sampleRect({ id: 'snapshot' })],
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndices: [],
+      },
+      selectedTool: selectedToolType.SELECT,
+    });
+
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect()],
+        historyPast: [sampleSnapshot],
+      });
+
+      component.instance().revertToSnapshot();
+    });
+
+    describe('with past history', () => {
+      it('moves current state to historyFuture', () => {
+        assert.deepEqual(component.state('historyFuture'), [
+          JSON.stringify({
+            bufferShapes: [sampleRect()],
+            focusedShapeCursor: {
+              shapeFocus: shapeFocusType.NONE,
+              bufferIndices: [],
+            },
+            selectedTool: selectedToolType.SELECT,
+          }),
+        ]);
+      });
+
+      it('applies latest snapshot to state', () => {
+        const {
+          bufferShapes,
+          focusedShapeCursor,
+          selectedTool,
+        } = component.state();
+
+        assert.deepEqual(
+          JSON.stringify({ bufferShapes, focusedShapeCursor, selectedTool }),
+          sampleSnapshot
+        );
+      });
+
+      it('pops snapshot off of historyPast', () => {
+        assert.equal(component.state('historyPast').length, 0);
+      });
+    });
+
+    describe('without past history', () => {
+      beforeEach(() => {
+        component.setState({
+          bufferShapes: [sampleRect()],
+          historyPast: [],
+          historyFuture: [],
+        });
+
+        component.instance().revertToSnapshot();
+      });
+
+      it('does not change the state of the app', () => {
+        assert.deepEqual(component.state('bufferShapes'), [sampleRect()]);
+      });
+
+      it('does not modify historyFuture', () => {
+        assert.equal(component.state('historyFuture').length, 0);
+      });
+    });
+  });
+
+  describe('proceedToSnapshot', () => {
+    const samplePastSnapshot = JSON.stringify({
+      bufferShapes: [sampleRect({ id: 'past-snapshot' })],
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndices: [],
+      },
+      selectedTool: selectedToolType.SELECT,
+    });
+    const sampleFutureSnapshot = JSON.stringify({
+      bufferShapes: [sampleRect({ id: 'future-snapshot' })],
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndices: [],
+      },
+      selectedTool: selectedToolType.SELECT,
+    });
+
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect()],
+        historyFuture: [sampleFutureSnapshot],
+        historyPast: [samplePastSnapshot],
+      });
+
+      component.instance().proceedToSnapshot();
+    });
+
+    describe('with future history', () => {
+      it('moves current state to historyPast', () => {
+        assert.deepEqual(component.state('historyPast'), [
+          samplePastSnapshot,
+          JSON.stringify({
+            bufferShapes: [sampleRect()],
+            focusedShapeCursor: {
+              shapeFocus: shapeFocusType.NONE,
+              bufferIndices: [],
+            },
+            selectedTool: selectedToolType.SELECT,
+          }),
+        ]);
+      });
+
+      it('applies next snapshot to state', () => {
+        const {
+          bufferShapes,
+          focusedShapeCursor,
+          selectedTool,
+        } = component.state();
+
+        assert.deepEqual(
+          JSON.stringify({ bufferShapes, focusedShapeCursor, selectedTool }),
+          sampleFutureSnapshot
+        );
+      });
+
+      it('shifts snapshot out of historyFuture', () => {
+        assert.equal(component.state('historyFuture').length, 0);
+      });
+    });
+
+    describe('without future history', () => {
+      beforeEach(() => {
+        component.setState({
+          bufferShapes: [sampleRect()],
+          historyPast: [],
+          historyFuture: [],
+        });
+
+        component.instance().proceedToSnapshot();
+      });
+
+      it('does not change the state of the app', () => {
+        assert.deepEqual(component.state('bufferShapes'), [sampleRect()]);
+      });
+
+      it('does not modify historyFuture', () => {
+        assert.equal(component.state('historyFuture').length, 0);
       });
     });
   });
