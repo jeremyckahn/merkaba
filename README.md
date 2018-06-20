@@ -23,7 +23,7 @@ This is the current roadmap:
 - [ ] Undo/redo support
 - [x] Other tools
     - [x] Group selection
-- [ ] Keyboard shortcuts/keybindings
+- [x] Keyboard shortcuts/keybindings
     - [x] Delete selected elements
     - [x] Position nudging via arrow keys
 - [ ] Data import/export
