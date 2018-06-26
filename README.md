@@ -20,7 +20,7 @@ This is the current roadmap:
         - [x] Color selection via color picker element
         - [x] Stroke/fill support
 - [x] Shape deleting
-- [ ] Undo/redo support
+- [x] Undo/redo support
 - [x] Other tools
     - [x] Group selection
 - [x] Keyboard shortcuts/keybindings
