@@ -46621,6 +46621,9 @@ var RectUI = function RectUI(_ref) {
 /**
  * @class merkaba.Details
  * @param {Array.<merkaba.svgShape>} focusedShapes
+ * @param {Function(external:React.SyntheticEvent)} handleColorPropertyChange
+ * @param {Function(external:React.SyntheticEvent)} handleDetailsInputFocus
+ * @param {Function(external:React.SyntheticEvent)} handlePropertyChange
  */
 var Details = exports.Details = function Details(_ref2) {
   var _ref2$focusedShapes = _ref2.focusedShapes,
@@ -46630,10 +46633,11 @@ var Details = exports.Details = function Details(_ref2) {
       _ref2$focusedShapesLe = _ref2.focusedShapesLength,
       focusedShapesLength = _ref2$focusedShapesLe === undefined ? focusedShapes.length : _ref2$focusedShapesLe,
       handleColorPropertyChange = _ref2.handleColorPropertyChange,
+      handleDetailsInputFocus = _ref2.handleDetailsInputFocus,
       handlePropertyChange = _ref2.handlePropertyChange;
   return _react2.default.createElement(
     'div',
-    { className: 'details' },
+    { className: 'details', onFocus: handleDetailsInputFocus },
     focusedShapesLength === 1 ? focusedShape.type === _enums.shapeType.RECT ? _react2.default.createElement(RectUI, {
       handleColorPropertyChange: handleColorPropertyChange,
       handlePropertyChange: handlePropertyChange,
@@ -47315,6 +47319,31 @@ exports.default = {
         y: y + deltaY
       });
     });
+  },
+
+
+  /**
+   * @method merkaba.Merkaba#handleUndoKeypress
+   */
+  handleUndoKeypress: function handleUndoKeypress() {
+    this.revertToSnapshot();
+  },
+
+
+  /**
+   * @method merkaba.Merkaba#handleRedoKeypress
+   */
+  handleRedoKeypress: function handleRedoKeypress() {
+    this.proceedToSnapshot();
+  },
+
+
+  /**
+   * @method merkaba.Merkaba#handleDetailsInputFocus
+   */
+  handleDetailsInputFocus: function handleDetailsInputFocus() {
+    // Intentionally defined as an empty function; this needs to be stubbed so
+    // that it can be wrapped by merkaba.Merkaba#setUpUndoableActions
   }
 };
 
@@ -47361,6 +47390,8 @@ var _enums = __webpack_require__(/*! ../enums */ "./src/enums.js");
 
 var _utils = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
+var _constants = __webpack_require__(/*! ../constants */ "./src/constants.js");
+
 var _merkaba = __webpack_require__(/*! ./merkaba.event-handlers */ "./src/components/merkaba.event-handlers.js");
 
 var _merkaba2 = _interopRequireDefault(_merkaba);
@@ -47368,6 +47399,8 @@ var _merkaba2 = _interopRequireDefault(_merkaba);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -47390,6 +47423,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @property {Array.<merkaba.svgShape>} bufferShapes
  * @property {null|string} draggedHandleOrientation
  * @property {merkaba.focusedShapeCursor} focusedShapeCursor
+ * @property {Array.<snapshot>} historyPast
+ * @property {Array.<snapshot>} historyFuture
  * @property {boolean} isDraggingSelectionHandle
  * @property {boolean} isDraggingSelectionRotator
  * @property {boolean} isDraggingShape
@@ -47425,12 +47460,14 @@ var Merkaba = exports.Merkaba = function (_Component) {
   function Merkaba() {
     _classCallCheck(this, Merkaba);
 
+    var _this = _possibleConstructorReturn(this, (Merkaba.__proto__ || Object.getPrototypeOf(Merkaba)).apply(this, arguments));
+
+    _this.historyLimit = _constants.historyLimit;
+
     /**
      * @member merkaba.Merkaba#state
      * @type {merkaba.state}
      */
-    var _this = _possibleConstructorReturn(this, (Merkaba.__proto__ || Object.getPrototypeOf(Merkaba)).apply(this, arguments));
-
     _this.state = {
       bufferShapes: [],
       draggedHandleOrientation: null,
@@ -47438,6 +47475,8 @@ var Merkaba = exports.Merkaba = function (_Component) {
         shapeFocus: _enums.shapeFocusType.NONE,
         bufferIndices: []
       },
+      historyPast: [],
+      historyFuture: [],
       isDraggingSelectionHandle: false,
       isDraggingSelectionRotator: false,
       isDraggingShape: false,
@@ -47464,6 +47503,8 @@ var Merkaba = exports.Merkaba = function (_Component) {
       return _this[method] = _merkaba2.default[method].bind(_this);
     });
 
+    _this.setUpUndoableActions();
+
     // TODO: Make this preventable via a prop
     _this.initKeyHandlers();
     return _this;
@@ -47472,9 +47513,13 @@ var Merkaba = exports.Merkaba = function (_Component) {
   _createClass(Merkaba, [{
     key: 'initKeyHandlers',
     value: function initKeyHandlers() {
+      var _this2 = this;
+
       var handleDeleteKeyPress = this.handleDeleteKeyPress,
           handleNudgeKeyPress = this.handleNudgeKeyPress,
-          handleToolClick = this.handleToolClick;
+          handleRedoKeypress = this.handleRedoKeypress,
+          handleToolClick = this.handleToolClick,
+          handleUndoKeypress = this.handleUndoKeypress;
 
 
       this.keyMap = {
@@ -47483,8 +47528,10 @@ var Merkaba = exports.Merkaba = function (_Component) {
         nudgeRight: 'right',
         nudgeDown: 'down',
         nudgeLeft: 'left',
+        redo: 'meta+shift+z',
         selectRectangleTool: 'r',
-        selectSelectTool: 's'
+        selectSelectTool: 's',
+        undo: 'meta+z'
       };
 
       this.keyHandlers = {
@@ -47493,13 +47540,61 @@ var Merkaba = exports.Merkaba = function (_Component) {
         nudgeRight: handleNudgeKeyPress,
         nudgeDown: handleNudgeKeyPress,
         nudgeLeft: handleNudgeKeyPress,
+        redo: handleRedoKeypress,
         selectRectangleTool: function selectRectangleTool() {
           return handleToolClick(_enums.selectedToolType.RECTANGLE);
         },
         selectSelectTool: function selectSelectTool() {
           return handleToolClick(_enums.selectedToolType.SELECT);
-        }
+        },
+        undo: handleUndoKeypress
       };
+
+      this.keyHandlers = Object.keys(this.keyHandlers).reduce(function (acc, key) {
+        var original = _this2.keyHandlers[key];
+
+        acc[key] = function () {
+          var _state = this.state,
+              isDraggingTool = _state.isDraggingTool,
+              isDraggingSelectionHandle = _state.isDraggingSelectionHandle,
+              isDraggingSelectionRotator = _state.isDraggingSelectionRotator,
+              isDraggingShape = _state.isDraggingShape;
+
+
+          if (
+          // User is focused on an input element
+          document.activeElement.className !== 'hotkeys' ||
+
+          // User is dragging something
+          isDraggingTool || isDraggingSelectionHandle || isDraggingSelectionRotator || isDraggingShape) {
+            return;
+          }
+
+          original.apply(undefined, arguments);
+        }.bind(_this2);
+
+        return acc;
+      }, {});
+    }
+
+    /**
+     * @method merkaba.Merkaba#setUpUndoableActions
+     */
+
+  }, {
+    key: 'setUpUndoableActions',
+    value: function setUpUndoableActions() {
+      var _this3 = this;
+
+      ['handleToolClick', 'handleCanvasDragStart', 'handleDeleteShapeClick', 'handleDetailsInputFocus', 'handleLayerSortStart'].forEach(function (handlerName) {
+        var original = _this3[handlerName];
+
+        _this3[handlerName] = function () {
+          var args = [].concat(Array.prototype.slice.call(arguments));
+          this.recordSnapshot();
+          original.apply(undefined, _toConsumableArray(args));
+        }.bind(_this3);
+      });
     }
 
     /**
@@ -47510,11 +47605,11 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'getFocusedShapes',
     value: function getFocusedShapes() {
-      var _state = this.state,
-          bufferShapes = _state.bufferShapes,
-          _state$focusedShapeCu = _state.focusedShapeCursor,
-          shapeFocus = _state$focusedShapeCu.shapeFocus,
-          bufferIndices = _state$focusedShapeCu.bufferIndices;
+      var _state2 = this.state,
+          bufferShapes = _state2.bufferShapes,
+          _state2$focusedShapeC = _state2.focusedShapeCursor,
+          shapeFocus = _state2$focusedShapeC.shapeFocus,
+          bufferIndices = _state2$focusedShapeC.bufferIndices;
       var NONE = _enums.shapeFocusType.NONE,
           LIVE = _enums.shapeFocusType.LIVE;
 
@@ -47532,9 +47627,9 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'deleteFocusedShapes',
     value: function deleteFocusedShapes() {
-      var _state2 = this.state,
-          bufferIndices = _state2.focusedShapeCursor.bufferIndices,
-          bufferShapes = _state2.bufferShapes;
+      var _state3 = this.state,
+          bufferIndices = _state3.focusedShapeCursor.bufferIndices,
+          bufferShapes = _state3.bufferShapes;
 
 
       this.setState({
@@ -47558,16 +47653,16 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'getLiveShape',
     value: function getLiveShape() {
-      var _state3 = this.state,
-          selectedTool = _state3.selectedTool,
-          toolDragDeltaX = _state3.toolDragDeltaX,
-          toolDragDeltaY = _state3.toolDragDeltaY,
-          toolDragStartX = _state3.toolDragStartX,
-          toolDragStartY = _state3.toolDragStartY,
-          toolFillColor = _state3.toolFillColor,
-          toolRotate = _state3.toolRotate,
-          toolStrokeColor = _state3.toolStrokeColor,
-          toolStrokeWidth = _state3.toolStrokeWidth;
+      var _state4 = this.state,
+          selectedTool = _state4.selectedTool,
+          toolDragDeltaX = _state4.toolDragDeltaX,
+          toolDragDeltaY = _state4.toolDragDeltaY,
+          toolDragStartX = _state4.toolDragStartX,
+          toolDragStartY = _state4.toolDragStartY,
+          toolFillColor = _state4.toolFillColor,
+          toolRotate = _state4.toolRotate,
+          toolStrokeColor = _state4.toolStrokeColor,
+          toolStrokeWidth = _state4.toolStrokeWidth;
 
 
       if (toolDragStartX !== null) {
@@ -47609,12 +47704,12 @@ var Merkaba = exports.Merkaba = function (_Component) {
           height = focusedShape.height;
 
       var rotate = focusedShape.rotate + rotationOffset;
-      var _state4 = this.state,
-          draggedHandleOrientation = _state4.draggedHandleOrientation,
-          rawSelectionDragStartX = _state4.transformDragStartX,
-          rawSelectionDragStartY = _state4.transformDragStartY,
-          rawSelectionDragX = _state4.transformDragX,
-          rawSelectionDragY = _state4.transformDragY;
+      var _state5 = this.state,
+          draggedHandleOrientation = _state5.draggedHandleOrientation,
+          rawSelectionDragStartX = _state5.transformDragStartX,
+          rawSelectionDragStartY = _state5.transformDragStartY,
+          rawSelectionDragX = _state5.transformDragX,
+          rawSelectionDragY = _state5.transformDragY;
 
       var _applyToPoint = (0, _transformationMatrix.applyToPoint)((0, _transformationMatrix.rotateDEG)(rotationOffset), {
         x: rawSelectionDragStartX,
@@ -47773,10 +47868,10 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'updateFocusedBufferShapes',
     value: function updateFocusedBufferShapes(newShapeData) {
-      var _this2 = this;
+      var _this4 = this;
 
       this.state.focusedShapeCursor.bufferIndices.forEach(function (bufferIndex) {
-        return _this2.updateBufferShape(bufferIndex, newShapeData);
+        return _this4.updateBufferShape(bufferIndex, newShapeData);
       });
     }
 
@@ -47819,11 +47914,11 @@ var Merkaba = exports.Merkaba = function (_Component) {
   }, {
     key: 'getSelectedShapeBufferIndices',
     value: function getSelectedShapeBufferIndices() {
-      var _state5 = this.state,
-          toolDragStartX = _state5.toolDragStartX,
-          toolDragStartY = _state5.toolDragStartY,
-          toolDragDeltaX = _state5.toolDragDeltaX,
-          toolDragDeltaY = _state5.toolDragDeltaY;
+      var _state6 = this.state,
+          toolDragStartX = _state6.toolDragStartX,
+          toolDragStartY = _state6.toolDragStartY,
+          toolDragDeltaX = _state6.toolDragDeltaX,
+          toolDragDeltaY = _state6.toolDragDeltaY;
 
       var _absolutizeCoordinate = (0, _utils.absolutizeCoordinates)(toolDragStartX, toolDragStartY, toolDragDeltaX, toolDragDeltaY),
           x = _absolutizeCoordinate.x,
@@ -47845,32 +47940,107 @@ var Merkaba = exports.Merkaba = function (_Component) {
       });
     }
   }, {
+    key: 'getSnapshot',
+    value: function getSnapshot() {
+      var _state7 = this.state,
+          bufferShapes = _state7.bufferShapes,
+          focusedShapeCursor = _state7.focusedShapeCursor,
+          selectedTool = _state7.selectedTool;
+
+      // Explore using https://github.com/fastify/fast-json-stringify
+
+      return JSON.stringify({
+        bufferShapes: bufferShapes,
+        focusedShapeCursor: focusedShapeCursor,
+        selectedTool: selectedTool
+      });
+    }
+  }, {
+    key: 'recordSnapshot',
+    value: function recordSnapshot() {
+      var historyLimit = this.historyLimit,
+          historyPast = this.state.historyPast;
+
+
+      var snapshot = this.getSnapshot();
+
+      if (snapshot === historyPast[historyPast.length - 1]) {
+        return;
+      }
+
+      if (historyPast.length >= historyLimit) {
+        historyPast.shift();
+      }
+
+      historyPast.push(snapshot);
+      this.setState({ historyFuture: [], historyPast: historyPast });
+    }
+  }, {
+    key: 'revertToSnapshot',
+    value: function revertToSnapshot() {
+      var _state8 = this.state,
+          historyFuture = _state8.historyFuture,
+          historyPast = _state8.historyPast;
+
+
+      if (!historyPast.length) {
+        return;
+      }
+
+      historyFuture.unshift(this.getSnapshot());
+
+      this.setState(Object.assign({}, JSON.parse(historyPast.pop()), {
+        historyFuture: historyFuture,
+        historyPast: historyPast
+      }));
+    }
+  }, {
+    key: 'proceedToSnapshot',
+    value: function proceedToSnapshot() {
+      var _state9 = this.state,
+          historyFuture = _state9.historyFuture,
+          historyPast = _state9.historyPast;
+
+
+      if (!historyFuture.length) {
+        return;
+      }
+
+      historyPast.push(this.getSnapshot());
+
+      this.setState(Object.assign({}, JSON.parse(historyFuture.shift()), {
+        historyFuture: historyFuture,
+        historyPast: historyPast
+      }));
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _state6 = this.state,
-          bufferShapes = _state6.bufferShapes,
-          draggedHandleOrientation = _state6.draggedHandleOrientation,
-          focusedShapeBufferIndices = _state6.focusedShapeCursor.bufferIndices,
-          isDraggingTool = _state6.isDraggingTool,
-          selectedTool = _state6.selectedTool,
-          transformDragStartX = _state6.transformDragStartX,
-          transformDragStartY = _state6.transformDragStartY,
-          transformDragX = _state6.transformDragX,
-          transformDragY = _state6.transformDragY,
-          toolDragDeltaX = _state6.toolDragDeltaX,
-          toolDragDeltaY = _state6.toolDragDeltaY,
-          toolDragStartX = _state6.toolDragStartX,
-          toolDragStartY = _state6.toolDragStartY,
-          toolFillColor = _state6.toolFillColor,
-          toolRotate = _state6.toolRotate,
-          toolStrokeColor = _state6.toolStrokeColor,
-          toolStrokeWidth = _state6.toolStrokeWidth,
+      var _state10 = this.state,
+          bufferShapes = _state10.bufferShapes,
+          draggedHandleOrientation = _state10.draggedHandleOrientation,
+          focusedShapeBufferIndices = _state10.focusedShapeCursor.bufferIndices,
+          isDraggingTool = _state10.isDraggingTool,
+          selectedTool = _state10.selectedTool,
+          transformDragStartX = _state10.transformDragStartX,
+          transformDragStartY = _state10.transformDragStartY,
+          transformDragX = _state10.transformDragX,
+          transformDragY = _state10.transformDragY,
+          toolDragDeltaX = _state10.toolDragDeltaX,
+          toolDragDeltaY = _state10.toolDragDeltaY,
+          toolDragStartX = _state10.toolDragStartX,
+          toolDragStartY = _state10.toolDragStartY,
+          toolFillColor = _state10.toolFillColor,
+          toolRotate = _state10.toolRotate,
+          toolStrokeColor = _state10.toolStrokeColor,
+          toolStrokeWidth = _state10.toolStrokeWidth,
           handleCanvasDrag = this.handleCanvasDrag,
           handleCanvasDragStart = this.handleCanvasDragStart,
           handleCanvasDragStop = this.handleCanvasDragStop,
           handleCanvasMouseDown = this.handleCanvasMouseDown,
           handleColorPropertyChange = this.handleColorPropertyChange,
           handleDeleteShapeClick = this.handleDeleteShapeClick,
+          handleDetailsInputFocus = this.handleDetailsInputFocus,
           handleLayerClick = this.handleLayerClick,
           handleLayerSortEnd = this.handleLayerSortEnd,
           handleLayerSortStart = this.handleLayerSortStart,
@@ -47929,6 +48099,7 @@ var Merkaba = exports.Merkaba = function (_Component) {
           _react2.default.createElement(_details.Details, {
             focusedShapes: focusedShapes,
             handleColorPropertyChange: handleColorPropertyChange,
+            handleDetailsInputFocus: handleDetailsInputFocus,
             handlePropertyChange: handlePropertyChange
           })
         )
@@ -48074,6 +48245,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var rotatorHitArea = exports.rotatorHitArea = 20;
+
+var historyLimit = exports.historyLimit = 1000;
 
 /***/ }),
 
