@@ -47939,6 +47939,12 @@ var Merkaba = exports.Merkaba = function (_Component) {
         return shape.i;
       });
     }
+
+    /**
+     * @method merkaba.Merkaba#getSnapshot
+     * @return {merkaba.snapshot}
+     */
+
   }, {
     key: 'getSnapshot',
     value: function getSnapshot() {
@@ -47955,6 +47961,11 @@ var Merkaba = exports.Merkaba = function (_Component) {
         selectedTool: selectedTool
       });
     }
+
+    /**
+     * @method merkaba.Merkaba#recordSnapshot
+     */
+
   }, {
     key: 'recordSnapshot',
     value: function recordSnapshot() {
@@ -47975,6 +47986,11 @@ var Merkaba = exports.Merkaba = function (_Component) {
       historyPast.push(snapshot);
       this.setState({ historyFuture: [], historyPast: historyPast });
     }
+
+    /**
+     * @method merkaba.Merkaba#revertToSnapshot
+     */
+
   }, {
     key: 'revertToSnapshot',
     value: function revertToSnapshot() {
@@ -47994,6 +48010,11 @@ var Merkaba = exports.Merkaba = function (_Component) {
         historyPast: historyPast
       }));
     }
+
+    /**
+     * @method merkaba.Merkaba#proceedToSnapshot
+     */
+
   }, {
     key: 'proceedToSnapshot',
     value: function proceedToSnapshot() {
@@ -48012,6 +48033,42 @@ var Merkaba = exports.Merkaba = function (_Component) {
         historyFuture: historyFuture,
         historyPast: historyPast
       }));
+    }
+
+    /**
+     * @method merkaba.Merkaba#toJSON
+     * @return {merkaba.json}
+     */
+
+  }, {
+    key: 'toJSON',
+    value: function toJSON() {
+      var bufferShapes = this.state.bufferShapes;
+
+
+      return {
+        shapes: (0, _utils.simpleClone)(bufferShapes)
+      };
+    }
+
+    /**
+     * @method merkaba.Merkaba#fromJSON
+     * @param {merkaba.json} data
+     */
+
+  }, {
+    key: 'fromJSON',
+    value: function fromJSON(data) {
+      var shapes = data.shapes;
+
+
+      this.setState({
+        bufferShapes: (0, _utils.simpleClone)(shapes),
+        focusedShapeCursor: {
+          shapeFocus: _enums.shapeFocusType.NONE,
+          bufferIndices: []
+        }
+      });
     }
   }, {
     key: 'render',
@@ -48377,7 +48434,7 @@ if(false) {}
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.doRectsIntersect = exports.computeUnrotatedBoundingBox = exports.computeMidDragMatrix = exports.absolutizeCoordinates = undefined;
+exports.simpleClone = exports.doRectsIntersect = exports.computeUnrotatedBoundingBox = exports.computeMidDragMatrix = exports.absolutizeCoordinates = undefined;
 
 var _transformationMatrixJs = __webpack_require__(/*! transformation-matrix-js */ "./node_modules/transformation-matrix-js/matrix.js");
 
@@ -48547,6 +48604,14 @@ var computeUnrotatedBoundingBox = exports.computeUnrotatedBoundingBox = function
 // Port of https://github.com/SVG-Edit/svgedit/blob/b84f776816bbb0eaa711862300e245de01fe8e58/editor/math.js#L212-L223
 var doRectsIntersect = exports.doRectsIntersect = function doRectsIntersect(rect1, rect2) {
   return rect2.x < rect1.x + rect1.width && rect2.x + rect2.width > rect1.x && rect2.y < rect1.y + rect1.height && rect2.y + rect2.height > rect1.y;
+};
+
+/**
+ * @param {Object} data
+ * @return {Object}
+ */
+var simpleClone = exports.simpleClone = function simpleClone(data) {
+  return JSON.parse(JSON.stringify(data));
 };
 
 /***/ })
