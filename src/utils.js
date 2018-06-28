@@ -186,3 +186,9 @@ export const doRectsIntersect = (rect1, rect2) =>
   rect2.x + rect2.width > rect1.x &&
   rect2.y < rect1.y + rect1.height &&
   rect2.y + rect2.height > rect1.y;
+
+/**
+ * @param {Object} data
+ * @return {Object}
+ */
+export const simpleClone = data => JSON.parse(JSON.stringify(data));

@@ -19,6 +19,7 @@ import {
   computeMidDragMatrix,
   computeUnrotatedBoundingBox,
   doRectsIntersect,
+  simpleClone,
 } from '../utils';
 import { historyLimit } from '../constants';
 import eventHandlers from './merkaba.event-handlers';
@@ -592,6 +593,34 @@ export class Merkaba extends Component {
         historyPast,
       })
     );
+  }
+
+  /**
+   * @method merkaba.Merkaba#toJSON
+   * @return {merkaba.json}
+   */
+  toJSON() {
+    const { bufferShapes } = this.state;
+
+    return {
+      shapes: simpleClone(bufferShapes)
+    };
+  }
+
+  /**
+   * @method merkaba.Merkaba#fromJSON
+   * @param {merkaba.json} data
+   */
+  fromJSON(data) {
+    const { shapes } = data;
+
+    this.setState({
+      bufferShapes: simpleClone(shapes),
+      focusedShapeCursor: {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndices: [],
+      },
+    });
   }
 
   render() {

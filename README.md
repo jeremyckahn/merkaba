@@ -26,8 +26,8 @@ This is the current roadmap:
 - [x] Keyboard shortcuts/keybindings
     - [x] Delete selected elements
     - [x] Position nudging via arrow keys
-- [ ] Data import/export
-    - [ ] JSON (format TBD)
+- [x] Data import/export
+    - [x] JSON (format TBD)
 
 ## Running tests (written in Mocha)
 

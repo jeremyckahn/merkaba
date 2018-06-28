@@ -19,6 +19,12 @@ import './styles/index.sass';
  */
 
 /**
+ * @typedef merkaba.json
+ * @type {Object}
+ * @property {Array.<merkaba.svgShape>} shapes
+ */
+
+/**
  * @typedef merkaba.svgRect
  * @see https://www.w3.org/TR/SVG/shapes.html#InterfaceSVGRectElement
  * @type {merkaba.svgShape}

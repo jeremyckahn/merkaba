@@ -757,4 +757,48 @@ describe('Merkaba', () => {
       });
     });
   });
+
+  describe('toJSON', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect({ id: 1 }), sampleRect({ id: 2 })],
+      });
+    });
+
+    it('exports relevant data', () => {
+      assert.deepEqual(component.instance().toJSON(), {
+        shapes: [sampleRect({ id: 1 }), sampleRect({ id: 2 })],
+      });
+    });
+  });
+
+  describe('fromJSON', () => {
+    beforeEach(() => {
+      component.setState({
+        bufferShapes: [sampleRect(), sampleRect()],
+        focusedShapeCursor: {
+          shapeFocus: shapeFocusType.BUFFER,
+          bufferIndices: [1, 2],
+        },
+      });
+
+      component.instance().fromJSON({
+        shapes: [sampleRect({ id: 1 }), sampleRect({ id: 2 })],
+      });
+    });
+
+    it('imports shapes data', () => {
+      assert.deepEqual(component.state('bufferShapes'), [
+        sampleRect({ id: 1 }),
+        sampleRect({ id: 2 }),
+      ]);
+    });
+
+    it('resets transient state data', () => {
+      assert.deepEqual(component.state('focusedShapeCursor'), {
+        shapeFocus: shapeFocusType.NONE,
+        bufferIndices: [],
+      });
+    });
+  });
 });
