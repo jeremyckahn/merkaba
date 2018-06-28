@@ -516,6 +516,10 @@ export class Merkaba extends Component {
       .map(shape => shape.i);
   }
 
+  /**
+   * @method merkaba.Merkaba#getSnapshot
+   * @return {merkaba.snapshot}
+   */
   getSnapshot() {
     const { bufferShapes, focusedShapeCursor, selectedTool } = this.state;
 
@@ -527,6 +531,9 @@ export class Merkaba extends Component {
     });
   }
 
+  /**
+   * @method merkaba.Merkaba#recordSnapshot
+   */
   recordSnapshot() {
     const {
       historyLimit,
@@ -547,6 +554,9 @@ export class Merkaba extends Component {
     this.setState({ historyFuture: [], historyPast });
   }
 
+  /**
+   * @method merkaba.Merkaba#revertToSnapshot
+   */
   revertToSnapshot() {
     const { historyFuture, historyPast } = this.state;
 
@@ -564,6 +574,9 @@ export class Merkaba extends Component {
     );
   }
 
+  /**
+   * @method merkaba.Merkaba#proceedToSnapshot
+   */
   proceedToSnapshot() {
     const { historyFuture, historyPast } = this.state;
 
