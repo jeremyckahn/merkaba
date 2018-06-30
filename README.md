@@ -2,11 +2,19 @@
 
 ### An SVG editor component written in React
 
-## Milestone 1 tasks
-
 This project is early in development and not useful yet, but you can play with the current snapshot here: https://jeremyckahn.github.io/merkaba/
 
 This is the current roadmap:
+
+## Milestone 2 tasks
+
+- [ ] Implement shape tools (to be roughly consistent with their Vectr equivalents)
+  - [ ] Ellipse
+  - [ ] Pen
+  - [ ] Pencil
+  - [ ] Text
+
+## ✅ ~~Milestone 1 tasks~~
 
 - [x] Stand up basic environment layout/structure similar to [Vectr](https://vectr.com/new)
 - [x] Layer reordering
