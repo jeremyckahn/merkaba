@@ -165,8 +165,7 @@ export class Merkaba extends Component {
 
         if (
           // User is focused on an input element
-          document.activeElement.className !== 'hotkeys' ||
-
+          !document.activeElement.classList.contains('hotkeys') ||
           // User is dragging something
           isDraggingTool ||
           isDraggingSelectionHandle ||
@@ -603,7 +602,7 @@ export class Merkaba extends Component {
     const { bufferShapes } = this.state;
 
     return {
-      shapes: simpleClone(bufferShapes)
+      shapes: simpleClone(bufferShapes),
     };
   }
 
@@ -663,7 +662,11 @@ export class Merkaba extends Component {
     const focusedShapes = this.getFocusedShapes();
 
     return (
-      <HotKeys className="hotkeys" keyMap={keyMap} handlers={keyHandlers}>
+      <HotKeys
+        className="merkaba-wrapper hotkeys"
+        keyMap={keyMap}
+        handlers={keyHandlers}
+      >
         <div className="fill merkaba">
           <Layers
             {...{
