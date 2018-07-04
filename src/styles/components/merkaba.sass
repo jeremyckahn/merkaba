@@ -2,3 +2,9 @@
 
 .merkaba
   +display-flex
+
+  // TODO: This is needed to prevent the whole page from being moved on mobile
+  // devices, and really only makes sense when Merkaba is taking up the entire
+  // page like it does in the demo environment. Find a way to make this
+  // optional. Possibly toggle it via a prop?
+  position: fixed
