@@ -8,8 +8,26 @@ import assert from 'assert';
 let component;
 
 describe('Canvas', () => {
+  const getCanvas = (props = {}) => (
+    <Canvas
+      {...Object.assign(
+        {
+          bufferShapes: [],
+          focusedShapes: [],
+          handleCanvasDrag: () => {},
+          handleCanvasDragStart: () => {},
+          handleCanvasDragStop: () => {},
+          handleCanvasMouseDown: () => {},
+          isDraggingTool: false,
+          selectedTool: selectedToolType.NONE,
+        },
+        props
+      )}
+    />
+  );
+
   beforeEach(() => {
-    component = shallow(<Canvas />);
+    component = shallow(getCanvas());
   });
 
   it('renders content', () => {
@@ -26,14 +44,14 @@ describe('Canvas', () => {
     describe('any live shape', () => {
       beforeEach(() => {
         component = mount(
-          <Canvas
-            toolDragStartX={5}
-            toolDragStartY={5}
-            toolDragDeltaX={10}
-            toolDragDeltaY={10}
-            isDraggingTool={true}
-            selectedTool={selectedToolType.RECTANGLE}
-          />
+          getCanvas({
+            toolDragStartX: 5,
+            toolDragStartY: 5,
+            toolDragDeltaX: 10,
+            toolDragDeltaY: 10,
+            isDraggingTool: true,
+            selectedTool: selectedToolType.RECTANGLE,
+          })
         );
       });
 
@@ -91,8 +109,8 @@ describe('Canvas', () => {
     describe('any buffered shapes', () => {
       beforeEach(() => {
         component = mount(
-          <Canvas
-            bufferShapes={[
+          getCanvas({
+            bufferShapes: [
               {
                 type: shapeType.RECT,
                 x: 5,
@@ -117,8 +135,8 @@ describe('Canvas', () => {
                 fill: 'blue',
                 strokeWidth: 1,
               },
-            ]}
-          />
+            ],
+          })
         );
       });
 
@@ -137,7 +155,7 @@ describe('Canvas', () => {
 
     describe('a single shape is selected', () => {
       beforeEach(() => {
-        component = mount(<Canvas focusedShapes={[sampleRect()]} />);
+        component = mount(getCanvas({ focusedShapes: [sampleRect()] }));
       });
 
       it('renders a selector rect', () => {
@@ -153,7 +171,7 @@ describe('Canvas', () => {
     describe('multiple shapes are selected', () => {
       beforeEach(() => {
         component = mount(
-          <Canvas focusedShapes={[sampleRect(), sampleRect()]} />
+          getCanvas({ focusedShapes: [sampleRect(), sampleRect()] })
         );
       });
 

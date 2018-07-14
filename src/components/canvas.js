@@ -1,25 +1,11 @@
 import React from 'react';
+import { array, bool, func, number, string } from 'prop-types';
 import { DraggableCore } from 'react-draggable';
 import { selectedToolType, shapeType } from '../enums';
 import { rotatorHitArea } from '../constants';
 import { Rect } from './shapes';
 
-/**
- * @param {Array.<merkaba.svgShape>} bufferShapes
- * @param {string|null} draggedHandleOrientation
- * @param {number|null} transformDragStartX
- * @param {number|null} transformDragStartY
- * @param {number|null} transformDragX
- * @param {number|null} transformDragY
- */
-const Buffer = ({
-  bufferShapes,
-  draggedHandleOrientation,
-  transformDragStartX,
-  transformDragStartY,
-  transformDragX,
-  transformDragY,
-}) =>
+const Buffer = ({ bufferShapes }) =>
   bufferShapes.map(
     ({ type, x, y, width, height, rotate, stroke, fill, strokeWidth }, i) =>
       type === shapeType.RECT ? (
@@ -40,6 +26,10 @@ const Buffer = ({
         />
       ) : null
   );
+
+Buffer.propTypes = {
+  bufferShapes: array.isRequired,
+};
 
 // FIXME: Change orientation values to be enums
 const FocusedShapeFrames = ({ focusedShapes }) =>
@@ -83,13 +73,13 @@ const FocusedShapeFrames = ({ focusedShapes }) =>
           transform={`rotate(${rotate} ${x + width / 2} ${y + height / 2})`}
         >
           {focusedShapes.length === 1 &&
-            handleConfig.map(({ orientation, x, y }, j) => (
+            handleConfig.map(({ x, y }, j) => (
               <ellipse
+                key={`handle-rotator-${j}`}
                 {...{
                   className: 'selection-handle-rotator',
                   cx: x,
                   cy: y,
-                  key: `handle-rotator-${j}`,
                   rx: rotatorHitArea,
                   ry: rotatorHitArea,
                 }}
@@ -109,11 +99,11 @@ const FocusedShapeFrames = ({ focusedShapes }) =>
           {focusedShapes.length === 1 &&
             handleConfig.map(({ orientation, x, y }, j) => (
               <ellipse
+                key={`handle-${j}`}
                 {...{
                   className: `selection-handle ${orientation}`,
                   cx: x,
                   cy: y,
-                  key: `handle-${j}`,
                   orientation,
                   rx: 5,
                   ry: 5,
@@ -124,14 +114,6 @@ const FocusedShapeFrames = ({ focusedShapes }) =>
       )
   );
 
-/**
- * @param {boolean} isDraggingTool
- * @param {merkaba.module:enums.selectedToolType} selectedTool
- * @param {number|null} toolDragDeltaX
- * @param {number|null} toolDragDeltaY
- * @param {number|null} toolDragStartX
- * @param {number|null} toolDragStartY
- */
 const Selector = ({
   isDraggingTool,
   selectedTool,
@@ -154,16 +136,17 @@ const Selector = ({
     />
   ) : null;
 
+Selector.propTypes = {
+  isDraggingTool: bool.isRequired,
+  selectedTool: string.isRequired,
+  toolDragDeltaX: number,
+  toolDragDeltaY: number,
+  toolDragStartX: number,
+  toolDragStartY: number,
+};
+
 /**
  * @param {boolean} isDraggingTool
- * @param {merkaba.module:enums.selectedToolType} selectedTool
- * @param {number|null} toolDragDeltaX
- * @param {number|null} toolDragDeltaY
- * @param {number|null} toolDragStartX
- * @param {number|null} toolDragStartY
- * @param {null|string} toolFillColor
- * @param {null|string} toolStrokeColor
- * @param {null|number} toolStrokeWidth
  */
 const LiveShape = ({
   isDraggingTool,
@@ -194,33 +177,12 @@ const LiveShape = ({
   ) : null;
 
 /**
- * @class merkaba.Canvas
- * @param {Array.<merkaba.svgShape>} bufferShapes
- * @param {string|null} draggedHandleOrientation
- * @param {Array.<merkaba.svgShape>} focusedShapes
- * @param {external:Draggable.DraggableEventHandler} handleCanvasDrag
- * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStart
- * @param {external:Draggable.DraggableEventHandler} handleCanvasDragStop
- * @param {Function(external:React.SyntheticEvent)} handleCanvasMouseDown
- * @param {boolean} isDraggingTool
- * @param {merkaba.module:enums.selectedToolType} selectedTool
- * @param {number|null} transformDragStartX
- * @param {number|null} transformDragStartY
- * @param {number|null} transformDragX
- * @param {number|null} transformDragY
- * @param {number|null} toolDragDeltaX
- * @param {number|null} toolDragDeltaY
- * @param {number|null} toolDragStartX
- * @param {number|null} toolDragStartY
- * @param {null|string} toolFillColor
- * @param {number} toolRotate
- * @param {null|string} toolStrokeColor
- * @param {null|number} toolStrokeWidth
- * @extends {external:React.Component}
+ * @function merkaba.Canvas
+ * @param {Object} props
+ * @returns {Element}
  */
 export const Canvas = ({
   bufferShapes = [],
-  draggedHandleOrientation,
   focusedShapes = [],
   handleCanvasDrag,
   handleCanvasDragStart,
@@ -228,10 +190,6 @@ export const Canvas = ({
   handleCanvasMouseDown,
   isDraggingTool,
   selectedTool,
-  transformDragStartX,
-  transformDragStartY,
-  transformDragX,
-  transformDragY,
   toolDragDeltaX,
   toolDragDeltaY,
   toolDragStartX,
@@ -260,11 +218,6 @@ export const Canvas = ({
         <Buffer
           {...{
             bufferShapes,
-            draggedHandleOrientation,
-            transformDragStartX,
-            transformDragStartY,
-            transformDragX,
-            transformDragY,
           }}
         />
         {selectedTool !== selectedToolType.SELECT ? (
@@ -302,3 +255,22 @@ export const Canvas = ({
     </div>
   </DraggableCore>
 );
+
+Canvas.propTypes = {
+  bufferShapes: array.isRequired,
+  focusedShapes: array.isRequired,
+  handleCanvasDrag: func.isRequired,
+  handleCanvasDragStart: func.isRequired,
+  handleCanvasDragStop: func.isRequired,
+  handleCanvasMouseDown: func.isRequired,
+  isDraggingTool: bool.isRequired,
+  selectedTool: string.isRequired,
+  toolDragDeltaX: number,
+  toolDragDeltaY: number,
+  toolDragStartX: number,
+  toolDragStartY: number,
+  toolFillColor: string,
+  toolRotate: number,
+  toolStrokeColor: string,
+  toolStrokeWidth: number,
+};

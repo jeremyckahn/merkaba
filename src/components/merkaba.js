@@ -5,9 +5,7 @@ import {
   applyToPoint,
   inverse,
   rotateDEG,
-  scale,
   transform,
-  translate,
 } from 'transformation-matrix';
 import { SortableLayers as Layers } from './layers';
 import { Toolbar } from './toolbar';
@@ -61,7 +59,6 @@ import eventHandlers from './merkaba.event-handlers';
  * @property {null|number} toolStrokeWidth
  */
 
-const { indexOf } = Array.prototype;
 const emptyShape = { type: shapeType.NONE };
 
 /**
@@ -183,7 +180,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#setUpUndoableActions
+   * @function merkaba.Merkaba#setUpUndoableActions
    */
   setUpUndoableActions() {
     [
@@ -204,8 +201,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getFocusedShapes
-   * @return {Array.<merkaba.svgShape>}
+   * @function merkaba.Merkaba#getFocusedShapes
+   * @returns {Array.<merkaba.svgShape>}
    */
   getFocusedShapes() {
     const {
@@ -223,8 +220,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#deleteFocusedShapes
-   * @return {undefined}
+   * @function merkaba.Merkaba#deleteFocusedShapes
+   * @returns {undefined}
    */
   deleteFocusedShapes() {
     const {
@@ -246,8 +243,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getLiveShape
-   * @return {merkaba.svgShape}
+   * @function merkaba.Merkaba#getLiveShape
+   * @returns {merkaba.svgShape}
    */
   getLiveShape() {
     const {
@@ -286,10 +283,10 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getMidDragMatrix
+   * @function merkaba.Merkaba#getMidDragMatrix
    * @param {Object} config
    * @param {number} [config.rotationOffset=0]
-   * @return {Matrix}
+   * @returns {Matrix}
    */
   getMidDragMatrix({ rotationOffset = 0 } = {}) {
     const [focusedShape] = this.getFocusedShapes();
@@ -328,8 +325,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getAggregateDragMatrix
-   * @return {Matrix}
+   * @function merkaba.Merkaba#getAggregateDragMatrix
+   * @returns {Matrix}
    */
   getAggregateDragMatrix() {
     // It would be ideal if this method only needed to call getMidDragMatrix
@@ -364,7 +361,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#applyMatrixToFocusedShape
+   * @function merkaba.Merkaba#applyMatrixToFocusedShape
    * @param {Matrix} matrix
    */
   applyMatrixToFocusedShape(matrix) {
@@ -389,7 +386,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#focusBufferShape
+   * @function merkaba.Merkaba#focusBufferShape
    * @param {SVGElement} shapeEl
    */
   focusBufferShape(shapeEl) {
@@ -402,7 +399,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#focusBufferShapeByIndex
+   * @function merkaba.Merkaba#focusBufferShapeByIndex
    * @param {number} index
    */
   focusBufferShapeByIndex(index) {
@@ -415,7 +412,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#focusBufferByLayerIndex
+   * @function merkaba.Merkaba#focusBufferByLayerIndex
    * @param {number} layerIndex
    */
   focusBufferByLayerIndex(layerIndex) {
@@ -425,7 +422,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#updateBufferShape
+   * @function merkaba.Merkaba#updateBufferShape
    * @param {number} shapeIndex
    * @param {Object.<any>} newShapeData Any properties to update the buffered
    * shape with.
@@ -437,7 +434,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#updateFocusedBufferShapes
+   * @function merkaba.Merkaba#updateFocusedBufferShapes
    * @param {Object.<any>} newShapeData Any properties to update the buffered
    * shape with.
    */
@@ -448,7 +445,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#updateBufferShapeProperty
+   * @function merkaba.Merkaba#updateBufferShapeProperty
    * @param {Array.<number>} bufferIndices
    * @param {string} name
    * @param {*} value
@@ -471,7 +468,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#updateFocusedBufferShapeProperty
+   * @function merkaba.Merkaba#updateFocusedBufferShapeProperty
    * @param {string} name
    * @param {*} value
    */
@@ -484,8 +481,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getSelectedShapeBufferIndices
-   * @return {Array.<number>}
+   * @function merkaba.Merkaba#getSelectedShapeBufferIndices
+   * @returns {Array.<number>}
    */
   getSelectedShapeBufferIndices() {
     const {
@@ -517,8 +514,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#getSnapshot
-   * @return {merkaba.snapshot}
+   * @function merkaba.Merkaba#getSnapshot
+   * @returns {external:merkaba.snapshot}
    */
   getSnapshot() {
     const { bufferShapes, focusedShapeCursor, selectedTool } = this.state;
@@ -532,7 +529,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#recordSnapshot
+   * @function merkaba.Merkaba#recordSnapshot
    */
   recordSnapshot() {
     const {
@@ -555,7 +552,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#revertToSnapshot
+   * @function merkaba.Merkaba#revertToSnapshot
    */
   revertToSnapshot() {
     const { historyFuture, historyPast } = this.state;
@@ -575,7 +572,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#proceedToSnapshot
+   * @function merkaba.Merkaba#proceedToSnapshot
    */
   proceedToSnapshot() {
     const { historyFuture, historyPast } = this.state;
@@ -595,8 +592,8 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#toJSON
-   * @return {merkaba.json}
+   * @function merkaba.Merkaba#toJSON
+   * @returns {merkaba.json}
    */
   toJSON() {
     const { bufferShapes } = this.state;
@@ -607,7 +604,7 @@ export class Merkaba extends Component {
   }
 
   /**
-   * @method merkaba.Merkaba#fromJSON
+   * @function merkaba.Merkaba#fromJSON
    * @param {merkaba.json} data
    */
   fromJSON(data) {

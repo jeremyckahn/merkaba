@@ -1,7 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { string, func } from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import { ChromePicker } from 'react-color';
 
+/**
+ * @function merkaba.ColorInput
+ * @param {Object} props
+ * @returns {Element}
+ */
 export const ColorInput = ({
   value,
   name,
@@ -32,3 +38,10 @@ export const ColorInput = ({
     </ReactTooltip>
   </span>
 );
+
+ColorInput.propTypes = {
+  value: string.isRequired,
+  name: string.isRequired,
+  handlePropertyChange: func.isRequired,
+  handleColorPropertyChange: func.isRequired,
+};

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { array, func, number, object } from 'prop-types';
 import { ColorInput } from './color-input';
 import { shapeType } from '../enums';
 
@@ -73,12 +74,16 @@ const RectUI = ({
   </div>
 );
 
+RectUI.propTypes = {
+  handlePropertyChange: func.isRequired,
+  handleColorPropertyChange: func.isRequired,
+  rect: object.isRequired,
+};
+
 /**
- * @class merkaba.Details
- * @param {Array.<merkaba.svgShape>} focusedShapes
- * @param {Function(external:React.SyntheticEvent)} handleColorPropertyChange
- * @param {Function(external:React.SyntheticEvent)} handleDetailsInputFocus
- * @param {Function(external:React.SyntheticEvent)} handlePropertyChange
+ * @function merkaba.Details
+ * @param {Object} props
+ * @returns {Element}
  */
 export const Details = ({
   focusedShapes = [],
@@ -102,3 +107,12 @@ export const Details = ({
     ) : null}
   </div>
 );
+
+Details.propTypes = {
+  focusedShapes: array.isRequired,
+  focusedShape: object,
+  focusedShapesLength: number,
+  handleColorPropertyChange: func.isRequired,
+  handleDetailsInputFocus: func.isRequired,
+  handlePropertyChange: func.isRequired,
+};

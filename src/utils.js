@@ -1,11 +1,9 @@
 import { Matrix } from 'transformation-matrix-js';
-import {
-  applyToPoint,
-  rotateDEG,
-  transform,
-  translate,
-  scale,
-} from 'transformation-matrix';
+import { rotateDEG, transform, translate, scale } from 'transformation-matrix';
+
+/**
+ * @module merkaba.utils
+ */
 
 // TODO: Update file to use these aliases
 const { cos, sin, min, max, sqrt, atan2, round, PI } = Math;
@@ -13,12 +11,11 @@ const { cos, sin, min, max, sqrt, atan2, round, PI } = Math;
 const degToRadian = deg => deg * PI / 180;
 
 /**
- * @method merkaba.utils#absolutizeCoordinates
  * @param {number} x1
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
- * @return { x: number, y: number, width: number, height: number }
+ * @returns {{ x: number, y: number, width: number, height: number }}
  */
 export const absolutizeCoordinates = (x1, y1, x2, y2) => ({
   x: x1 + Math.min(x2, 0),
@@ -28,12 +25,11 @@ export const absolutizeCoordinates = (x1, y1, x2, y2) => ({
 });
 
 /**
- * @method merkaba.utils#computeMidDragTransform
  * @param {merkaba.svgShape} shapeData
  * @param {string} draggedHandleOrientation
  * @param {number} dragDeltaX
  * @param {number} dragDeltaY
- * @return { rotate: number, originX: number, originY: number, scaleX: number, scaleY: number, transformX: number, transformY: number}
+ * @returns {{ rotate: number, originX: number, originY: number, scaleX: number, scaleY: number, transformX: number, transformY: number}}
  */
 const computeMidDragTransform = (
   {
@@ -86,19 +82,17 @@ const computeMidDragTransform = (
   };
 };
 
+/* eslint-disable jsdoc/check-param-names */
+
 /**
+ * Requires the same params as {@link computeMidDragTransform}.
  * @param {merkaba.svgShape} shapeData
  * @param {string} draggedHandleOrientation
  * @param {number} dragDeltaX
  * @param {number} dragDeltaY
- * @return {Matrix}
+ * @returns {Matrix}
  */
-export const computeMidDragMatrix = function(
-  shapeData,
-  draggedHandleOrientation,
-  dragDeltaX,
-  dragDeltaY
-) {
+export const computeMidDragMatrix = function() {
   const {
     rotate,
     originX,
@@ -118,6 +112,7 @@ export const computeMidDragMatrix = function(
     ])
   );
 };
+/* eslint-enable jsdoc/check-param-names */
 
 /**
  * @param {Object} config
@@ -126,7 +121,7 @@ export const computeMidDragMatrix = function(
  * @param {number} config.y
  * @param {number} config.height
  * @param {number} config.width
- * @return {Object}
+ * @returns {Object}
  */
 export const computeUnrotatedBoundingBox = ({
   rotate,
@@ -189,6 +184,6 @@ export const doRectsIntersect = (rect1, rect2) =>
 
 /**
  * @param {Object} data
- * @return {Object}
+ * @returns {Object}
  */
 export const simpleClone = data => JSON.parse(JSON.stringify(data));

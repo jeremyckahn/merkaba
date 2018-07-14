@@ -1,5 +1,5 @@
+/* global __dirname */
 const path = require('path');
-const Webpack = require('webpack');
 
 module.exports = {
   devtool: 'source-map',

@@ -1,9 +1,7 @@
+/* global __dirname */
 const commonConfig = require('./webpack.common.config');
 const path = require('path');
-const Webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
-const { name, version } = require('./package.json');
 
 const dist = 'dist';
 

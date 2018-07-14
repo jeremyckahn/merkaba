@@ -431,7 +431,6 @@ describe('eventHandlers', () => {
 
     it('modifies the bufferShapes data', () => {
       const [shape1, shape2] = component.state('bufferShapes');
-      const { x, y } = sampleRect();
       assert.equal(shape1.x, 20);
       assert.equal(shape1.y, 0);
       assert.equal(shape2.x, 30);
@@ -794,7 +793,7 @@ describe('eventHandlers', () => {
         focusedShapeCursor: {
           shapeFocus: shapeFocusType.BUFFER,
           bufferIndices: [0, 1],
-        }
+        },
       });
     });
 

@@ -1,11 +1,12 @@
 import React from 'react';
+import { func, string } from 'prop-types';
 import { Icon } from './icon';
 import { selectedToolType } from '../enums';
 
 /**
- * @class merkaba.Toolbar
- * @param {merkaba.Merkaba#handleToolClick} handleToolClick
- * @param {merkaba.module:enums.selectedToolType} selectedTool
+ * @function merkaba.Toolbar
+ * @param {Object} props
+ * @returns {Element}
  */
 export const Toolbar = ({ handleToolClick, selectedTool }) => (
   <div className="toolbar">
@@ -20,3 +21,8 @@ export const Toolbar = ({ handleToolClick, selectedTool }) => (
     </ul>
   </div>
 );
+
+Toolbar.propTypes = {
+  handleToolClick: func.isRequired,
+  selectedTool: string.isRequired,
+};

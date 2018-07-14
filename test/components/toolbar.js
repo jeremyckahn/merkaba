@@ -7,8 +7,19 @@ import assert from 'assert';
 let component;
 
 describe('Toolbar', () => {
+  const getToolbar = (props = {}) => (
+    <Toolbar
+      {...Object.assign(
+        {
+          handleToolClick: () => {},
+          selectedTool: selectedToolType.NONE,
+        },
+        props
+      )}
+    />
+  );
   beforeEach(() => {
-    component = shallow(<Toolbar />);
+    component = shallow(getToolbar());
   });
 
   describe('responding to parameters', () => {
@@ -22,7 +33,7 @@ describe('Toolbar', () => {
       describe('selectedToolType.RECTANGLE', () => {
         beforeEach(() => {
           component = shallow(
-            <Toolbar selectedTool={selectedToolType.RECTANGLE} />
+            getToolbar({ selectedTool: selectedToolType.RECTANGLE })
           );
         });
 

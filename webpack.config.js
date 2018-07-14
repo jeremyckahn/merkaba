@@ -1,3 +1,4 @@
+/* global __dirname */
 const commonConfig = require('./webpack.common.config');
 const path = require('path');
 const Webpack = require('webpack');

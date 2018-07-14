@@ -1,6 +1,5 @@
 import React from 'react';
 import { Details } from '../../src/components/details';
-import { selectedToolType, shapeType } from '../../src/enums';
 import { mount, shallow } from 'enzyme';
 import assert from 'assert';
 import { sampleRect } from '../test-utils.js';
@@ -9,12 +8,26 @@ let component;
 let rect;
 
 describe('Details', () => {
+  const getDetails = (props = {}) => (
+    <Details
+      {...Object.assign(
+        {
+          focusedShapes: [],
+          handleColorPropertyChange: () => {},
+          handleDetailsInputFocus: () => {},
+          handlePropertyChange: () => {},
+        },
+        props
+      )}
+    />
+  );
+
   beforeEach(() => {
     rect = sampleRect({
       fill: 'rgba(0, 0, 0, 1)',
       stroke: 'rgba(0, 0, 0, 1)',
     });
-    component = shallow(<Details />);
+    component = shallow(getDetails());
   });
 
   describe('nothing selected (default)', () => {
@@ -25,7 +38,7 @@ describe('Details', () => {
 
   describe('single shape selected', () => {
     beforeEach(() => {
-      component = mount(<Details focusedShapes={[rect]} />);
+      component = mount(getDetails({ focusedShapes: [rect] }));
     });
 
     it('renders controls', () => {
@@ -35,7 +48,7 @@ describe('Details', () => {
 
   describe('multiple shapes selected', () => {
     beforeEach(() => {
-      component = mount(<Details focusedShapes={[rect, rect]} />);
+      component = mount(getDetails({ focusedShapes: [rect, rect] }));
     });
 
     it('renders controls', () => {
@@ -45,7 +58,7 @@ describe('Details', () => {
 
   describe('focusedShape.type === shapeType.RECT', () => {
     beforeEach(() => {
-      component = mount(<Details focusedShapes={[rect]} />);
+      component = mount(getDetails({ focusedShapes: [rect] }));
     });
 
     it('renders inputs for a rect', () => {

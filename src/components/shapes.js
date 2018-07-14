@@ -1,18 +1,11 @@
 import React from 'react';
-import { DraggableCore } from 'react-draggable';
+import { number, string } from 'prop-types';
 import { absolutizeCoordinates } from '../utils';
 
 /**
- * @param {number} bufferIndex
- * @param {string} className
- * @param {number} dx
- * @param {number} dy
- * @param {string} fill
- * @param {number} rotate
- * @param {string} stroke
- * @param {number} strokeWidth
- * @param {number} x
- * @param {number} y
+ * @function merkaba.Rect
+ * @param {Object} props
+ * @returns {Element}
  */
 export const Rect = ({
   bufferIndex,
@@ -40,3 +33,16 @@ export const Rect = ({
     )}
   />
 );
+
+Rect.propTypes = {
+  bufferIndex: number,
+  className: string,
+  dx: number.isRequired,
+  dy: number.isRequired,
+  fill: string,
+  rotate: number,
+  stroke: string,
+  strokeWidth: number,
+  x: number.isRequired,
+  y: number.isRequired,
+};

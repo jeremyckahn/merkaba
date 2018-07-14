@@ -1,8 +1,8 @@
-import { selectedToolType, shapeFocusType, shapeType } from '../enums';
+import { selectedToolType, shapeFocusType } from '../enums';
 
 export default {
   /**
-   * @method merkaba.Merkaba#handleToolClick
+   * @function merkaba.Merkaba#handleToolClick
    * @param {merkaba.module:enums.selectedToolType} selectedTool
    */
   handleToolClick(selectedTool) {
@@ -10,7 +10,7 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handlePropertyChange
+   * @function merkaba.Merkaba#handlePropertyChange
    * @param {external:React.SyntheticEvent} e
    */
   handlePropertyChange(e) {
@@ -25,7 +25,7 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleColorPropertyChange
+   * @function merkaba.Merkaba#handleColorPropertyChange
    * @param {external:ReactColor.Color} color
    * @param {string} name
    */
@@ -36,10 +36,10 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleCanvasMouseDown
+   * @function merkaba.Merkaba#handleCanvasMouseDown
    * @param {external:React.SyntheticEvent} e
    */
-  handleCanvasMouseDown({ target, currentTarget }) {
+  handleCanvasMouseDown({ target }) {
     const svg =
       target.nodeName === 'svg' ? target : target.nearestViewportElement;
 
@@ -80,7 +80,7 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleCanvasDragStart
+   * @function merkaba.Merkaba#handleCanvasDragStart
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
@@ -132,7 +132,7 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleCanvasDrag
+   * @function merkaba.Merkaba#handleCanvasDrag
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
@@ -175,9 +175,9 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleCanvasDragStop
+   * @function merkaba.Merkaba#handleCanvasDragStop
    */
-  handleCanvasDragStop(e) {
+  handleCanvasDragStop() {
     const {
       isDraggingSelectionHandle,
       isDraggingSelectionRotator,
@@ -185,11 +185,6 @@ export default {
       selectedTool,
       toolDragDeltaX,
       toolDragDeltaY,
-      toolDragStartX,
-      toolDragStartY,
-      toolFillColor,
-      toolStrokeColor,
-      toolStrokeWidth,
     } = this.state;
 
     if (isDraggingShape) {
@@ -228,9 +223,8 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleBufferedShapeDragStart
+   * @function merkaba.Merkaba#handleBufferedShapeDragStart
    * @param {external:React.SyntheticEvent} e
-   * @param {external:Draggable.DraggableData} data
    */
   handleBufferedShapeDragStart(e) {
     if (
@@ -245,7 +239,7 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleBufferedShapeDrag
+   * @function merkaba.Merkaba#handleBufferedShapeDrag
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
@@ -266,16 +260,14 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleBufferedShapeDragStop
-   * @param {external:React.SyntheticEvent} e
-   * @param {external:Draggable.DraggableData} data
+   * @function merkaba.Merkaba#handleBufferedShapeDragStop
    */
   handleBufferedShapeDragStop() {
     this.setState({ isDraggingShape: false });
   },
 
   /**
-   * @method merkaba.Merkaba#handleSelectionHandleDragStart
+   * @function merkaba.Merkaba#handleSelectionHandleDragStart
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
@@ -293,7 +285,7 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleSelectionHandleDrag
+   * @function merkaba.Merkaba#handleSelectionHandleDrag
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
@@ -311,10 +303,9 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleSelectionHandleDragStop
-   * @param {external:React.SyntheticEvent} e
+   * @function merkaba.Merkaba#handleSelectionHandleDragStop
    */
-  handleSelectionHandleDragStop(e) {
+  handleSelectionHandleDragStop() {
     this.setState({
       draggedHandleOrientation: null,
       isDraggingSelectionHandle: false,
@@ -327,15 +318,14 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleSelectionRotatorDragStart
-   * @param {external:React.SyntheticEvent} e
+   * @function merkaba.Merkaba#handleSelectionRotatorDragStart
    */
-  handleSelectionRotatorDragStart(e) {
+  handleSelectionRotatorDragStart() {
     this.setState({ isDraggingSelectionRotator: true });
   },
 
   /**
-   * @method merkaba.Merkaba#handleSelectionRotatorDrag
+   * @function merkaba.Merkaba#handleSelectionRotatorDrag
    * @param {external:React.SyntheticEvent} e
    * @param {external:Draggable.DraggableData} data
    */
@@ -360,29 +350,26 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleSelectionRotatorDragStop
-   * @param {external:React.SyntheticEvent} e
+   * @function merkaba.Merkaba#handleSelectionRotatorDragStop
    */
-  handleSelectionRotatorDragStop(e) {
+  handleSelectionRotatorDragStop() {
     this.setState({ isDraggingSelectionRotator: false });
   },
 
   /**
-   * @method merkaba.Merkaba#handleLayerSortStart
+   * @function merkaba.Merkaba#handleLayerSortStart
    * @param {Object} config
    * @param {number} config.index
-   * @param {external:React.SyntheticEvent} e
    */
   handleLayerSortStart({ index: layerIndex }) {
     this.focusBufferByLayerIndex(layerIndex);
   },
 
   /**
-   * @method merkaba.Merkaba#handleLayerSortEnd
+   * @function merkaba.Merkaba#handleLayerSortEnd
    * @param {Object} config
    * @param {number} config.oldIndex
    * @param {number} config.newIndex
-   * @param {external:React.SyntheticEvent} e
    */
   handleLayerSortEnd({ oldIndex, newIndex }) {
     const {
@@ -402,16 +389,15 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleLayerClick
+   * @function merkaba.Merkaba#handleLayerClick
    * @param {number} layerIndex
-   * @param {external:React.SyntheticEvent} e
    */
   handleLayerClick(layerIndex) {
     this.focusBufferByLayerIndex(layerIndex);
   },
 
   /**
-   * @method merkaba.Merkaba#handleDeleteShapeClick
+   * @function merkaba.Merkaba#handleDeleteShapeClick
    * @param {number} bufferShapeIndex
    */
   handleDeleteShapeClick(bufferShapeIndex) {
@@ -422,14 +408,14 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleDeleteKeyPress
+   * @function merkaba.Merkaba#handleDeleteKeyPress
    */
   handleDeleteKeyPress() {
     this.deleteFocusedShapes();
   },
 
   /**
-   * @method merkaba.Merkaba#handleNudgeKeyPress
+   * @function merkaba.Merkaba#handleNudgeKeyPress
    * @param {external:React.SyntheticEvent} e
    */
   handleNudgeKeyPress({ key }) {
@@ -466,21 +452,21 @@ export default {
   },
 
   /**
-   * @method merkaba.Merkaba#handleUndoKeypress
+   * @function merkaba.Merkaba#handleUndoKeypress
    */
   handleUndoKeypress() {
     this.revertToSnapshot();
   },
 
   /**
-   * @method merkaba.Merkaba#handleRedoKeypress
+   * @function merkaba.Merkaba#handleRedoKeypress
    */
   handleRedoKeypress() {
     this.proceedToSnapshot();
   },
 
   /**
-   * @method merkaba.Merkaba#handleDetailsInputFocus
+   * @function merkaba.Merkaba#handleDetailsInputFocus
    */
   handleDetailsInputFocus() {
     // Intentionally defined as an empty function; this needs to be stubbed so

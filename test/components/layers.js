@@ -1,14 +1,21 @@
 import React from 'react';
 import { SortableLayers as Layers } from '../../src/components/layers';
 import { sampleRect } from '../test-utils.js';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import assert from 'assert';
 
 let component;
 
 describe('Layers', () => {
   beforeEach(() => {
-    component = mount(<Layers />);
+    component = mount(
+      <Layers
+        bufferShapes={[]}
+        focusedShapeBufferIndices={[]}
+        handleDeleteShapeClick={() => {}}
+        handleLayerClick={() => {}}
+      />
+    );
   });
 
   describe('rendering', () => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { array, func, number, object, string } from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { Icon } from './icon';
 
@@ -28,17 +29,24 @@ const Layer = ({
 );
 const SortableLayer = SortableElement(Layer);
 
+Layer.propTypes = {
+  bufferIndex: number.isRequired,
+  className: string,
+  handleDeleteShapeClick: func.isRequired,
+  handleLayerClick: func.isRequired,
+  shape: object.isRequired,
+  layerIndex: number.isRequired,
+};
+
 /**
- * @class merkaba.SortableLayers
- * @param {Array.<merkaba.svgShape>} bufferShapes
- * @param {Array.<number>} focusedShapeBufferIndices
- * @param {Function} handleLayerClick
+ * @function merkaba.SortableLayers
+ * @param {Object} props
+ * @returns {Element}
  */
 const Layers = ({
   bufferShapes = [],
   bufferShapesLength = bufferShapes.length,
   focusedShapeBufferIndices = [],
-  focusedShapeBufferIndex = focusedShapeBufferIndices[0],
   handleDeleteShapeClick,
   handleLayerClick,
 }) => (
@@ -66,4 +74,13 @@ const Layers = ({
     </ol>
   </div>
 );
+
+Layers.propTypes = {
+  bufferShapes: array.isRequired,
+  bufferShapesLength: number,
+  focusedShapeBufferIndices: array.isRequired,
+  handleDeleteShapeClick: func.isRequired,
+  handleLayerClick: func.isRequired,
+};
+
 export const SortableLayers = SortableContainer(Layers);

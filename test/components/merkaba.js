@@ -2,7 +2,7 @@ import React from 'react';
 import { sampleRect } from '../test-utils.js';
 import { Merkaba } from '../../src/components/merkaba';
 import { selectedToolType, shapeFocusType, shapeType } from '../../src/enums';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import assert from 'assert';
 
 let component;
