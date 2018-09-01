@@ -156,7 +156,7 @@ export class Merkaba extends Component {
     this.keyHandlers = Object.keys(this.keyHandlers).reduce((acc, key) => {
       const original = this.keyHandlers[key];
 
-      acc[key] = function() {
+      acc[key] = (...args) => {
         const {
           isDraggingTool,
           isDraggingSelectionHandle,
@@ -176,8 +176,8 @@ export class Merkaba extends Component {
           return;
         }
 
-        original(...arguments);
-      }.bind(this);
+        original(...args);
+      };
 
       return acc;
     }, {});
@@ -198,11 +198,10 @@ export class Merkaba extends Component {
     ].forEach(handlerName => {
       const original = handlers[handlerName];
 
-      handlers[handlerName] = function() {
-        const args = [...arguments];
+      handlers[handlerName] = (...args) => {
         this.recordSnapshot();
         original(...args);
-      }.bind(this);
+      };
     });
   }
 
