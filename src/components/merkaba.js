@@ -621,24 +621,9 @@ export class Merkaba extends Component {
 
   render() {
     const {
+      state,
       state: {
-        bufferShapes,
-        draggedHandleOrientation,
         focusedShapeCursor: { bufferIndices: focusedShapeBufferIndices },
-        isDraggingTool,
-        selectedTool,
-        transformDragStartX,
-        transformDragStartY,
-        transformDragX,
-        transformDragY,
-        toolDragDeltaX,
-        toolDragDeltaY,
-        toolDragStartX,
-        toolDragStartY,
-        toolFillColor,
-        toolRotate,
-        toolStrokeColor,
-        toolStrokeWidth,
       },
       handleCanvasDrag,
       handleCanvasDragStart,
@@ -667,7 +652,6 @@ export class Merkaba extends Component {
         <div className="fill merkaba">
           <Layers
             {...{
-              bufferShapes,
               distance: 1,
               focusedShapeBufferIndices,
               handleDeleteShapeClick,
@@ -676,37 +660,23 @@ export class Merkaba extends Component {
               lockAxis: 'y',
               onSortEnd: handleLayerSortEnd,
               onSortStart: handleLayerSortStart,
+              ...state,
             }}
           />
           <Toolbar
             {...{
               handleToolClick,
-              selectedTool,
+              ...state,
             }}
           />
           <Canvas
             {...{
-              bufferShapes,
-              draggedHandleOrientation,
               focusedShapes,
               handleCanvasDrag,
               handleCanvasDragStart,
               handleCanvasDragStop,
               handleCanvasMouseDown,
-              isDraggingTool,
-              selectedTool,
-              transformDragStartX,
-              transformDragStartY,
-              transformDragX,
-              transformDragY,
-              toolDragDeltaX,
-              toolDragDeltaY,
-              toolDragStartX,
-              toolDragStartY,
-              toolFillColor,
-              toolRotate,
-              toolStrokeColor,
-              toolStrokeWidth,
+              ...state,
             }}
           />
           <Details
@@ -715,6 +685,7 @@ export class Merkaba extends Component {
               handleColorPropertyChange,
               handleDetailsInputFocus,
               handlePropertyChange,
+              ...state,
             }}
           />
         </div>
