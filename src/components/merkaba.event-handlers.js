@@ -89,6 +89,8 @@ export default {
       target: { classList, nodeName },
     } = e;
 
+    const { handlers } = this;
+
     // Because of limitations of how DraggableCore handles events and the fact
     // that all SVG shapes (buffered, live, selector components, etc.) are all
     // in a single <svg> element, all DraggableCore event interaction is
@@ -99,11 +101,11 @@ export default {
     // specific event handlers like handleShapeDragX.
     if (nodeName !== 'svg') {
       if (classList.contains('buffered')) {
-        return this.handleBufferedShapeDragStart(...arguments);
+        return handlers.handleBufferedShapeDragStart(...arguments);
       } else if (classList.contains('selection-handle')) {
-        return this.handleSelectionHandleDragStart(...arguments);
+        return handlers.handleSelectionHandleDragStart(...arguments);
       } else if (classList.contains('selection-handle-rotator')) {
-        return this.handleSelectionRotatorDragStart(...arguments);
+        return handlers.handleSelectionRotatorDragStart(...arguments);
       }
     }
 
@@ -138,20 +140,23 @@ export default {
    */
   handleCanvasDrag(e, { deltaX, deltaY }) {
     const {
-      isDraggingSelectionHandle,
-      isDraggingSelectionRotator,
-      isDraggingShape,
-      selectedTool,
-      toolDragDeltaX,
-      toolDragDeltaY,
-    } = this.state;
+      handlers,
+      state: {
+        isDraggingSelectionHandle,
+        isDraggingSelectionRotator,
+        isDraggingShape,
+        selectedTool,
+        toolDragDeltaX,
+        toolDragDeltaY,
+      },
+    } = this;
 
     if (isDraggingShape) {
-      return this.handleBufferedShapeDrag(...arguments);
+      return handlers.handleBufferedShapeDrag(...arguments);
     } else if (isDraggingSelectionHandle) {
-      return this.handleSelectionHandleDrag(...arguments);
+      return handlers.handleSelectionHandleDrag(...arguments);
     } else if (isDraggingSelectionRotator) {
-      return this.handleSelectionRotatorDrag(...arguments);
+      return handlers.handleSelectionRotatorDrag(...arguments);
     }
 
     const isUsingSelectTool = selectedTool === selectedToolType.SELECT;
@@ -179,20 +184,23 @@ export default {
    */
   handleCanvasDragStop() {
     const {
-      isDraggingSelectionHandle,
-      isDraggingSelectionRotator,
-      isDraggingShape,
-      selectedTool,
-      toolDragDeltaX,
-      toolDragDeltaY,
-    } = this.state;
+      handlers,
+      state: {
+        isDraggingSelectionHandle,
+        isDraggingSelectionRotator,
+        isDraggingShape,
+        selectedTool,
+        toolDragDeltaX,
+        toolDragDeltaY,
+      },
+    } = this;
 
     if (isDraggingShape) {
-      return this.handleBufferedShapeDragStop(...arguments);
+      return handlers.handleBufferedShapeDragStop(...arguments);
     } else if (isDraggingSelectionHandle) {
-      return this.handleSelectionHandleDragStop(...arguments);
+      return handlers.handleSelectionHandleDragStop(...arguments);
     } else if (isDraggingSelectionRotator) {
-      return this.handleSelectionRotatorDragStop(...arguments);
+      return handlers.handleSelectionRotatorDragStop(...arguments);
     }
 
     const bufferShapes = this.state.bufferShapes.slice();

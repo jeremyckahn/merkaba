@@ -105,9 +105,11 @@ export class Merkaba extends Component {
       toolStrokeWidth: 0,
     };
 
+    const handlers = (this.handlers = {});
+
     // Bind event handlers
     Object.keys(eventHandlers).forEach(
-      method => (this[method] = eventHandlers[method].bind(this))
+      method => (handlers[method] = eventHandlers[method].bind(this))
     );
 
     this.setUpUndoableActions();
@@ -118,11 +120,13 @@ export class Merkaba extends Component {
 
   initKeyHandlers() {
     const {
-      handleDeleteKeyPress,
-      handleNudgeKeyPress,
-      handleRedoKeypress,
-      handleToolClick,
-      handleUndoKeypress,
+      handlers: {
+        handleDeleteKeyPress,
+        handleNudgeKeyPress,
+        handleRedoKeypress,
+        handleToolClick,
+        handleUndoKeypress,
+      },
     } = this;
 
     this.keyMap = {
@@ -183,6 +187,8 @@ export class Merkaba extends Component {
    * @function merkaba.Merkaba#setUpUndoableActions
    */
   setUpUndoableActions() {
+    const { handlers } = this;
+
     [
       'handleToolClick',
       'handleCanvasDragStart',
@@ -190,9 +196,9 @@ export class Merkaba extends Component {
       'handleDetailsInputFocus',
       'handleLayerSortStart',
     ].forEach(handlerName => {
-      const original = this[handlerName];
+      const original = handlers[handlerName];
 
-      this[handlerName] = function() {
+      handlers[handlerName] = function() {
         const args = [...arguments];
         this.recordSnapshot();
         original(...args);
@@ -621,18 +627,8 @@ export class Merkaba extends Component {
 
   render() {
     const {
-      handleCanvasDrag,
-      handleCanvasDragStart,
-      handleCanvasDragStop,
-      handleCanvasMouseDown,
-      handleColorPropertyChange,
-      handleDeleteShapeClick,
-      handleDetailsInputFocus,
-      handleLayerClick,
-      handleLayerSortEnd,
-      handleLayerSortStart,
-      handlePropertyChange,
-      handleToolClick,
+      handlers,
+      handlers: { handleLayerSortEnd, handleLayerSortStart },
       keyHandlers,
       keyMap,
       state,
@@ -650,38 +646,32 @@ export class Merkaba extends Component {
           <Layers
             {...{
               distance: 1,
-              handleDeleteShapeClick,
-              handleLayerClick,
               helperClass: 'focused',
               lockAxis: 'y',
               onSortEnd: handleLayerSortEnd,
               onSortStart: handleLayerSortStart,
               ...state,
+              ...handlers,
             }}
           />
           <Toolbar
             {...{
-              handleToolClick,
               ...state,
+              ...handlers,
             }}
           />
           <Canvas
             {...{
               focusedShapes,
-              handleCanvasDrag,
-              handleCanvasDragStart,
-              handleCanvasDragStop,
-              handleCanvasMouseDown,
               ...state,
+              ...handlers,
             }}
           />
           <Details
             {...{
               focusedShapes,
-              handleColorPropertyChange,
-              handleDetailsInputFocus,
-              handlePropertyChange,
               ...state,
+              ...handlers,
             }}
           />
         </div>
