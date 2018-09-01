@@ -1,5 +1,5 @@
 import React from 'react';
-import { array, func, number, object, string } from 'prop-types';
+import { array, func, number, object, shape, string } from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { Icon } from './icon';
 
@@ -46,7 +46,7 @@ Layer.propTypes = {
 const Layers = ({
   bufferShapes = [],
   bufferShapesLength = bufferShapes.length,
-  focusedShapeBufferIndices = [],
+  focusedShapeCursor: { bufferIndices = [] },
   handleDeleteShapeClick,
   handleLayerClick,
 }) => (
@@ -59,7 +59,7 @@ const Layers = ({
           <SortableLayer
             bufferIndex={bufferShapesLength - 1 - i}
             className={`merkaba-layer${
-              ~focusedShapeBufferIndices.indexOf(bufferShapesLength - 1 - i)
+              ~bufferIndices.indexOf(bufferShapesLength - 1 - i)
                 ? ' focused'
                 : ''
             }`}
@@ -78,7 +78,9 @@ const Layers = ({
 Layers.propTypes = {
   bufferShapes: array.isRequired,
   bufferShapesLength: number,
-  focusedShapeBufferIndices: array.isRequired,
+  focusedShapeCursor: shape({
+    bufferIndices: array.isRequired,
+  }).isRequired,
   handleDeleteShapeClick: func.isRequired,
   handleLayerClick: func.isRequired,
 };

@@ -621,10 +621,6 @@ export class Merkaba extends Component {
 
   render() {
     const {
-      state,
-      state: {
-        focusedShapeCursor: { bufferIndices: focusedShapeBufferIndices },
-      },
       handleCanvasDrag,
       handleCanvasDragStart,
       handleCanvasDragStop,
@@ -639,6 +635,7 @@ export class Merkaba extends Component {
       handleToolClick,
       keyHandlers,
       keyMap,
+      state,
     } = this;
 
     const focusedShapes = this.getFocusedShapes();
@@ -653,7 +650,6 @@ export class Merkaba extends Component {
           <Layers
             {...{
               distance: 1,
-              focusedShapeBufferIndices,
               handleDeleteShapeClick,
               handleLayerClick,
               helperClass: 'focused',

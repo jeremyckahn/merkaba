@@ -11,9 +11,11 @@ describe('Layers', () => {
     component = mount(
       <Layers
         bufferShapes={[]}
-        focusedShapeBufferIndices={[]}
         handleDeleteShapeClick={() => {}}
         handleLayerClick={() => {}}
+        {...{
+          focusedShapeCursor: { bufferIndices: [] },
+        }}
       />
     );
   });
@@ -53,7 +55,7 @@ describe('Layers', () => {
       beforeEach(() => {
         component.setProps({
           bufferShapes: [sampleRect(), sampleRect(), sampleRect()],
-          focusedShapeBufferIndices: [0, 1],
+          focusedShapeCursor: { bufferIndices: [0, 1] },
         });
       });
 
