@@ -7,6 +7,8 @@ import { shallow } from 'enzyme';
 
 let component;
 
+const handlers = () => component.instance().handlers;
+
 describe('eventHandlers', () => {
   beforeEach(() => {
     component = shallow(<Merkaba />);
@@ -14,7 +16,7 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleToolClick', () => {
     beforeEach(() => {
-      component.instance().handlers.handleToolClick(selectedToolType.RECTANGLE);
+      handlers().handleToolClick(selectedToolType.RECTANGLE);
     });
 
     it('sets the selectedTool state', () => {
@@ -32,7 +34,7 @@ describe('eventHandlers', () => {
         },
       });
 
-      component.instance().handlers.handleCanvasMouseDown({
+      handlers().handleCanvasMouseDown({
         target: {
           getBoundingClientRect: () => ({ x: 1, y: 2 }),
           nodeName: 'svg',
@@ -67,9 +69,7 @@ describe('eventHandlers', () => {
           selectedTool: selectedToolType.NONE,
         });
 
-        component
-          .instance()
-          .handlers.handleCanvasDragStart(eventHandlerData, dragData);
+        handlers().handleCanvasDragStart(eventHandlerData, dragData);
       });
 
       it('sets the focusedShapeCursor state', () => {
@@ -108,9 +108,7 @@ describe('eventHandlers', () => {
               selectedTool: selectedToolType.NONE,
             });
 
-            component
-              .instance()
-              .handlers.handleCanvasDragStart(eventHandlerData, dragData);
+            handlers().handleCanvasDragStart(eventHandlerData, dragData);
           });
 
           it('sets correct shapeFocusType', () => {
@@ -127,9 +125,7 @@ describe('eventHandlers', () => {
               selectedTool: selectedToolType.SELECT,
             });
 
-            component
-              .instance()
-              .handlers.handleCanvasDragStart(eventHandlerData, dragData);
+            handlers().handleCanvasDragStart(eventHandlerData, dragData);
           });
 
           it('sets correct shapeFocusType', () => {
@@ -154,9 +150,7 @@ describe('eventHandlers', () => {
         toolDragDeltaY: 15,
       });
 
-      component
-        .instance()
-        .handlers.handleCanvasDrag(null, { deltaX: -5, deltaY: 5 });
+      handlers().handleCanvasDrag(null, { deltaX: -5, deltaY: 5 });
     });
 
     it('sets the toolDragDeltaX state', () => {
@@ -174,9 +168,7 @@ describe('eventHandlers', () => {
             selectedTool: selectedToolType.NONE,
           });
 
-          component
-            .instance()
-            .handlers.handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+          handlers().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
         });
 
         it('does not change focusedShapeCursor', () => {
@@ -202,9 +194,7 @@ describe('eventHandlers', () => {
               toolDragDeltaY: 20,
             });
 
-            component
-              .instance()
-              .handlers.handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+            handlers().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
           });
 
           it('sets correct focusedShapeCursor', () => {
@@ -221,9 +211,7 @@ describe('eventHandlers', () => {
               selectedTool: selectedToolType.SELECT,
             });
 
-            component
-              .instance()
-              .handlers.handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
+            handlers().handleCanvasDrag(null, { deltaX: 0, deltaY: 0 });
           });
 
           it('sets correct focusedShapeCursor', () => {
@@ -254,7 +242,7 @@ describe('eventHandlers', () => {
 
     describe('state management', () => {
       beforeEach(() => {
-        component.instance().handlers.handleCanvasDragStop();
+        handlers().handleCanvasDragStop();
       });
 
       it('sets the focusedShapeCursor state', () => {
@@ -308,7 +296,7 @@ describe('eventHandlers', () => {
             toolDragDeltaY: 0,
           });
 
-          component.instance().handlers.handleCanvasDragStop();
+          handlers().handleCanvasDragStop();
         });
 
         it('is not committed to state.bufferShapes', () => {
@@ -327,7 +315,7 @@ describe('eventHandlers', () => {
             toolDragDeltaY: 10,
           });
 
-          component.instance().handlers.handleCanvasDragStop();
+          handlers().handleCanvasDragStop();
         });
 
         it('is committed to state.bufferShapes', () => {
@@ -356,7 +344,7 @@ describe('eventHandlers', () => {
               selectedTool: selectedToolType.NONE,
             });
 
-            component.instance().handlers.handleCanvasDragStop();
+            handlers().handleCanvasDragStop();
           });
 
           it('sets correct focusedShapeCursor', () => {
@@ -376,7 +364,7 @@ describe('eventHandlers', () => {
         bufferShapes: [sampleRect()],
       });
 
-      component.instance().handlers.handleBufferedShapeDragStart({
+      handlers().handleBufferedShapeDragStart({
         target: { getAttribute: () => 1 },
       });
     });
@@ -403,7 +391,7 @@ describe('eventHandlers', () => {
           },
         });
 
-        component.instance().handlers.handleBufferedShapeDragStart({
+        handlers().handleBufferedShapeDragStart({
           target: { getAttribute: () => 2 },
         });
       });
@@ -430,9 +418,7 @@ describe('eventHandlers', () => {
         },
       });
 
-      component
-        .instance()
-        .handlers.handleBufferedShapeDrag({}, { deltaX: 10, deltaY: -10 });
+      handlers().handleBufferedShapeDrag({}, { deltaX: 10, deltaY: -10 });
     });
 
     it('modifies the bufferShapes data', () => {
@@ -451,7 +437,7 @@ describe('eventHandlers', () => {
       });
       component.setState({ isDraggingShape: true });
 
-      component.instance().handlers.handleBufferedShapeDragStop({
+      handlers().handleBufferedShapeDragStop({
         target: { getAttribute: () => 1 },
       });
     });
@@ -472,7 +458,7 @@ describe('eventHandlers', () => {
         },
       });
 
-      component.instance().handlers.handleSelectionHandleDragStart(
+      handlers().handleSelectionHandleDragStart(
         {
           target: {
             getAttribute: () => 'top-left',
@@ -529,7 +515,7 @@ describe('eventHandlers', () => {
 
     describe('state updates', () => {
       beforeEach(() => {
-        component.instance().handlers.handleSelectionHandleDrag(null, { x, y });
+        handlers().handleSelectionHandleDrag(null, { x, y });
       });
 
       it('updates the transformDragX state', () => {
@@ -568,7 +554,7 @@ describe('eventHandlers', () => {
         transformDragX: 0,
         transformDragY: 5,
       });
-      component.instance().handlers.handleSelectionHandleDragStop();
+      handlers().handleSelectionHandleDragStop();
     });
 
     it('updates isDraggingSelectionHandle state', () => {
@@ -602,7 +588,7 @@ describe('eventHandlers', () => {
 
   describe('Merkaba#handleSelectionRotatorDragStart', () => {
     beforeEach(() => {
-      component.instance().handlers.handleSelectionRotatorDragStart();
+      handlers().handleSelectionRotatorDragStart();
     });
 
     it('updates isDraggingSelectionRotator state', () => {
@@ -633,7 +619,7 @@ describe('eventHandlers', () => {
         svgBoundingRect: { x: 0, y: 0 },
       });
 
-      component.instance().handlers.handleSelectionRotatorDrag(null, {
+      handlers().handleSelectionRotatorDrag(null, {
         lastX: 0,
         lastY: 0,
         x: 90,
@@ -649,7 +635,7 @@ describe('eventHandlers', () => {
   describe('Merkaba#handleSelectionRotatorDragStop', () => {
     beforeEach(() => {
       component.instance().setState({ isDraggingSelectionRotator: true });
-      component.instance().handlers.handleSelectionRotatorDragStop();
+      handlers().handleSelectionRotatorDragStop();
     });
 
     it('updates isDraggingSelectionRotator state', () => {
@@ -667,7 +653,7 @@ describe('eventHandlers', () => {
         },
       });
 
-      component.instance().handlers.handlePropertyChange({
+      handlers().handlePropertyChange({
         target: {
           name: 'x',
           type: 'number',
@@ -692,12 +678,10 @@ describe('eventHandlers', () => {
         },
       });
 
-      component
-        .instance()
-        .handlers.handleColorPropertyChange(
-          { rgb: { r: 1, g: 2, b: 3, a: 0.5 } },
-          'stroke'
-        );
+      handlers().handleColorPropertyChange(
+        { rgb: { r: 1, g: 2, b: 3, a: 0.5 } },
+        'stroke'
+      );
     });
 
     it('modifies the specified color property of the focused shape', () => {
@@ -713,7 +697,7 @@ describe('eventHandlers', () => {
       component.setState({
         bufferShapes: [sampleRect(), sampleRect(), sampleRect()],
       });
-      component.instance().handlers.handleLayerSortStart({ index: 2 });
+      handlers().handleLayerSortStart({ index: 2 });
     });
 
     it('focuses the clicked layer', () => {
@@ -738,9 +722,7 @@ describe('eventHandlers', () => {
         },
       });
 
-      component
-        .instance()
-        .handlers.handleLayerSortEnd({ oldIndex: 1, newIndex: 0 });
+      handlers().handleLayerSortEnd({ oldIndex: 1, newIndex: 0 });
     });
 
     it('sorts the bufferShapes', () => {
@@ -764,7 +746,7 @@ describe('eventHandlers', () => {
         bufferShapes: [sampleRect({ id: 0 })],
       });
 
-      component.instance().handlers.handleLayerClick(0);
+      handlers().handleLayerClick(0);
     });
 
     it('focuses the clicked layer', () => {
@@ -781,7 +763,7 @@ describe('eventHandlers', () => {
         bufferShapes: [sampleRect({ id: 0 }), sampleRect({ id: 1 })],
       });
 
-      component.instance().handlers.handleDeleteShapeClick(0);
+      handlers().handleDeleteShapeClick(0);
     });
 
     it('deletes the specified shape', () => {
@@ -807,7 +789,7 @@ describe('eventHandlers', () => {
 
     describe('up', () => {
       beforeEach(() => {
-        component.instance().handlers.handleNudgeKeyPress({ key: 'ArrowUp' });
+        handlers().handleNudgeKeyPress({ key: 'ArrowUp' });
       });
 
       it('nudges all shapes up', () => {
@@ -824,9 +806,7 @@ describe('eventHandlers', () => {
 
     describe('right', () => {
       beforeEach(() => {
-        component
-          .instance()
-          .handlers.handleNudgeKeyPress({ key: 'ArrowRight' });
+        handlers().handleNudgeKeyPress({ key: 'ArrowRight' });
       });
 
       it('nudges all shapes right', () => {
@@ -843,7 +823,7 @@ describe('eventHandlers', () => {
 
     describe('down', () => {
       beforeEach(() => {
-        component.instance().handlers.handleNudgeKeyPress({ key: 'ArrowDown' });
+        handlers().handleNudgeKeyPress({ key: 'ArrowDown' });
       });
 
       it('nudges all shapes down', () => {
@@ -860,7 +840,7 @@ describe('eventHandlers', () => {
 
     describe('left', () => {
       beforeEach(() => {
-        component.instance().handlers.handleNudgeKeyPress({ key: 'ArrowLeft' });
+        handlers().handleNudgeKeyPress({ key: 'ArrowLeft' });
       });
 
       it('nudges all shapes left', () => {
